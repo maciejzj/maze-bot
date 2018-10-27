@@ -4,3 +4,5 @@
 #define FRONT 2
 
 #define TURNING_TIME 1000
+
+#define SAFE_DIST 10
