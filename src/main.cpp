@@ -1,5 +1,7 @@
 #include <Arduino.h>
+#include <Servo.h>
 #include "defines.h"
+#include "servoSensor.h"
 #include "platformMotors.h"
 
 int motLeftForward = 2;
@@ -9,6 +11,9 @@ int motLeftVelo = 9;
 int motRightForward = 4;
 int motRightBack = 5;
 int motRightVelo = 10;
+
+int servoPin = 6;
+Servo servoSensor;
 
 void setup() {
 	Serial.begin(9600); // for debug
@@ -20,6 +25,8 @@ void setup() {
 	pinMode(motRightForward, OUTPUT);
 	pinMode(motRightBack, OUTPUT);
 	pinMode(motRightVelo, OUTPUT);
+
+	servoSensor.attach(servoPin);
 }
 
 void loop() {
