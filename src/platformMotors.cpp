@@ -20,6 +20,18 @@ void motorStop() {
 	analogWrite(motLeftVelo, 0);
 }
 
+void motorTurn(int direction, int velocity) {
+	switch (direction) {
+		case RIGHT:
+			motorTurnRight(velocity);
+			break;
+
+		case LEFT:
+			motorTurnLeft(velocity);
+			break;
+	}
+}
+
 void motorTurnLeft(int velocity = 255) {
 	analogWrite(motLeftVelo, velocity);
 	
