@@ -21,8 +21,6 @@ int ultrasonicEcho = 3;
 int ultrasonicInt = 0;
 HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt);
 
-int direction;
-
 void setup() {
 	Serial.begin(9600); // for debug
 
@@ -43,6 +41,8 @@ void setup() {
 }
 
 void loop() {
+	int direction;
+
 	if(sensor.isFinished()) {
 		if(sensor.getRange() < SAFE_DIST) {
 			motorStop();
@@ -50,7 +50,22 @@ void loop() {
 
 			direction = random(LEFT, RIGHT - 1);
 			turnServoSensor(direction);
+
+			if(sensor.probeRange() < SAFE_DIST) {
+				direction = !direction;
+				turnServoSensor(direction);
+
+				if(sensor.probeRange() < SAFE_DIST) {
+					direction = BACK;
+				}
+			}
+
+			turnServoSensor(FRONT);
+			motorTurn(direction);
+			sensor.start();
+			motorForward();	
 		}
+		
 		sensor.start();
 	}
 }
