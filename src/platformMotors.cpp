@@ -20,7 +20,7 @@ void motorStop() {
 	analogWrite(motLeftVelo, 0);
 }
 
-void motorTurnLeft(int direction, int velocity = 255) {
+void motorTurnLeft(int velocity = 255) {
 	analogWrite(motLeftVelo, velocity);
 	
 	digitalWrite(motLeftForward, HIGH);
@@ -33,7 +33,7 @@ void motorTurnLeft(int direction, int velocity = 255) {
 	motorStop();
 }
 
-void motorTurnRight(int direction, int velocity) {
+void motorTurnRight(int velocity = 255) {
 	analogWrite(motLeftVelo, velocity);
 
 	digitalWrite(motLeftForward, LOW);
@@ -46,7 +46,7 @@ void motorTurnRight(int direction, int velocity) {
 	motorStop();
 }
 
-void motorForward(int direction, int velocity) {
+void motorForward(int velocity = 255) {
 	analogWrite(motLeftVelo, velocity);
 
 	digitalWrite(motLeftForward, HIGH);

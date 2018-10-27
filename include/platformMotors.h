@@ -1,4 +1,4 @@
 void motorStop();
-void motorTurnLeft(int direction, int velocity);
-void motorTurnRight(int direction, int velocity);
-void motorForward(int direction, int velocity);
+void motorTurnLeft(int velocity);
+void motorTurnRight(int velocity);
+void motorForward(int velocity);
