@@ -3,9 +3,10 @@
 #include "defines.h"
 #include "servoSensor.h"
 #include "platformMotors.h"
+#include "HC_SR04.h"
 
-int motLeftForward = 2;
-int motLeftBack = 3;
+int motLeftForward = 6;
+int motLeftBack = 7;
 int motLeftVelo = 9;
 
 int motRightForward = 4;
@@ -14,6 +15,11 @@ int motRightVelo = 10;
 
 int servoPin = 6;
 Servo servoSensor;
+
+int ultrasonicTrig = 2;
+int ultrasonicEcho = 3;
+int ultrasonicInt = 0;
+HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt);
 
 void setup() {
 	Serial.begin(9600); // for debug
@@ -27,8 +33,16 @@ void setup() {
 	pinMode(motRightVelo, OUTPUT);
 
 	servoSensor.attach(servoPin);
+
+	sensor.begin();
+	sensor.start();
 }
 
 void loop() {
-	
+	if(sensor.isFinished()){
+		Serial.print(sensor.getRange());
+		Serial.println("cm");
+		delay(1000);
+		sensor.start();
+	}
 }
