@@ -14,6 +14,7 @@ class HC_SR04 {
     void start();
     bool isFinished(){ return _finished; }
     unsigned int getRange(bool units=CM);
+    unsigned int probeRange(bool units=CM);
     static HC_SR04* instance(){ return _instance; }
     
   private:
