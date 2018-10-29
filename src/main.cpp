@@ -41,27 +41,12 @@ void setup() {
 }
 
 void loop() {
-	int direction;
-
 	if(sensor.isFinished()) {
 		if(sensor.getRange() < SAFE_DIST) {
 			motorStop();
-			sensor.start();
 
-			direction = random(LEFT, RIGHT - 1);
-			turnServoSensor(direction);
-
-			if(sensor.probeRange() < SAFE_DIST) {
-				direction = !direction;
-				turnServoSensor(direction);
-
-				if(sensor.probeRange() < SAFE_DIST) {
-					direction = BACK;
-				}
-			}
-
-			turnServoSensor(FRONT);
-			motorTurn(direction);
+			motorTurn(findUnobstructedDirection());
+			
 			sensor.start();
 			motorForward();	
 		}
