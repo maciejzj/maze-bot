@@ -19,6 +19,8 @@ void motorStop() {
 
 	analogWrite(motLeftVelo, 0);
 	analogWrite(motRightVelo, 0);
+
+	delay(MOTOR_STOP_DELAY);
 }
 
 void motorTurn(int direction, int velocity) {
