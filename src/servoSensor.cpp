@@ -21,6 +21,7 @@ void turnServoSensor(int direction) {
 			servoSensor.write(180);
 			break;
     }
+	delay(1000);
 }
 
 int findUnobstructedDirection() {

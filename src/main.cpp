@@ -13,7 +13,7 @@ int motRightForward = 4;
 int motRightBack = 5;
 int motRightVelo = 10;
 
-int servoPin = 6;
+int servoPin = 11;
 Servo servoSensor;
 
 int ultrasonicTrig = 2;
@@ -23,6 +23,7 @@ HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt);
 
 void setup() {
 	Serial.begin(9600); // for debug
+	Serial.print("Initialised serial");
 
 	pinMode(motLeftForward, OUTPUT);
 	pinMode(motLeftBack, OUTPUT);
@@ -33,11 +34,13 @@ void setup() {
 	pinMode(motRightVelo, OUTPUT);
 
 	servoSensor.attach(servoPin);
+	turnServoSensor(FRONT);
 
 	sensor.begin();
 	sensor.start();
 
 	randomSeed(analogRead(0));
+	motorForward();
 }
 
 void loop() {
