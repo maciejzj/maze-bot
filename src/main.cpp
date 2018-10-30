@@ -21,6 +21,9 @@ int ultrasonicEcho = 3;
 int ultrasonicInt = 0;
 HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt);
 
+unsigned long forwardStartTim = 0;
+unsigned long forwardStopTim = 0;
+
 void setup() {
 	Serial.begin(9600); // for debug
 	Serial.print("Initialised serial");
@@ -41,17 +44,20 @@ void setup() {
 
 	randomSeed(analogRead(0));
 	motorForward();
+	forwardStartTim = millis();
 }
 
 void loop() {
 	if(sensor.isFinished()) {
 		if(sensor.getRange() < SAFE_DIST) {
 			motorStop();
+			forwardStopTim = millis();
 
 			motorTurn(findUnobstructedDirection());
 			
 			sensor.start();
-			motorForward();	
+			motorForward();
+			forwardStartTim = millis();
 		}
 		
 		sensor.start();
