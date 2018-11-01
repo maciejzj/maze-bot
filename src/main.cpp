@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
+#include <TimerOne.h>
 #include "defines.h"
 #include "servoSensor.h"
 #include "platformMotors.h"
@@ -23,6 +24,9 @@ HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt);
 
 unsigned long forwardStartTim = 0;
 unsigned long forwardStopTim = 0;
+
+int backtrackCounter = 0;
+void corridorEscaper();
 
 void setup() {
 	Serial.begin(9600); // for debug
@@ -53,13 +57,48 @@ void loop() {
 			motorStop();
 			forwardStopTim = millis();
 
-			motorTurn(findUnobstructedDirection());
-			
-			sensor.start();
+			int direction = findUnobstructedDirection();
+			motorTurn(direction);
+
+			if (direction == BACK) backtrackCounter++;
+			else backtrackCounter = 0;
+
+			if(backtrackCounter == 2) {
+				corridorEscaper();
+			}
+
 			motorForward();
 			forwardStartTim = millis();
 		}
 		
 		sensor.start();
+	}
+}
+
+void corridorEscaper() {
+	unsigned long forwardDeltaTim = forwardStopTim - forwardStartTim;
+
+	int direction = random(LEFT, RIGHT - 1);
+	turnServoSensor(direction);
+	sensor.start();
+
+	Timer1.initialize(forwardDeltaTim * 1000); 
+	Timer1.attachInterrupt(motorTurnBack);
+	motorForward();
+
+	while (true) {
+		if(sensor.isFinished()) {
+			if(sensor.getRange() > SAFE_DIST) {
+				Timer1.detachInterrupt();
+
+				motorStop();
+				turnServoSensor(FRONT);
+
+				motorMoveOffset();
+				motorTurn(direction);
+
+				break;
+			}
+		}
 	}
 }
