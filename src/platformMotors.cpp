@@ -23,14 +23,14 @@ void motorStop() {
 	delay(MOTOR_STOP_DELAY);
 }
 
-void motorTurn(int direction, int velocity) {
+void motorTurn(int direction) {
 	switch (direction) {
 		case RIGHT:
-			motorTurnRight(velocity);
+			motorTurnRight();
 			break;
 
 		case LEFT:
-			motorTurnLeft(velocity);
+			motorTurnLeft();
 			break;
 
 		case BACK:
@@ -39,7 +39,9 @@ void motorTurn(int direction, int velocity) {
 	}
 }
 
-void motorTurnLeft(int velocity) {
+void motorTurnLeft() {
+	int velocity = 255;
+
 	analogWrite(motLeftVelo, velocity);
 	analogWrite(motRightVelo, velocity);
 	
@@ -53,7 +55,9 @@ void motorTurnLeft(int velocity) {
 	motorStop();
 }
 
-void motorTurnRight(int velocity) {
+void motorTurnRight() {
+	int velocity = 255;
+
 	analogWrite(motLeftVelo, velocity);
 	analogWrite(motRightVelo, velocity);
 
@@ -67,7 +71,9 @@ void motorTurnRight(int velocity) {
 	motorStop();
 }
 
-void motorTurnBack(int velocity) {
+void motorTurnBack() {
+	int velocity = 255;
+	
 	analogWrite(motLeftVelo, velocity);
 	analogWrite(motRightVelo, velocity);
 
@@ -90,4 +96,20 @@ void motorForward(int velocity) {
 
 	digitalWrite(motRightForward, HIGH);
 	digitalWrite(motRightBack, LOW);
+}
+
+void motorMoveOffset() {
+	int velocity = 255;	
+
+	analogWrite(motLeftVelo, velocity);
+	analogWrite(motRightVelo, velocity);
+
+	digitalWrite(motLeftForward, HIGH);
+	digitalWrite(motRightBack, LOW);	
+
+	digitalWrite(motRightForward, HIGH);
+	digitalWrite(motRightBack, LOW);
+
+	delay(SELF_LENGTH_OFFSET);
+	motorStop();
 }
