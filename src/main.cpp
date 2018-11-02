@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include <TimerOne.h>
+#include <IRremote.h>
 #include "defines.h"
 #include "servoSensor.h"
 #include "platformMotors.h"
@@ -22,9 +23,14 @@ int ultrasonicEcho = 3;
 int ultrasonicInt = 0;
 HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt);
 
+int IRrecvPin = 1;
+IRrecv irrecv(IRrecvPin);
+decode_results results;
+
 unsigned long forwardStartTim = 0;
 unsigned long forwardStopTim = 0;
 
+volatile int isRunning = 1;
 int backtrackCounter = 0;
 void corridorEscaper();
 
@@ -45,6 +51,8 @@ void setup() {
 
 	sensor.begin();
 	sensor.start();
+
+	irrecv.enableIRIn();
 
 	randomSeed(analogRead(0));
 	motorForward();
