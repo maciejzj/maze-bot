@@ -30,7 +30,7 @@ decode_results results;
 unsigned long forwardStartTim = 0;
 unsigned long forwardStopTim = 0;
 
-volatile int state = 0;
+volatile int state = IDLE;
 int backtrackCounter = 0;
 
 void changeRunningState();
@@ -58,31 +58,44 @@ void setup() {
 	attachInterrupt(digitalPinToInterrupt(IRrecvPin), changeRunningState, RISING);
 
 	randomSeed(analogRead(0));
-	motorForward();
-	forwardStartTim = millis();
+
 }
 
 void loop() {
-	if(sensor.isFinished()) {
-		if(sensor.getRange() < SAFE_DIST) {
-			motorStop();
-			forwardStopTim = millis();
-
-			int direction = findUnobstructedDirection();
-			motorTurn(direction);
-
-			if (direction == BACK) backtrackCounter++;
-			else backtrackCounter = 0;
-
-			if(backtrackCounter == 2) {
-				corridorEscaper();
-			}
-
+	switch(state) {
+		case START:
 			motorForward();
 			forwardStartTim = millis();
-		}
-		
-		sensor.start();
+			sensor.start();
+			state = RUNNING;
+			break;
+
+		case RUNNING:
+			if(sensor.isFinished()) {
+				if(sensor.getRange() < SAFE_DIST) {
+					state = START;
+
+					motorStop();
+					forwardStopTim = millis();
+
+					int direction = findUnobstructedDirection();
+					motorTurn(direction);
+
+					if (direction == BACK) backtrackCounter++;
+					else backtrackCounter = 0;
+
+					if(backtrackCounter == 2) {
+						corridorEscaper();
+					}
+				}
+				sensor.start();
+			}
+			break;
+
+		case STOP:
+			motorStop();
+			state = IDLE;
+			break;
 	}
 }
 
@@ -116,8 +129,8 @@ void corridorEscaper() {
 
 void changeRunningState() {
 	if (irrecv.decode(&results)) {
-		unsigned long odczyt = results.value;
-		switch (odczyt) {
+		unsigned long IRvalue = results.value;
+		switch (IRvalue) {
 			case 0x100CBCA:
 				state = STOP;
 				break;
