@@ -85,7 +85,8 @@ void loop() {
 					else backtrackCounter = 0;
 
 					if(backtrackCounter == 2) {
-						corridorEscaper();
+						/* 	Disabled corridorEscaper() due to it being broken by 
+							conflict of timers */
 					}
 				}
 				sensor.start();
