@@ -30,7 +30,7 @@ decode_results results;
 unsigned long forwardStartTim = 0;
 unsigned long forwardStopTim = 0;
 
-volatile int state = 1;
+volatile int state = 0;
 int backtrackCounter = 0;
 
 void changeRunningState();
@@ -119,10 +119,10 @@ void changeRunningState() {
 		unsigned long odczyt = results.value;
 		switch (odczyt) {
 			case 0x100CBCA:
-				state = 0;
+				state = STOP;
 				break;
 			case 0x1009C9D:
-				state = 1;
+				state = START;
 				break;
 		}
 		irrecv.resume();

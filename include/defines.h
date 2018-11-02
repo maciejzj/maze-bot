@@ -8,3 +8,8 @@
 #define MOTOR_STOP_DELAY 500
 
 #define SAFE_DIST 10
+
+#define IDLE 0
+#define START 1
+#define RUNNING 2
+#define STOP 3
