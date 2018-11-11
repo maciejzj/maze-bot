@@ -7,23 +7,28 @@
 #include "platformMotors.h"
 #include "HC_SR04.h"
 
-int motLeftForward = 6;
-int motLeftBack = 7;
-int motLeftVelo = 9;
+int motLeftForward = 11;
+int motLeftBack = 10;
+int motLeftVelo = 6;
 
-int motRightForward = 4;
-int motRightBack = 5;
-int motRightVelo = 10;
+int motRightForward = 8;
+int motRightBack = 9;
+int motRightVelo = 5;
 
-int servoPin = 11;
+int motLeftSlotSensor = 2;
+int motRightSlotSensor = 1;
+int motLeftCounter = 0;
+int motRightCounter = 0;
+
+int servoPin = 13;
 Servo servoSensor;
 
-int ultrasonicTrig = 2;
+int ultrasonicTrig = 4;
 int ultrasonicEcho = 3;
 int ultrasonicInt = 0;
 HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt);
 
-int IRrecvPin = 1;
+int IRrecvPin = 7;
 IRrecv irrecv(IRrecvPin);
 decode_results results;
 
