@@ -10,6 +10,9 @@ extern int motRightForward;
 extern int motRightBack;
 extern int motRightVelo;
 
+extern int motLeftCounter;
+extern int motRightCounter;
+
 void motorStop() {
 	digitalWrite(motRightForward, LOW);
 	digitalWrite(motRightBack, LOW);
@@ -92,7 +95,7 @@ void motorForward(int velocity) {
 	analogWrite(motRightVelo, velocity);
 
 	digitalWrite(motLeftForward, HIGH);
-	digitalWrite(motRightBack, LOW);	
+	digitalWrite(motLeftBack, LOW);	
 
 	digitalWrite(motRightForward, HIGH);
 	digitalWrite(motRightBack, LOW);
@@ -112,4 +115,23 @@ void motorMoveOffset() {
 
 	delay(SELF_LENGTH_OFFSET);
 	motorStop();
+}
+
+
+void motorLeftCounterInt() {
+	static unsigned long lastTime;
+	unsigned long timeNow = millis();
+	if(timeNow - lastTime < 1) return;
+
+	motLeftCounter++;
+	lastTime = timeNow;
+}
+
+void motorRightCounterInt() {
+	static unsigned long lastTime;
+	unsigned long timeNow = millis();
+	if(timeNow - lastTime < 1) return;
+
+	motRightCounter++;
+	lastTime = timeNow;
 }

@@ -7,9 +7,9 @@
 #include "platformMotors.h"
 #include "HC_SR04.h"
 
-int motLeftForward = 11;
+int motLeftForward = 12;
 int motLeftBack = 10;
-int motLeftVelo = 6;
+int motLeftVelo = 11;
 
 int motRightForward = 8;
 int motRightBack = 9;
@@ -17,8 +17,8 @@ int motRightVelo = 5;
 
 int motLeftSlotSensor = 2;
 int motRightSlotSensor = 1;
-int motLeftCounter = 0;
-int motRightCounter = 0;
+volatile int motLeftCounter = 0;
+volatile int motRightCounter = 0;
 
 int servoPin = 13;
 Servo servoSensor;
@@ -35,7 +35,7 @@ decode_results results;
 unsigned long forwardStartTim = 0;
 unsigned long forwardStopTim = 0;
 
-volatile int state = IDLE;
+volatile int state = START;
 int backtrackCounter = 0;
 
 void changeRunningState();
@@ -52,6 +52,9 @@ void setup() {
 	pinMode(motRightForward, OUTPUT);
 	pinMode(motRightBack, OUTPUT);
 	pinMode(motRightVelo, OUTPUT);
+
+	attachInterrupt(digitalPinToInterrupt(motLeftSlotSensor), motorLeftCounterInt, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(motRightSlotSensor), motorRightCounterInt, CHANGE);
 
 	servoSensor.attach(servoPin);
 	turnServoSensor(FRONT);
