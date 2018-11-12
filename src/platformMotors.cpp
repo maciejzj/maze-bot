@@ -14,16 +14,21 @@ extern int motLeftCounter;
 extern int motRightCounter;
 
 void motorStop() {
-	digitalWrite(motRightForward, LOW);
-	digitalWrite(motRightBack, LOW);
+	motorLeftStop();
+	motorRightStop();
+	delay(MOTOR_STOP_DELAY);
+}
 
+void motorLeftStop() {
 	digitalWrite(motLeftForward, LOW);
 	digitalWrite(motLeftBack, LOW);
-
 	analogWrite(motLeftVelo, 0);
-	analogWrite(motRightVelo, 0);
+}
 
-	delay(MOTOR_STOP_DELAY);
+void motorRightStop() {
+	digitalWrite(motRightForward, LOW);
+	digitalWrite(motRightBack, LOW);
+	analogWrite(motRightVelo, 0);
 }
 
 void motorTurn(int direction) {

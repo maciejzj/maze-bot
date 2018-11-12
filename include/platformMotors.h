@@ -1,4 +1,6 @@
 void motorStop();
+void motorLeftStop();
+void motorRightStop();
 void motorTurn(int direction);
 void motorTurnLeft();
 void motorTurnRight();
