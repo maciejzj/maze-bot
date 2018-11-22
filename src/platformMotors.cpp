@@ -66,6 +66,30 @@ void motorTurnLeft() {
 	motorStop();
 }
 
+void motorRotateRight(int velocity) {
+	if(velocity >= 0) {
+		digitalWrite(motLeftForward, HIGH);
+		digitalWrite(motLeftBack, LOW);
+		analogWrite(motLeftVelo, velocity);
+	} else {
+		digitalWrite(motLeftForward, LOW);
+		digitalWrite(motLeftBack, HIGH);
+		analogWrite(motLeftVelo, -velocity);
+	}
+}
+
+void motorRotateLeft(int velocity) {
+	if(velocity >= 0) {
+		digitalWrite(motRightForward, HIGH);
+		digitalWrite(motRightBack, LOW);
+		analogWrite(motRightVelo, velocity);
+	} else {
+		digitalWrite(motRightForward, LOW);
+		digitalWrite(motRightBack, HIGH);
+		analogWrite(motRightVelo, -velocity);
+	}
+}
+
 void motorTurnRight() {
 	int velocity = 255;
 
