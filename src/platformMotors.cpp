@@ -13,6 +13,9 @@ extern int motRightVelo;
 extern int motLeftCounter;
 extern int motRightCounter;
 
+unsigned long motLeftDeltaTime;
+unsigned long motRightDeltaTime;
+
 void motorStop() {
 	motorLeftStop();
 	motorRightStop();
@@ -129,6 +132,7 @@ void motorLeftCounterInt() {
 	if(timeNow - lastTime < 1) return;
 
 	motLeftCounter++;
+	motLeftDeltaTime = timeNow - lastTime;
 	lastTime = timeNow;
 }
 
@@ -138,5 +142,6 @@ void motorRightCounterInt() {
 	if(timeNow - lastTime < 1) return;
 
 	motRightCounter++;
+	motRightDeltaTime = timeNow - lastTime;
 	lastTime = timeNow;
 }
