@@ -73,12 +73,12 @@ void loop() {
 	switch(state) {
 		case START:
 			motorForward();
-			forwardStartTim = millis();
 			sensor.start();
 			state = RUNNING;
 			break;
 
 		case RUNNING:
+			headingVeloFix();
 			if(sensor.isFinished()) {
 				if(sensor.getRange() < SAFE_DIST) {
 					state = START;

@@ -8,6 +8,7 @@ void motorTurnRight();
 void motorRotateRight(int velocity);
 void motorTurnBack();
 void motorForward(int velocity = 100);
+void headingVeloFix();
 void motorMoveOffset();
 void motorLeftCounterInt();
 void motorRightCounterInt();

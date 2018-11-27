@@ -66,7 +66,7 @@ void motorTurnLeft() {
 	motorStop();
 }
 
-void motorRotateRight(int velocity) {
+void motorRotateLeft(int velocity) {
 	if(velocity >= 0) {
 		digitalWrite(motLeftForward, HIGH);
 		digitalWrite(motLeftBack, LOW);
@@ -78,7 +78,7 @@ void motorRotateRight(int velocity) {
 	}
 }
 
-void motorRotateLeft(int velocity) {
+void motorRotateRight(int velocity) {
 	if(velocity >= 0) {
 		digitalWrite(motRightForward, HIGH);
 		digitalWrite(motRightBack, LOW);
@@ -126,11 +126,23 @@ void motorForward(int velocity) {
 	analogWrite(motLeftVelo, velocity);
 	analogWrite(motRightVelo, velocity);
 
-	digitalWrite(motLeftForward, HIGH);
-	digitalWrite(motLeftBack, LOW);	
-
 	digitalWrite(motRightForward, HIGH);
 	digitalWrite(motRightBack, LOW);
+
+	digitalWrite(motLeftForward, HIGH);
+	digitalWrite(motLeftBack, LOW);	
+}
+
+void headingVeloFix() {
+	static int actuation = 100;
+	float P = 10;
+	float I = 20;
+
+	int veloDelta = 1/motLeftDeltaTime - 1/motRightDeltaTime;
+	int slotDelta = motLeftCounter - motRightCounter + 5;
+
+	actuation = round(P * veloDelta + I * slotDelta);
+	motorRotateRight(actuation);
 }
 
 void motorMoveOffset() {
