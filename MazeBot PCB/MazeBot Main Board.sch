@@ -71,7 +71,7 @@
 <layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
-<layer number="93" name="Pins" color="2" fill="1" visible="no" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
@@ -20138,7 +20138,7 @@ W = angled&lt;p&gt;
 <part name="D8" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="1N4004" device="" package3d_urn="urn:adsk.eagle:package:43336/1"/>
 <part name="GND8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="P+5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="V+" device=""/>
-<part name="Q1" library="special" library_urn="urn:adsk.eagle:library:367" deviceset="XTAL/S" device="" package3d_urn="urn:adsk.eagle:package:26647/2"/>
+<part name="Q1" library="special" library_urn="urn:adsk.eagle:library:367" deviceset="XTAL/S" device="" package3d_urn="urn:adsk.eagle:package:26647/2" value="16MHz"/>
 <part name="U$1" library="adafruit" deviceset="ATMEGA32U4" device="-AU"/>
 <part name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="025-024X044" package3d_urn="urn:adsk.eagle:package:23630/1" value="100nF"/>
 <part name="C2" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="025-024X044" package3d_urn="urn:adsk.eagle:package:23630/1" value="100nF"/>
@@ -20161,7 +20161,7 @@ W = angled&lt;p&gt;
 <part name="GND16" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="R2" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="0207/10" package3d_urn="urn:adsk.eagle:package:23491/2" value="22"/>
 <part name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="0207/10" package3d_urn="urn:adsk.eagle:package:23491/2" value="22"/>
-<part name="FRAME1" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device=""/>
+<part name="FRAME1" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device="" value="Maciej Ziaja"/>
 <part name="P+8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="0207/10" package3d_urn="urn:adsk.eagle:package:23491/2" value="1k"/>
 <part name="PWR_LED" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0805" package3d_urn="urn:adsk.eagle:package:15818/2"/>
@@ -20508,8 +20508,8 @@ W = angled&lt;p&gt;
 <attribute name="NAME" x="209.55" y="83.058" size="1.778" layer="95" rot="R180"/>
 </instance>
 <instance part="C11" gate="G$1" x="182.88" y="71.12" smashed="yes">
-<attribute name="NAME" x="184.023" y="71.6026" size="1.778" layer="95"/>
-<attribute name="VALUE" x="184.023" y="66.5226" size="1.778" layer="96"/>
+<attribute name="NAME" x="176.403" y="71.6026" size="1.778" layer="95"/>
+<attribute name="VALUE" x="176.403" y="66.5226" size="1.778" layer="96"/>
 </instance>
 <instance part="P+15" gate="1" x="182.88" y="81.28" smashed="yes">
 <attribute name="VALUE" x="180.34" y="76.2" size="1.778" layer="96" rot="R90"/>
@@ -20840,6 +20840,11 @@ W = angled&lt;p&gt;
 <wire x1="177.8" y1="147.32" x2="165.1" y2="147.32" width="0.1524" layer="91"/>
 <label x="167.64" y="147.32" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="U$1" gate="G$1" pin="PC6(OC3A/!OC4A)"/>
+<wire x1="142.24" y1="78.74" x2="154.94" y2="78.74" width="0.1524" layer="91"/>
+<label x="144.78" y="78.74" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="IN1_L" class="0">
 <segment>
@@ -21159,6 +21164,11 @@ W = angled&lt;p&gt;
 <pinref part="U$1" gate="G$1" pin="PC7(ICP3/CLK0/OC4A)"/>
 <wire x1="142.24" y1="76.2" x2="154.94" y2="76.2" width="0.1524" layer="91"/>
 <label x="144.78" y="76.2" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SERVO" gate="G$1" pin="2"/>
+<wire x1="198.12" y1="73.66" x2="187.96" y2="73.66" width="0.1524" layer="91"/>
+<label x="187.96" y="73.66" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="ULTR_TRIG" class="0">
