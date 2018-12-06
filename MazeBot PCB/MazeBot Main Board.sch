@@ -17490,14 +17490,14 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <part name="FRAME1" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device="" value="Maciej Ziaja"/>
 <part name="P+8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="R4" library="eagle-ltspice" library_urn="urn:adsk.eagle:library:217" deviceset="R" device="R1206" package3d_urn="urn:adsk.eagle:package:13301/1" value="1k"/>
-<part name="PWR_LED" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0805" package3d_urn="urn:adsk.eagle:package:15818/2"/>
+<part name="PWR" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0805" package3d_urn="urn:adsk.eagle:package:15818/2"/>
 <part name="GND17" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="P+9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="R5" library="eagle-ltspice" library_urn="urn:adsk.eagle:library:217" deviceset="R" device="R1206" package3d_urn="urn:adsk.eagle:package:13301/1" value="1k"/>
-<part name="TX_LED" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0805" package3d_urn="urn:adsk.eagle:package:15818/2"/>
+<part name="TX" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0805" package3d_urn="urn:adsk.eagle:package:15818/2"/>
 <part name="P+10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="R6" library="eagle-ltspice" library_urn="urn:adsk.eagle:library:217" deviceset="R" device="R1206" package3d_urn="urn:adsk.eagle:package:13301/1" value="1k"/>
-<part name="RX_LED" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0805" package3d_urn="urn:adsk.eagle:package:15818/2"/>
+<part name="RX" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="CHIP-LED0805" package3d_urn="urn:adsk.eagle:package:15818/2"/>
 <part name="IR_RCV" library="SparkFun-Sensors" deviceset="TSOP382" device="38" value="38kHz"/>
 <part name="C10" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="UD-6,3X8,8" package3d_urn="urn:adsk.eagle:package:23471/1" value="4.7uF"/>
 <part name="P+11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
@@ -17505,10 +17505,10 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <part name="ULTR_SENSOR" library="con-lstb" library_urn="urn:adsk.eagle:library:162" deviceset="MA04-1" device="" package3d_urn="urn:adsk.eagle:package:8337/1"/>
 <part name="P+12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND19" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="SLOT_SENS_R" library="con-lstb" library_urn="urn:adsk.eagle:library:162" deviceset="MA03-1" device="" package3d_urn="urn:adsk.eagle:package:8339/1"/>
+<part name="SLOT_R" library="con-lstb" library_urn="urn:adsk.eagle:library:162" deviceset="MA03-1" device="" package3d_urn="urn:adsk.eagle:package:8339/1"/>
 <part name="P+13" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND20" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="SLOT_SENS_L" library="con-lstb" library_urn="urn:adsk.eagle:library:162" deviceset="MA03-1" device="" package3d_urn="urn:adsk.eagle:package:8339/1"/>
+<part name="SLOT_L" library="con-lstb" library_urn="urn:adsk.eagle:library:162" deviceset="MA03-1" device="" package3d_urn="urn:adsk.eagle:package:8339/1"/>
 <part name="P+14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND21" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="SERVO" library="con-lstb" library_urn="urn:adsk.eagle:library:162" deviceset="MA03-1" device="" package3d_urn="urn:adsk.eagle:package:8339/1"/>
@@ -17757,7 +17757,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <attribute name="NAME" x="87.4014" y="153.67" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="92.202" y="153.67" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="PWR_LED" gate="G$1" x="88.9" y="144.78" smashed="yes">
+<instance part="PWR" gate="G$1" x="88.9" y="144.78" smashed="yes">
 <attribute name="NAME" x="92.456" y="137.668" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="94.615" y="140.208" size="1.778" layer="96" rot="R90"/>
 </instance>
@@ -17771,7 +17771,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <attribute name="NAME" x="97.5614" y="153.67" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="102.362" y="153.67" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="TX_LED" gate="G$1" x="99.06" y="144.78" smashed="yes">
+<instance part="TX" gate="G$1" x="99.06" y="144.78" smashed="yes">
 <attribute name="NAME" x="102.616" y="140.208" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="104.775" y="140.208" size="1.778" layer="96" rot="R90"/>
 </instance>
@@ -17782,7 +17782,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <attribute name="NAME" x="107.7214" y="153.67" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="112.522" y="153.67" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="RX_LED" gate="G$1" x="109.22" y="144.78" smashed="yes">
+<instance part="RX" gate="G$1" x="109.22" y="144.78" smashed="yes">
 <attribute name="NAME" x="112.776" y="140.208" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="114.935" y="140.208" size="1.778" layer="96" rot="R90"/>
 </instance>
@@ -17810,7 +17810,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <instance part="GND19" gate="1" x="182.88" y="33.02" smashed="yes">
 <attribute name="VALUE" x="180.34" y="30.48" size="1.778" layer="96"/>
 </instance>
-<instance part="SLOT_SENS_R" gate="G$1" x="241.3" y="40.64" smashed="yes" rot="R180">
+<instance part="SLOT_R" gate="G$1" x="241.3" y="40.64" smashed="yes" rot="R180">
 <attribute name="VALUE" x="242.57" y="48.26" size="1.778" layer="96" rot="R180"/>
 <attribute name="NAME" x="245.11" y="50.038" size="1.778" layer="95" rot="R180"/>
 </instance>
@@ -17820,7 +17820,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <instance part="GND20" gate="1" x="223.52" y="33.02" smashed="yes">
 <attribute name="VALUE" x="220.98" y="30.48" size="1.778" layer="96"/>
 </instance>
-<instance part="SLOT_SENS_L" gate="G$1" x="241.3" y="66.04" smashed="yes" rot="R180">
+<instance part="SLOT_L" gate="G$1" x="241.3" y="66.04" smashed="yes" rot="R180">
 <attribute name="VALUE" x="242.57" y="73.66" size="1.778" layer="96" rot="R180"/>
 <attribute name="NAME" x="245.11" y="75.438" size="1.778" layer="95" rot="R180"/>
 </instance>
@@ -17973,13 +17973,13 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <pinref part="P+12" gate="1" pin="+5V"/>
 </segment>
 <segment>
-<pinref part="SLOT_SENS_R" gate="G$1" pin="1"/>
+<pinref part="SLOT_R" gate="G$1" pin="1"/>
 <wire x1="233.68" y1="43.18" x2="223.52" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="223.52" y1="43.18" x2="223.52" y2="45.72" width="0.1524" layer="91"/>
 <pinref part="P+13" gate="1" pin="+5V"/>
 </segment>
 <segment>
-<pinref part="SLOT_SENS_L" gate="G$1" pin="1"/>
+<pinref part="SLOT_L" gate="G$1" pin="1"/>
 <wire x1="233.68" y1="68.58" x2="223.52" y2="68.58" width="0.1524" layer="91"/>
 <wire x1="223.52" y1="68.58" x2="223.52" y2="71.12" width="0.1524" layer="91"/>
 <pinref part="P+14" gate="1" pin="+5V"/>
@@ -18126,7 +18126,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <junction x="71.12" y="53.34"/>
 </segment>
 <segment>
-<pinref part="PWR_LED" gate="G$1" pin="C"/>
+<pinref part="PWR" gate="G$1" pin="C"/>
 <wire x1="88.9" y1="139.7" x2="88.9" y2="134.62" width="0.1524" layer="91"/>
 <pinref part="GND17" gate="1" pin="GND"/>
 </segment>
@@ -18148,13 +18148,13 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <pinref part="GND19" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="SLOT_SENS_R" gate="G$1" pin="3"/>
+<pinref part="SLOT_R" gate="G$1" pin="3"/>
 <wire x1="233.68" y1="38.1" x2="223.52" y2="38.1" width="0.1524" layer="91"/>
 <wire x1="223.52" y1="38.1" x2="223.52" y2="35.56" width="0.1524" layer="91"/>
 <pinref part="GND20" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="SLOT_SENS_L" gate="G$1" pin="3"/>
+<pinref part="SLOT_L" gate="G$1" pin="3"/>
 <wire x1="233.68" y1="63.5" x2="223.52" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="223.52" y1="63.5" x2="223.52" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="GND21" gate="1" pin="GND"/>
@@ -18267,7 +18267,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <label x="144.78" y="53.34" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="RX_LED" gate="G$1" pin="C"/>
+<pinref part="RX" gate="G$1" pin="C"/>
 <wire x1="109.22" y1="139.7" x2="109.22" y2="132.08" width="0.1524" layer="91"/>
 <label x="106.68" y="132.08" size="1.778" layer="95" rot="R90"/>
 </segment>
@@ -18424,7 +18424,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <label x="144.78" y="33.02" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="SLOT_SENS_R" gate="G$1" pin="2"/>
+<pinref part="SLOT_R" gate="G$1" pin="2"/>
 <wire x1="233.68" y1="40.64" x2="223.52" y2="40.64" width="0.1524" layer="91"/>
 <label x="215.9" y="40.64" size="1.778" layer="95"/>
 </segment>
@@ -18436,7 +18436,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <label x="144.78" y="38.1" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="SLOT_SENS_L" gate="G$1" pin="2"/>
+<pinref part="SLOT_L" gate="G$1" pin="2"/>
 <wire x1="233.68" y1="66.04" x2="223.52" y2="66.04" width="0.1524" layer="91"/>
 <label x="215.9" y="66.04" size="1.778" layer="95"/>
 </segment>
@@ -18514,21 +18514,21 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <net name="N$3" class="0">
 <segment>
 <pinref part="R4" gate="G$1" pin="1"/>
-<pinref part="PWR_LED" gate="G$1" pin="A"/>
+<pinref part="PWR" gate="G$1" pin="A"/>
 <wire x1="88.9" y1="149.86" x2="88.9" y2="147.32" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$6" class="0">
 <segment>
 <pinref part="R5" gate="G$1" pin="1"/>
-<pinref part="TX_LED" gate="G$1" pin="A"/>
+<pinref part="TX" gate="G$1" pin="A"/>
 <wire x1="99.06" y1="149.86" x2="99.06" y2="147.32" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$7" class="0">
 <segment>
 <pinref part="R6" gate="G$1" pin="1"/>
-<pinref part="RX_LED" gate="G$1" pin="A"/>
+<pinref part="RX" gate="G$1" pin="A"/>
 <wire x1="109.22" y1="149.86" x2="109.22" y2="147.32" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -18539,7 +18539,7 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <label x="144.78" y="43.18" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="TX_LED" gate="G$1" pin="C"/>
+<pinref part="TX" gate="G$1" pin="C"/>
 <wire x1="99.06" y1="139.7" x2="99.06" y2="132.08" width="0.1524" layer="91"/>
 <label x="96.52" y="129.54" size="1.778" layer="95" rot="R90"/>
 </segment>
