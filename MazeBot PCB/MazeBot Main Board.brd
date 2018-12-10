@@ -2655,9 +2655,14 @@ design rules under a new name.</description>
 <vertex x="76.2" y="0"/>
 <vertex x="76.2" y="45.72"/>
 </polygon>
-<wire x1="42.418" y1="30.734" x2="40.03" y2="29.93" width="0" layer="19" extent="1-1"/>
-<wire x1="42.63" y1="20.13" x2="44.958" y2="19.939" width="0" layer="19" extent="1-1"/>
-<wire x1="35.23" y1="18.33" x2="31.877" y2="16.891" width="0" layer="19" extent="1-1"/>
+<wire x1="42.418" y1="30.734" x2="41.91" y2="31.242" width="0.508" layer="1"/>
+<wire x1="41.91" y1="31.242" x2="40.513" y2="31.242" width="0.508" layer="1"/>
+<wire x1="40.513" y1="31.242" x2="40.03" y2="30.759" width="0.508" layer="1"/>
+<wire x1="40.03" y1="30.759" x2="40.03" y2="29.93" width="0.508" layer="1"/>
+<wire x1="33.02" y1="15.24" x2="35.23" y2="17.45" width="0.508" layer="1"/>
+<wire x1="35.23" y1="17.45" x2="35.23" y2="18.33" width="0.508" layer="1"/>
+<wire x1="42.63" y1="20.13" x2="44.767" y2="20.13" width="0.508" layer="1"/>
+<wire x1="44.767" y1="20.13" x2="44.958" y2="19.939" width="0.508" layer="1"/>
 </signal>
 <signal name="EN_L">
 <contactref element="IC2" pad="6"/>
