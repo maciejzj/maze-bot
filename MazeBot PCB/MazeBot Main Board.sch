@@ -17491,6 +17491,8 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <part name="PWR_IN" library="adafruit" deviceset="1X2" device="-3.5MM"/>
 <part name="MOT_L" library="adafruit" deviceset="1X2" device="-3.5MM"/>
 <part name="MOT_R" library="adafruit" deviceset="1X2" device="-3.5MM"/>
+<part name="R7" library="eagle-ltspice" library_urn="urn:adsk.eagle:library:217" deviceset="R" device="R1206" package3d_urn="urn:adsk.eagle:package:13301/1" value="10k"/>
+<part name="GND24" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -17830,6 +17832,13 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <instance part="MOT_R" gate="G$1" x="238.76" y="81.28" smashed="yes">
 <attribute name="NAME" x="236.22" y="86.36" size="1.778" layer="95"/>
 </instance>
+<instance part="R7" gate="G$1" x="162.56" y="78.74" smashed="yes" rot="R90">
+<attribute name="NAME" x="161.0614" y="74.93" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="165.862" y="74.93" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="GND24" gate="1" x="162.56" y="68.58" smashed="yes">
+<attribute name="VALUE" x="160.02" y="66.04" size="1.778" layer="96"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -18145,6 +18154,11 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <wire x1="68.58" y1="162.56" x2="68.58" y2="160.02" width="0.1524" layer="91"/>
 <pinref part="GND23" gate="1" pin="GND"/>
 <pinref part="PWR_IN" gate="G$1" pin="1"/>
+</segment>
+<segment>
+<pinref part="R7" gate="G$1" pin="1"/>
+<pinref part="GND24" gate="1" pin="GND"/>
+<wire x1="162.56" y1="73.66" x2="162.56" y2="71.12" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="EN_L" class="0">
@@ -18585,6 +18599,14 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <wire x1="233.68" y1="81.28" x2="220.98" y2="81.28" width="0.1524" layer="91"/>
 <label x="220.98" y="81.28" size="1.778" layer="95"/>
 <pinref part="MOT_R" gate="G$1" pin="2"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="PE2(!HWB)"/>
+<wire x1="142.24" y1="86.36" x2="162.56" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="162.56" y1="86.36" x2="162.56" y2="83.82" width="0.1524" layer="91"/>
+<pinref part="R7" gate="G$1" pin="2"/>
 </segment>
 </net>
 </nets>
