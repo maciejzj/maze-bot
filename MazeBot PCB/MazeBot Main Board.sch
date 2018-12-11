@@ -17512,8 +17512,8 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <part name="P+5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="V+" device=""/>
 <part name="Q1" library="special" library_urn="urn:adsk.eagle:library:367" deviceset="XTAL/S" device="" package3d_urn="urn:adsk.eagle:package:26647/2" value="16MHz"/>
 <part name="U$1" library="adafruit" deviceset="ATMEGA32U4" device="-AU"/>
-<part name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="025-024X044" package3d_urn="urn:adsk.eagle:package:23630/1" value="100nF"/>
-<part name="C2" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="025-024X044" package3d_urn="urn:adsk.eagle:package:23630/1" value="100nF"/>
+<part name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="025-024X044" package3d_urn="urn:adsk.eagle:package:23630/1" value="22pF"/>
+<part name="C2" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="025-024X044" package3d_urn="urn:adsk.eagle:package:23630/1" value="22pF"/>
 <part name="GND9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="P+6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -17722,8 +17722,8 @@ Source: http://download.siliconexpert.com/pdfs/2005/02/24/Semi_Ap/2/VSH/Resistor
 <attribute name="VALUE" x="111.76" y="106.68" size="1.778" layer="96"/>
 </instance>
 <instance part="C1" gate="G$1" x="76.2" y="58.42" smashed="yes" rot="R90">
-<attribute name="NAME" x="75.819" y="59.944" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="80.899" y="59.944" size="1.778" layer="96" rot="R90"/>
+<attribute name="NAME" x="80.899" y="59.944" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="75.819" y="59.944" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="C2" gate="G$1" x="78.74" y="48.26" smashed="yes" rot="R270">
 <attribute name="NAME" x="79.121" y="46.736" size="1.778" layer="95" rot="R270"/>
