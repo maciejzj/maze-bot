@@ -3,7 +3,7 @@
 <eagle version="9.2.2">
 <drawing>
 <settings>
-<setting alwaysvectorfont="yes"/>
+<setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
@@ -1974,6 +1974,43 @@ Source: http://www.osram.convergy.de/ ... lb_r99a.pdf</description>
 </package3d>
 </packages3d>
 </library>
+<library name="jumper" urn="urn:adsk.eagle:library:252">
+<description>&lt;b&gt;Jumpers&lt;/b&gt;&lt;p&gt;
+&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<packages>
+<package name="JP1" urn="urn:adsk.eagle:footprint:15398/1" library_version="1">
+<description>&lt;b&gt;JUMPER&lt;/b&gt;</description>
+<wire x1="-1.016" y1="0" x2="-1.27" y2="0.254" width="0.1524" layer="21"/>
+<wire x1="-1.016" y1="0" x2="-1.27" y2="-0.254" width="0.1524" layer="21"/>
+<wire x1="1.016" y1="0" x2="1.27" y2="0.254" width="0.1524" layer="21"/>
+<wire x1="1.016" y1="0" x2="1.27" y2="-0.254" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="-0.254" x2="1.27" y2="-2.286" width="0.1524" layer="21"/>
+<wire x1="1.016" y1="-2.54" x2="1.27" y2="-2.286" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="2.286" x2="1.016" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="2.286" x2="1.27" y2="0.254" width="0.1524" layer="21"/>
+<wire x1="1.016" y1="2.54" x2="-1.016" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-1.27" y1="2.286" x2="-1.016" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-1.27" y1="2.286" x2="-1.27" y2="0.254" width="0.1524" layer="21"/>
+<wire x1="-1.27" y1="-0.254" x2="-1.27" y2="-2.286" width="0.1524" layer="21"/>
+<wire x1="-1.016" y1="-2.54" x2="-1.27" y2="-2.286" width="0.1524" layer="21"/>
+<wire x1="-1.016" y1="-2.54" x2="1.016" y2="-2.54" width="0.1524" layer="21"/>
+<pad name="1" x="0" y="-1.27" drill="0.9144" shape="long"/>
+<pad name="2" x="0" y="1.27" drill="0.9144" shape="long"/>
+<text x="-1.651" y="-2.54" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
+<text x="2.921" y="-2.54" size="1.27" layer="27" ratio="10" rot="R90">&gt;VALUE</text>
+<rectangle x1="-0.3048" y1="0.9652" x2="0.3048" y2="1.5748" layer="51"/>
+<rectangle x1="-0.3048" y1="-1.5748" x2="0.3048" y2="-0.9652" layer="51"/>
+</package>
+</packages>
+<packages3d>
+<package3d name="JP1" urn="urn:adsk.eagle:package:15455/1" type="box" library_version="1">
+<description>JUMPER</description>
+<packageinstances>
+<packageinstance name="JP1"/>
+</packageinstances>
+</package3d>
+</packages3d>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -2384,11 +2421,15 @@ design rules under a new name.</description>
 <attribute name="NAME" x="46.22" y="11.7" size="1.27" layer="25" display="off"/>
 <attribute name="VALUE" x="46.22" y="0" size="1.27" layer="27"/>
 </element>
-<element name="R7" library="eagle-ltspice" library_urn="urn:adsk.eagle:library:217" package="R1206" package3d_urn="urn:adsk.eagle:package:13301/1" value="10k" x="45.847" y="29.845" smashed="yes" rot="R180">
-<attribute name="NAME" x="47.117" y="28.575" size="1.27" layer="25" rot="R180"/>
-<attribute name="SPICEMODEL" value="NONE" x="45.847" y="29.845" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="SPICEPREFIX" value="R" x="45.847" y="29.845" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="VALUE" x="47.117" y="32.385" size="1.27" layer="27" rot="R180"/>
+<element name="R7" library="eagle-ltspice" library_urn="urn:adsk.eagle:library:217" package="R1206" package3d_urn="urn:adsk.eagle:package:13301/1" value="10k" x="45.72" y="33.02" smashed="yes" rot="MR180">
+<attribute name="NAME" x="44.45" y="31.75" size="1.27" layer="26" rot="MR180"/>
+<attribute name="SPICEMODEL" value="NONE" x="45.72" y="33.02" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="SPICEPREFIX" value="R" x="45.72" y="33.02" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="VALUE" x="44.45" y="35.56" size="1.27" layer="28" rot="MR180"/>
+</element>
+<element name="HWB" library="jumper" library_urn="urn:adsk.eagle:library:252" package="JP1" package3d_urn="urn:adsk.eagle:package:15455/1" value="" x="45.847" y="29.972" smashed="yes" rot="R270">
+<attribute name="NAME" x="43.307" y="31.623" size="1.27" layer="25" ratio="10"/>
+<attribute name="VALUE" x="43.307" y="27.051" size="1.27" layer="27" ratio="10"/>
 </element>
 </elements>
 <signals>
@@ -2661,6 +2702,10 @@ design rules under a new name.</description>
 <via x="49.149" y="29.464" extent="1-16" drill="0.45"/>
 <via x="49.149" y="30.48" extent="1-16" drill="0.45"/>
 <via x="42.418" y="29.591" extent="1-16" drill="0.45"/>
+<wire x1="42.418" y1="30.734" x2="42.418" y2="32.385" width="0.6096" layer="16"/>
+<wire x1="42.418" y1="32.385" x2="42.926" y2="32.893" width="0.6096" layer="16"/>
+<wire x1="42.926" y1="32.893" x2="44.171" y2="32.893" width="0.6096" layer="16"/>
+<wire x1="44.171" y1="32.893" x2="44.298" y2="33.02" width="0.6096" layer="16"/>
 </signal>
 <signal name="EN_L">
 <contactref element="IC2" pad="6"/>
@@ -3150,10 +3195,16 @@ design rules under a new name.</description>
 </signal>
 <signal name="N$8">
 <contactref element="U$1" pad="33"/>
+<contactref element="HWB" pad="1"/>
+<wire x1="44.577" y1="29.972" x2="44.577" y2="29.337" width="0.6096" layer="1"/>
+<wire x1="44.577" y1="29.337" x2="43.37" y2="28.13" width="0.6096" layer="1"/>
+<wire x1="43.37" y1="28.13" x2="42.63" y2="28.13" width="0.6096" layer="1"/>
+</signal>
+<signal name="N$9">
+<contactref element="HWB" pad="2"/>
 <contactref element="R7" pad="2"/>
-<wire x1="44.425" y1="29.845" x2="44.425" y2="28.55" width="0.6096" layer="1"/>
-<wire x1="44.005" y1="28.13" x2="42.63" y2="28.13" width="0.6096" layer="1"/>
-<wire x1="44.425" y1="28.55" x2="44.005" y2="28.13" width="0.6096" layer="1"/>
+<wire x1="47.117" y1="29.972" x2="47.117" y2="32.995" width="0.6096" layer="16"/>
+<wire x1="47.117" y1="32.995" x2="47.142" y2="33.02" width="0.6096" layer="16"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
