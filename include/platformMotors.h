@@ -30,7 +30,7 @@ void motorRightStop();
  *	@param direction Relative direction the platform will turn to.
  *  @return Void.
  */
-void platoformTurn(int direction);
+void platformTurn(int direction);
 
 /** @brief Turns the platofrm by given angle.
  *
