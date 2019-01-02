@@ -2,6 +2,7 @@
 #include "platformMotors.h"
 #include "defines.h"
 
+/* Global variables from main file */
 extern int motLeftForward;
 extern int motLeftBack;
 extern int motLeftVelo;
@@ -13,22 +14,25 @@ extern int motRightVelo;
 extern int motLeftCounter;
 extern int motRightCounter;
 
-unsigned long motLeftDeltaTime;
-unsigned long motRightDeltaTime;
+extern unsigned long motLeftDeltaTime;
+extern unsigned long motRightDeltaTime;
 
-void motorStop() {
+unsigned long lastTimeLeft;		///< Time from last interrupt on left endcoder
+unsigned long lastTimeRight;	///< Time from last interrupt on right endcoder
+
+inline void motorStop() {
 	motorLeftStop();
 	motorRightStop();
 	delay(MOTOR_STOP_DELAY);
 }
 
-void motorLeftStop() {
+inline void motorLeftStop() {
 	digitalWrite(motLeftForward, LOW);
 	digitalWrite(motLeftBack, LOW);
 	analogWrite(motLeftVelo, 0);
 }
 
-void motorRightStop() {
+inline void motorRightStop() {
 	digitalWrite(motRightForward, LOW);
 	digitalWrite(motRightBack, LOW);
 	analogWrite(motRightVelo, 0);
