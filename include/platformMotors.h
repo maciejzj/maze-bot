@@ -76,7 +76,7 @@ void motorRotateRight(int velocity);
  * 
  *  @return Void.
  */
-inline void resetEncoders();
+void resetEncoders();
 
 /** @brief Actuates motors to run foward while keeping the straight direction.
  *

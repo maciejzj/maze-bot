@@ -20,19 +20,19 @@ extern unsigned long motRightDeltaTime;
 unsigned long lastTimeLeft;		///< Time from last interrupt on left endcoder
 unsigned long lastTimeRight;	///< Time from last interrupt on right endcoder
 
-inline void motorStop() {
+void motorStop() {
 	motorLeftStop();
 	motorRightStop();
 	delay(MOTOR_STOP_DELAY);
 }
 
-inline void motorLeftStop() {
+void motorLeftStop() {
 	digitalWrite(motLeftForward, LOW);
 	digitalWrite(motLeftBack, LOW);
 	analogWrite(motLeftVelo, 0);
 }
 
-inline void motorRightStop() {
+void motorRightStop() {
 	digitalWrite(motRightForward, LOW);
 	digitalWrite(motRightBack, LOW);
 	analogWrite(motRightVelo, 0);
@@ -120,7 +120,10 @@ void platformTurnAngle(int degree) {
 			motorRotateRight(-direction * actuationRight);
 
 		/* If both motors are stopped exit function */
-		if(leftIsStopped && rightIsStopped) return;
+		if(leftIsStopped && rightIsStopped) {
+			delay(MOTOR_STOP_DELAY);
+			return;
+		}
 	}
 }
 
@@ -148,7 +151,7 @@ void motorRotateRight(int velocity) {
 	}
 }
 
-inline void resetEncoders() {
+void resetEncoders() {
 	motLeftCounter = 0;
     motRightCounter = 0;
     motLeftDeltaTime = 20;
@@ -181,9 +184,9 @@ void headingVeloFix() {
 
 void motorLeftCounterInt() {
 	/* When ISR is entered first time in the movement we shouldn't calculate time delta */
-	if(motRightCounter == 0) {
-		lastTimeRight = millis();
-		motRightCounter++; 
+	if(motLeftCounter == 0) {
+		lastTimeLeft = millis();
+		motLeftCounter++; 
 		return;
 	}
 
@@ -191,15 +194,15 @@ void motorLeftCounterInt() {
 	 * 	when it is on the edge of a slot. 
 	 */
 	unsigned long timeNow = millis();
-	if(timeNow - lastTimeRight < 2) return;
+	if(timeNow - lastTimeLeft < 2) return;
 
 	/**	Increment slot counter and calculate time delta to provide
 	 * 	information for velocity calculation
 	 */
-	motRightCounter++;
-	motRightDeltaTime = timeNow - lastTimeRight;
+	motLeftCounter++;
+	motLeftDeltaTime = timeNow - lastTimeLeft;
 
-	lastTimeRight = timeNow;
+	lastTimeLeft = timeNow;
 }
 
 void motorRightCounterInt() {
