@@ -4,13 +4,14 @@
 #include "defines.h"
 #include "HC_SR04.h"
 
+/* Global variables from main file */
 extern Servo servoSensor;
 extern HC_SR04 sensor;
 
 void turnServoSensor(int direction) {
     switch(direction) {
         case RIGHT:
-			servoSensor.write(0);
+			servoSensor.write(180);
 			break;
 		
 		case FRONT:
@@ -18,14 +19,14 @@ void turnServoSensor(int direction) {
 			break;
 
 		case LEFT:
-			servoSensor.write(180);
+			servoSensor.write(0);
 			break;
     }
-	delay(1000);
+	delay(MOTOR_STOP_DELAY);
 }
 
 int findUnobstructedDirection() {
-			int direction = random(LEFT, RIGHT - 1);
+			int direction = random(RIGHT, LEFT + 1);
 			turnServoSensor(direction);
 
 			if(sensor.probeRange() < SAFE_DIST) {

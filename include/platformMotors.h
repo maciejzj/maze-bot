@@ -32,7 +32,7 @@ void motorRightStop();
  */
 void platformTurn(int direction);
 
-/** @brief Turns the platofrm by given angle.
+/** @brief Turns the platform by given angle.
  *
  *  Rotates the platform till it reaches set point of turn angle.
  *  Counts slots and compares them with target calculated from

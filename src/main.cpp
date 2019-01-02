@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <Servo.h>
-#include <TimerOne.h>
 #include <IRremote.h>
 #include "defines.h"
 #include "servoSensor.h"
@@ -34,11 +33,10 @@ int IRrecvPin = 7;					///< IR receiver interrupt and data pin.
 IRrecv irrecv(IRrecvPin);			///< IR library global instance.
 decode_results results;				///< IR received codes holding structure.
 
-unsigned long forwardStartTim = 0;  ///< IR library global instance.
+unsigned long forwardStartTim = 0;
 unsigned long forwardStopTim = 0;
 
 volatile int state = START;			///< State machine state variable.
-int backtrackCounter = 0;
    
 /** @brief Changes the state of program when IR signal is received.
  *

@@ -64,8 +64,6 @@ void platformTurnAngle(int degree) {
 	float setPointVeloLeft;			///< Velocity set point for subordinate regulator of left motor.
 	bool leftIsStopped = false;		///< Indicator of left motor being stopped after it reaches posiotion set point.
 	bool rightIsStopped = false;	///< Indicator of right motor being stopped after it reaches posiotion set point.
-	float veloErrL = 0;             ///< Velocity (subordinate) regulator error for left motor
-	float veloErr = 0; 				///< Velocity (subordinate) regulator error for right motor
 
 	/* Clear initial values for encoder readouts */
 	motLeftDeltaTime = 1;
@@ -85,9 +83,10 @@ void platformTurnAngle(int degree) {
 	lastTimeRight = millis();
 
 	while(1) {
-		int slotDeltaRight = target - motRightCounter;  ///< Error of precedent position regulator for right motor.
-		int slotDeltaLeft = target - motLeftCounter;    ///< Error of precedent position regulator for left motor.
+		int slotDeltaRight = target - motRightCounter;  ///< Error of position (precedent) regulator for right motor.
+		int slotDeltaLeft = target - motLeftCounter;    ///< Error of position (precedent) regulator for left motor.
 
+		/* P regualtor formula, calcualtes velocity setpoint */
 		setPointVeloRight = Pp * slotDeltaRight;
 		setPointVeloLeft = Pp * slotDeltaLeft;
 	
@@ -96,28 +95,27 @@ void platformTurnAngle(int degree) {
 		if(setPointVeloLeft > 16) setPointVeloLeft = 16;
 
 		/* Calulate velocity errors */
-		float veloDelta = setPointVeloRight - (1.0/((float) motRightDeltaTime));  
-		float veloDeltaL = setPointVeloLeft - (1.0/((float) motLeftDeltaTime));
+		float veloDeltaRight = setPointVeloRight - (1.0/((float) motRightDeltaTime));  
+		float veloDeltaLeft = setPointVeloLeft - (1.0/((float) motLeftDeltaTime));
 		/* Get current time to compare it with last time of ISR and estimate integral */
 		unsigned long compareTime = millis();
 	
 		/* PI regulator formula, calculates motors actuations */
-		actuationRight = round(Pv * veloDelta + Iv * veloDelta * (compareTime - lastTimeRight));
-		actuationLeft = round(Pv * veloDeltaL + Iv * veloDeltaL * (compareTime - lastTimeLeft));
+		actuationRight = round(Pv * veloDeltaRight + Iv * veloDeltaRight * (compareTime - lastTimeRight));
+		actuationLeft = round(Pv * veloDeltaLeft + Iv * veloDeltaLeft * (compareTime - lastTimeLeft));
 
 		/* Prevent oversaturation of PWM */
 		if (actuationRight > 255) actuationRight = 255;
 		if (actuationLeft > 255) actuationLeft = 255;
 
 		/* If target is reached stop the motor, otherwise actuate it */
-		if (motLeftCounter>=target) {
+		if (motLeftCounter >= target) {
 			motorLeftStop(); leftIsStopped = true;
 		} else
 			motorRotateLeft(direction * actuationLeft);
 
-		if (motRightCounter>=target) {
-			motorRightStop();
-			rightIsStopped = true;
+		if (motRightCounter >= target) {
+			motorRightStop(); rightIsStopped = true;
 		} else
 			motorRotateRight(-direction * actuationRight);
 
@@ -165,9 +163,9 @@ void headingVeloFix() {
 	float Ps = 15;		///< Proportional coefficient of slave velocity regulator.
 	float Is = 5;		///< Integral coefficient of slave velocity regulator.
 
-	/* Master regulation */
+	/* Master regulator */
 	float veloDeltaLeft = ((float)200.0/20.0) - (200.0/((float) motLeftDeltaTime));
-	actuationLeft = 112 + round(Pm * veloDeltaL);
+	actuationLeft = 112 + round(Pm * veloDeltaLeft);
 	if(actuationLeft > 255) actuationLeft = 255;
 
 	/* Slave regulator */
