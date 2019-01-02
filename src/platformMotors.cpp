@@ -239,21 +239,47 @@ void motorMoveOffset() {
 
 
 void motorLeftCounterInt() {
-	static unsigned long lastTime;
-	unsigned long timeNow = millis();
-	if(timeNow - lastTime < 1) return;
+	/* When ISR is entered first time in the movement we shouldn't calculate time delta */
+	if(motRightCounter == 0) {
+		lastTimeRight = millis();
+		motRightCounter++; 
+		return;
+	}
 
-	motLeftCounter++;
-	motLeftDeltaTime = timeNow - lastTime;
-	lastTime = timeNow;
+	/** Straightforward low pass filter, debounces the slot sensor 
+	 * 	when it is on the edge of a slot. 
+	 */
+	unsigned long timeNow = millis();
+	if(timeNow - lastTimeRight < 2) return;
+
+	/**	Increment slot counter and calculate time delta to provide
+	 * 	information for velocity calculation
+	 */
+	motRightCounter++;
+	motRightDeltaTime = timeNow - lastTimeRight;
+
+	lastTimeRight = timeNow;
 }
 
 void motorRightCounterInt() {
-	static unsigned long lastTime;
-	unsigned long timeNow = millis();
-	if(timeNow - lastTime < 1) return;
+	/* When ISR is entered first time in the movement we shouldn't calculate time delta */
+	if(motRightCounter == 0) {
+		lastTimeRight = millis();
+		motRightCounter++; 
+		return;
+	}
 
+	/** Straightforward low pass filter, debounces the slot sensor 
+	 * 	when it is on the edge of a slot. 
+	 */
+	unsigned long timeNow = millis();
+	if(timeNow - lastTimeRight < 2) return;
+
+	/**	Increment slot counter and calculate time delta to provide
+	 * 	information for velocity calculation
+	 */
 	motRightCounter++;
-	motRightDeltaTime = timeNow - lastTime;
-	lastTime = timeNow;
+	motRightDeltaTime = timeNow - lastTimeRight;
+
+	lastTimeRight = timeNow;
 }

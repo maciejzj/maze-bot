@@ -39,7 +39,7 @@ void platoformTurn(int direction);
  *  given angle. Uses cascade regulation for precision and proper
  *  driving of the motors.
  *
- *  @param degree Tergeted degree of rotation, if positive
+ *  @param degree Targeted degree of rotation, if positive
  *         turns right, negative turns left. Not recommended
  *         and pointless to use values greater than 180 degrees,
  *         waht results in longer rotation and precision loss.
@@ -49,12 +49,50 @@ void platoformTurn(int direction);
 void platformTurnAngle(int degree);
 
 void motorTurnLeft();
+
+/** @brief Rotates the left motor with given valocity (actuation).
+ *
+ *  Steers the motor's pins and PWM actuate the left motor.
+ *
+ *  @param velocity Actuation that will drive the PWM steering the
+ *         motor's velocity (precisely force momentum). Ranges from
+ *         0 to 255.
+ * 
+ *  @return Void.
+ */
 void motorRotateLeft(int velocity);
 void motorTurnRight();
+
+/** @brief Rotates the right motor with given valocity (actuation).
+ *
+ *  Steers the motor's pins and PWM actuate the right motor.
+ *
+ *  @param velocity Actuation that will drive the PWM steering the
+ *         motor's velocity (precisely force momentum). Ranges from
+ *         0 to 255.
+ * 
+ *  @return Void.
+ */
 void motorRotateRight(int velocity);
 void motorTurnBack();
 void motorForward(int velocity = 100);
 void headingVeloFix();
 void motorMoveOffset();
+
+/** @brief ISR for left slot sensor interrupt.
+ *
+ *  Increments the counter and calculates delta time for velocity estimation.
+ *  Provides simple debouncing.
+ *
+ *  @return Void.
+ */
 void motorLeftCounterInt();
+
+/** @brief ISR for right slot sensor interrupt.
+ *
+ *  Increments the counter and calculates delta time for velocity estimation.
+ *  Provides simple debouncing.
+ *
+ *  @return Void.
+ */
 void motorRightCounterInt();
