@@ -40,13 +40,20 @@ unsigned long forwardStopTim = 0;
 volatile int state = START;			///< State machine state variable.
 int backtrackCounter = 0;
    
+/** @brief Changes the state of program when IR signal is received.
+ *
+ *  Handles IR receiver interrupt, decodes message and sets new state.
+ *
+ *  @return Void.
+ */
 void changeRunningState();
 void corridorEscaper();
 
 void setup() {
-	Serial.begin(9600); // for debug
+	Serial.begin(9600); 				// For debug purposes.
 	Serial.print("Initialised serial");
 
+	/* Initialise pin modes for motors */
 	pinMode(motLeftForward, OUTPUT);
 	pinMode(motLeftBack, OUTPUT);
 	pinMode(motLeftVelo, OUTPUT);
@@ -58,17 +65,19 @@ void setup() {
 	attachInterrupt(digitalPinToInterrupt(motLeftSlotSensor), motorLeftCounterInt, CHANGE);
 	attachInterrupt(digitalPinToInterrupt(motRightSlotSensor), motorRightCounterInt, CHANGE);
 
+	/* Initialise servo */
 	servoSensor.attach(servoPin);
 	turnServoSensor(FRONT);
 
+	/* Initialise ultrasonic sensor */
 	sensor.begin();
-	sensor.start();
 
+	/* Enable IR receiver and set it's interrupt */
 	irrecv.enableIRIn();
 	attachInterrupt(digitalPinToInterrupt(IRrecvPin), changeRunningState, RISING);
 
+	/* Get random seed from analog input 0 */
 	randomSeed(analogRead(0));
-
 }
 
 void loop() {
