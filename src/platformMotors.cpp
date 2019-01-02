@@ -54,6 +54,78 @@ void motorTurn(int direction) {
 	}
 }
 
+void platformTurnAngle(int degree) {
+	int actuationLeft;				///< Actuation of the left motor, steers the motor's PWM.
+	int actuationRight;				///< Actuation of the right motor, steers the motor's PWM.
+	float Pv = 1.2;					///< Proportional coefficient of (subordinate) velocity regulator.
+	float Iv = 1.2;					///< Integral coefficient of (subordinate) velocity regulator.
+	float Pp = 0.35;				///< Proportional coefficient of (precedent) position regulator.
+	float setPointVeloRight;		///< Velocity set point for subordinate regulator of right motor.
+	float setPointVeloLeft;			///< Velocity set point for subordinate regulator of left motor.
+	bool leftIsStopped = false;		///< Indicator of left motor being stopped after it reaches posiotion set point.
+	bool rightIsStopped = false;	///< Indicator of right motor being stopped after it reaches posiotion set point.
+	float veloErrL = 0;             ///< Velocity (subordinate) regulator error for left motor
+	float veloErr = 0; 				///< Velocity (subordinate) regulator error for right motor
+
+	/* Clear initial values for encoder readouts */
+	motLeftDeltaTime = 1;
+	motRightDeltaTime = 1;
+
+	motRightCounter = 0;
+	motLeftCounter = 0;
+
+	/* Calculate position target (set point) number of slots from given angle */
+	float target = abs(SLOT_NUM_FOR_DEG_ROTATION(degree)); 
+
+	/* Calculate direction sign, determines whether platform turns left or right */
+	int direction = degree > 0 ? 1 : -1;
+
+	/* Set the last time ISRs as the begging of the work of the regulator */
+	lastTimeLeft = millis();
+	lastTimeRight = millis();
+
+	while(1) {
+		int slotDeltaRight = target - motRightCounter;  ///< Error of precedent position regulator for right motor.
+		int slotDeltaLeft = target - motLeftCounter;    ///< Error of precedent position regulator for left motor.
+
+		setPointVeloRight = Pp * slotDeltaRight;
+		setPointVeloLeft = Pp * slotDeltaLeft;
+	
+		/* Avoid too high velocity set points to elude wheel slips during long turns */
+		if(setPointVeloRight > 16) setPointVeloRight = 16;
+		if(setPointVeloLeft > 16) setPointVeloLeft = 16;
+
+		/* Calulate velocity errors */
+		float veloDelta = setPointVeloRight - (1.0/((float) motRightDeltaTime));  
+		float veloDeltaL = setPointVeloLeft - (1.0/((float) motLeftDeltaTime));
+		/* Get current time to compare it with last time of ISR and estimate integral */
+		unsigned long compareTime = millis();
+	
+		/* PI regulator formula, calculates motors actuations */
+		actuationRight = round(Pv * veloDelta + Iv * veloDelta * (compareTime - lastTimeRight));
+		actuationLeft = round(Pv * veloDeltaL + Iv * veloDeltaL * (compareTime - lastTimeLeft));
+
+		/* Prevent oversaturation of PWM */
+		if (actuationRight > 255) actuationRight = 255;
+		if (actuationLeft > 255) actuationLeft = 255;
+
+		/* If target is reached stop the motor, otherwise actuate it */
+		if (motLeftCounter>=target) {
+			motorLeftStop(); leftIsStopped = true;
+		} else
+			motorRotateLeft(direction * actuationLeft);
+
+		if (motRightCounter>=target) {
+			motorRightStop();
+			rightIsStopped = true;
+		} else
+			motorRotateRight(-direction * actuationRight);
+
+		/* If both motors are stopped exit function */
+		if(leftIsStopped && rightIsStopped) return;
+	}
+}
+
 void motorTurnLeft() {
 	int velocity = 255;
 

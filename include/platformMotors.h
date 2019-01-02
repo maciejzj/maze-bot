@@ -22,6 +22,23 @@ void motorLeftStop();
  */
 void motorRightStop();
 void motorTurn(int direction);
+
+/** @brief Turns the platofrm by given angle.
+ *
+ *  Rotates the platform till it reaches set point of turn angle.
+ *  Counts slots and compares them with target calculated from
+ *  given angle. Uses cascade regulation for precision and proper
+ *  driving of the motors.
+ *
+ *  @param degree Tergeted degree of rotation, if positive
+ *         turns right, negative turns left. Not recommended
+ *         and pointless to use values greater than 180 degrees,
+ *         waht results in longer rotation and precision loss.
+ * 
+ *  @return Void.
+ */
+void platformTurnAngle(int degree);
+
 void motorTurnLeft();
 void motorRotateLeft(int velocity);
 void motorTurnRight();
