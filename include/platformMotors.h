@@ -76,6 +76,15 @@ void motorTurnRight();
 void motorRotateRight(int velocity);
 void motorTurnBack();
 void motorForward(int velocity = 100);
+
+/** @brief Actuates motors to run foward while keeping the straight direction.
+ *
+ *  Implements velcity regualtion for both motors. One has a fixed set point
+ *  and acts as master, while the second one, slave has floating set point to
+ *  synchronise with master. This ensures keeping the heading direction.
+ *
+ *  @return Void.
+ */
 void headingVeloFix();
 void motorMoveOffset();
 

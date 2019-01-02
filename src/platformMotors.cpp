@@ -210,15 +210,27 @@ void motorForward(int velocity) {
 }
 
 void headingVeloFix() {
-	static int actuation = 100;
-	float P = 10;
-	float I = 20;
+	int actuationLeft;	///< Actuation of the left motor, steers the motor's PWM.
+	int actuationRight;	///< Actuation of the right motor, steers the motor's PWM.
 
-	int veloDelta = 1/motLeftDeltaTime - 1/motRightDeltaTime;
-	int slotDelta = motLeftCounter - motRightCounter + 5;
+	float Pm = 10;		///< Proportional coefficient of master velocity regulator.
+	float Ps = 15;		///< Proportional coefficient of slave velocity regulator.
+	float Is = 5;		///< Integral coefficient of slave velocity regulator.
 
-	actuation = round(P * veloDelta + I * slotDelta);
-	motorRotateRight(actuation);
+	/* Master regulation */
+	float veloDeltaLeft = ((float)200.0/20.0) - (200.0/((float) motLeftDeltaTime));
+	actuationLeft = 112 + round(Pm * veloDeltaL);
+	if(actuationLeft > 255) actuationLeft = 255;
+
+	/* Slave regulator */
+	float veloDelta = ((200.0/((float) motLeftDeltaTime)) - (200.0/((float) motRightDeltaTime)));
+	int slotDelta = motLeftCounter - motRightCounter;
+	actuationRight = 88 + round(Ps * veloDelta + Is * slotDelta);
+	if(actuationRight > 255) actuationRight = 255;
+
+	/* Actuate motors */
+	motorRotateRight(actuationRight);
+	motorRotateLeft(actuationLeft);
 }
 
 void motorMoveOffset() {
