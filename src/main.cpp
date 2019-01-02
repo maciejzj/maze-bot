@@ -7,37 +7,39 @@
 #include "platformMotors.h"
 #include "HC_SR04.h"
 
-int motLeftForward = 12;
-int motLeftBack = 10;
-int motLeftVelo = 11;
+int motLeftForward = 10;			///< Left motor forward pin.
+int motLeftBack = 12;				///< Left motor back pin.
+int motLeftVelo = 11;				///< Left motor velocity PWM pin.
 
-int motRightForward = 8;
-int motRightBack = 9;
-int motRightVelo = 5;
+int motRightForward = 8;			///< Right motor forward pin.
+int motRightBack = 9;				///< Right motor back pin.
+int motRightVelo = 5;				///< Right motor velocity PWM pin.
 
-int motLeftSlotSensor = 2;
-int motRightSlotSensor = 1;
-volatile int motLeftCounter = 0;
-volatile int motRightCounter = 0;
+int motLeftSlotSensor = 2;			///< Left motor slot sensor (encoder) interrupt pin.
+int motRightSlotSensor = 1;			///< Right motor slot sensor (encoder) interrupt pin.
+volatile int motLeftCounter = 0;	///< Counter of left motor's slots detected in current movement.
+volatile int motRightCounter = 0;	///< Counter of right motor's slots detected in current movement.
+unsigned long motLeftDeltaTime;		///< Time betweeen last left enoder's ISRs, indicates velocity.
+unsigned long motRightDeltaTime;	///< Time betweeen last right enoder's ISRs, indicates velocity.
 
-int servoPin = 13;
-Servo servoSensor;
+int servoPin = 13;					///< Servo control PWM pin.
+Servo servoSensor;					///< Servo library global instance.
 
-int ultrasonicTrig = 4;
-int ultrasonicEcho = 3;
-int ultrasonicInt = 0;
-HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt);
+int ultrasonicTrig = 4;				///< Ultrasonic sensor trigger pin.
+int ultrasonicEcho = 3;				///< Ultrasonic sensor echo pin.
+int ultrasonicInt = 0;				///< Ultrasonic sensor interrupt pin.
+HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt); ///< Ultrasonic sensor library instance.
 
-int IRrecvPin = 7;
-IRrecv irrecv(IRrecvPin);
-decode_results results;
+int IRrecvPin = 7;					///< IR receiver interrupt and data pin.
+IRrecv irrecv(IRrecvPin);			///< IR library global instance.
+decode_results results;				///< IR received codes holding structure.
 
-unsigned long forwardStartTim = 0;
+unsigned long forwardStartTim = 0;  ///< IR library global instance.
 unsigned long forwardStopTim = 0;
 
-volatile int state = START;
+volatile int state = START;			///< State machine state variable.
 int backtrackCounter = 0;
-
+   
 void changeRunningState();
 void corridorEscaper();
 
