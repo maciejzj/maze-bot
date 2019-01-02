@@ -150,15 +150,11 @@ void motorRotateRight(int velocity) {
 	}
 }
 
-void motorForward(int velocity) {
-	analogWrite(motLeftVelo, velocity);
-	analogWrite(motRightVelo, velocity);
-
-	digitalWrite(motRightForward, HIGH);
-	digitalWrite(motRightBack, LOW);
-
-	digitalWrite(motLeftForward, HIGH);
-	digitalWrite(motLeftBack, LOW);	
+inline void resetEncoders() {
+	motLeftCounter = 0;
+    motRightCounter = 0;
+    motLeftDeltaTime = 20;
+    motRightDeltaTime = 20;
 }
 
 void headingVeloFix() {

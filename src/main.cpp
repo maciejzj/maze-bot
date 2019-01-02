@@ -77,12 +77,15 @@ void setup() {
 
 	/* Get random seed from analog input 0 */
 	randomSeed(analogRead(0));
+	
+	delay(INITIAL_DELAY);
 }
 
 void loop() {
 	switch(state) {
 		case START:
-			motorForward();
+			resetEncoders();
+			headingVeloFix();
 			sensor.start();
 			state = RUNNING;
 			break;

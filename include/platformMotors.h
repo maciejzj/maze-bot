@@ -72,7 +72,11 @@ void motorRotateLeft(int velocity);
  */
 void motorRotateRight(int velocity);
 
-void motorForward(int velocity = 100);
+/** @brief Resets encoders values when heading new direction after stop.
+ * 
+ *  @return Void.
+ */
+inline void resetEncoders();
 
 /** @brief Actuates motors to run foward while keeping the straight direction.
  *
