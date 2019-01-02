@@ -48,8 +48,6 @@ void platformTurn(int direction);
  */
 void platformTurnAngle(int degree);
 
-void motorTurnLeft();
-
 /** @brief Rotates the left motor with given valocity (actuation).
  *
  *  Steers the motor's pins and PWM actuate the left motor.
@@ -61,7 +59,6 @@ void motorTurnLeft();
  *  @return Void.
  */
 void motorRotateLeft(int velocity);
-void motorTurnRight();
 
 /** @brief Rotates the right motor with given valocity (actuation).
  *
@@ -74,7 +71,7 @@ void motorTurnRight();
  *  @return Void.
  */
 void motorRotateRight(int velocity);
-void motorTurnBack();
+
 void motorForward(int velocity = 100);
 
 /** @brief Actuates motors to run foward while keeping the straight direction.
@@ -86,7 +83,6 @@ void motorForward(int velocity = 100);
  *  @return Void.
  */
 void headingVeloFix();
-void motorMoveOffset();
 
 /** @brief ISR for left slot sensor interrupt.
  *

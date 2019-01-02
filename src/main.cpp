@@ -47,7 +47,6 @@ int backtrackCounter = 0;
  *  @return Void.
  */
 void changeRunningState();
-void corridorEscaper();
 
 void setup() {
 	Serial.begin(9600); 				// For debug purposes.
@@ -98,15 +97,7 @@ void loop() {
 					forwardStopTim = millis();
 
 					int direction = findUnobstructedDirection();
-					motorTurn(direction);
-
-					if (direction == BACK) backtrackCounter++;
-					else backtrackCounter = 0;
-
-					if(backtrackCounter == 2) {
-						/* 	Disabled corridorEscaper() due to it being broken by 
-							conflict of timers */
-					}
+					platformTurn(direction);
 				}
 				sensor.start();
 			}
@@ -116,34 +107,6 @@ void loop() {
 			motorStop();
 			state = IDLE;
 			break;
-	}
-}
-
-void corridorEscaper() {
-	unsigned long forwardDeltaTim = forwardStopTim - forwardStartTim;
-
-	int direction = random(LEFT, RIGHT - 1);
-	turnServoSensor(direction);
-	sensor.start();
-
-	Timer1.initialize(forwardDeltaTim * 1000); 
-	Timer1.attachInterrupt(motorTurnBack);
-	motorForward();
-
-	while (true) {
-		if(sensor.isFinished()) {
-			if(sensor.getRange() > SAFE_DIST) {
-				Timer1.detachInterrupt();
-
-				motorStop();
-				turnServoSensor(FRONT);
-
-				motorMoveOffset();
-				motorTurn(direction);
-
-				break;
-			}
-		}
 	}
 }
 

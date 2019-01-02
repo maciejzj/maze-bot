@@ -126,22 +126,6 @@ void platformTurnAngle(int degree) {
 	}
 }
 
-void motorTurnLeft() {
-	int velocity = 255;
-
-	analogWrite(motLeftVelo, velocity);
-	analogWrite(motRightVelo, velocity);
-	
-	digitalWrite(motLeftForward, HIGH);
-	digitalWrite(motLeftBack, LOW);
-
-	digitalWrite(motRightForward, LOW);
-	digitalWrite(motRightBack, HIGH);
-
-	delay(TURNING_TIME);
-	motorStop();
-}
-
 void motorRotateLeft(int velocity) {
 	if(velocity >= 0) {
 		digitalWrite(motLeftForward, HIGH);
@@ -164,38 +148,6 @@ void motorRotateRight(int velocity) {
 		digitalWrite(motRightBack, HIGH);
 		analogWrite(motRightVelo, -velocity);
 	}
-}
-
-void motorTurnRight() {
-	int velocity = 255;
-
-	analogWrite(motLeftVelo, velocity);
-	analogWrite(motRightVelo, velocity);
-
-	digitalWrite(motLeftForward, LOW);
-	digitalWrite(motLeftBack, HIGH);
-
-	digitalWrite(motRightForward, HIGH);
-	digitalWrite(motRightBack, LOW);
-
-	delay(TURNING_TIME);
-	motorStop();
-}
-
-void motorTurnBack() {
-	int velocity = 255;
-	
-	analogWrite(motLeftVelo, velocity);
-	analogWrite(motRightVelo, velocity);
-
-	digitalWrite(motLeftForward, LOW);
-	digitalWrite(motLeftBack, HIGH);
-
-	digitalWrite(motRightForward, HIGH);
-	digitalWrite(motRightBack, LOW);
-
-	delay(2 * TURNING_TIME);
-	motorStop();
 }
 
 void motorForward(int velocity) {
@@ -232,23 +184,6 @@ void headingVeloFix() {
 	motorRotateRight(actuationRight);
 	motorRotateLeft(actuationLeft);
 }
-
-void motorMoveOffset() {
-	int velocity = 255;	
-
-	analogWrite(motLeftVelo, velocity);
-	analogWrite(motRightVelo, velocity);
-
-	digitalWrite(motLeftForward, HIGH);
-	digitalWrite(motRightBack, LOW);	
-
-	digitalWrite(motRightForward, HIGH);
-	digitalWrite(motRightBack, LOW);
-
-	delay(SELF_LENGTH_OFFSET);
-	motorStop();
-}
-
 
 void motorLeftCounterInt() {
 	/* When ISR is entered first time in the movement we shouldn't calculate time delta */
