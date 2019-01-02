@@ -38,18 +38,18 @@ inline void motorRightStop() {
 	analogWrite(motRightVelo, 0);
 }
 
-void motorTurn(int direction) {
+void platformTurn(int direction) {
 	switch (direction) {
 		case RIGHT:
-			motorTurnRight();
+			platformTurnAngle(-90);
 			break;
 
 		case LEFT:
-			motorTurnLeft();
+			platformTurnAngle(90);
 			break;
 
 		case BACK:
-			motorTurnBack();
+			platformTurnAngle(180);
 			break;
 	}
 }

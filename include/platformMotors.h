@@ -21,7 +21,16 @@ void motorLeftStop();
  *  @return Void.
  */
 void motorRightStop();
-void motorTurn(int direction);
+
+/** @brief Turns the platform.
+ *
+ *  Utility for easily colling rotation to realtive positions of platform.
+ *	Calls turning function with specified argument.
+ *
+ *	@param direction Relative direction the platform will turn to.
+ *  @return Void.
+ */
+void platoformTurn(int direction);
 
 /** @brief Turns the platofrm by given angle.
  *
