@@ -1,3 +1,11 @@
+/**
+ * \file platformMotors.h
+ * \author Maciej Ziaja, Bartosz Staszulonek
+ * \brief Provides functions for driving MazeBot platform with DC motors.
+ * 
+ * \see https://github.com/MaciejZj/MazeBot
+ */
+
 /** @brief Stops the motors.
  *
  *  Stops both motors and delays next action to ensure mechanical stability.

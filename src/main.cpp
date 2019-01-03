@@ -1,3 +1,14 @@
+/**
+ * \file main.cpp
+ * \author Maciej Ziaja, Bartosz Staszulonek
+ * \brief Main program logic for MazeBot. Avoids obstacles.
+ *
+ * Avoids obstacels using ultrasonic sensor and maages servo tower
+ * and platform motors. Turns on/off using IR communication.
+ * 
+ * \see https://github.com/MaciejZj/MazeBot
+ */
+
 #include <Arduino.h>
 #include <Servo.h>
 #include <IRremote.h>
