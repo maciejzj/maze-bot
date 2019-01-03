@@ -118,7 +118,10 @@ void platformTurnAngle(int degree) {
 			motorRightStop(); rightIsStopped = true;
 		} else
 			motorRotateRight(-direction * actuationRight);
-
+		
+		#if	TURN_ANGLE_DBG
+			PRINT_TURN_ANGLE_DBG
+		#endif
 		/* If both motors are stopped exit function */
 		if(leftIsStopped && rightIsStopped) {
 			delay(MOTOR_STOP_DELAY);
@@ -180,6 +183,10 @@ void headingVeloFix() {
 	/* Actuate motors */
 	motorRotateRight(actuationRight);
 	motorRotateLeft(actuationLeft);
+
+	#if	HEADING_VELO_FIX_DBG
+		PRINT_HEADING_VELO_FIX_DBG
+	#endif
 }
 
 void motorLeftCounterInt() {
