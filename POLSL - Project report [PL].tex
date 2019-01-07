@@ -78,8 +78,22 @@ Termin                  & Zakres pracy                                          
 \subsection{Budżet}
 
 \section{Budowa prototypu, analiza problemów}
+Realizację projektu zaczęto od zgromadzenia peryferiów koniecznych do realizacji robota.
+W pierwszej fazie prototypowania komponenty testowano osobno używając Arduino Leonardo. Zapoznano się z ich praktycznymi możliwościami i działaniem dostępnych bibliotek. 
+
+Następnie połączono wszystkie komponenty jednocześnie i przeprowadzono ich jednoczesne testy oraz zmierzono zasilanie używając multimetru i zasilacza regulowanego.
+Testy pokazały, że układ przy zasilaniu $ 7.3 \ V $~pobiera prąd do $ 0.3 \ A $,~co dostarcza nam informacji potrzebnych do doboru baterii dla robota.
+
+Elementy prototypowe umieszczono na platformie testowej i oceniono działanie konstrukcji.
+Okazało się, że działanie robota jest możliwe, ale sterowanie silnikami w~torze otwartym nie było wystarczająco precyzyjne aby unikać przeszkód. Przy symetrycznym wysterowaniu silników robot nie poruszał się w~kierunku prostym, różnice w działaniu poszczególnych silników są zbyt duże by pracowały one symetrycznie co jest wymagane by platforma jechała na wprost.
+Skręcanie platformy o zadany kąt również okazało się nieprecyzyjne, obroty o~na przykład 90 stopni w~prawo były mało powtarzalne i~obarczone dużym błędem. Zdecydowano się na syntezę układów regulacji, aby wyeliminować te problemy.
+
+Testy platformy prototypowej pokazały także, że złożoność układu jest zbyt duża aby budować go na płytce stykowej/prototypowej.
+Dodatkowo serwomechanizm, który jest bardzo wrażliwy na zakłócenia zasilania, działał źle gdy był połączony przez wiele kabli, które razem tworzyły dużą rezystancję. Obserwacje te skłoniły nas do zaprojektowania własnego obwodu drukowanego, który mieściłby wszystkie potrzebne komponenty elektroniczne na małej przestrzeni.
+Konstrukcja mechaniczna platformy prototypowej okazała się mało solidna i nie była dostosowana do używanych przez nas modułów elektronicznych. W celu zwiększenia porządku i wytrzymałości układu zdecydowano się na projekt własnego podwozia robota.
 
 \section{Projekt układu elektronicznego}
+\subsection{Działanie i uzasadnienie doboru elementów elektronicznych}
 \subsection{Schemat układu elektronicznego}
 \subsection{Projekt układu drukowanego}
 
