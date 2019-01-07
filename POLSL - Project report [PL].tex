@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage{polski}
 \usepackage[utf8]{inputenc}
-\usepackage[a4paper,margin=20mm]{geometry}
+\usepackage[a4paper, margin=20mm]{geometry}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \graphicspath{ {.//} }
@@ -13,7 +13,6 @@
   \large MazeBot \\
     Robot unikający przeszkód z regulacją napędu silników prądu stałego}
 
-\pagenumbering{gobble}
 \maketitle
 \tableofcontents
 \newpage
@@ -32,9 +31,51 @@ Na potrzeby projektu wykonano także schemat układu elektronicznego i~zrealizow
 Zaprojektowano także podwozie robota i~wydrukowano je w~technologii~3D.
 
 \subsection{Cel i zakres projektu}
+Projekt obejmował budowę platformy bazującej na mikroprocesorze z~serii ATmega32, obsługującym peryferia:
+\begin{itemize}
+	\item czujnika ultradźwiękowego wykrywającego przeszkody,
+	\item wieży serwomechanizmu, na której zamontowany jest czujnik i która kieruje go w różne strony,
+	\item silników prądu stałego stanowiących napęd platformy
+	\item czujników szczelinowych odczytujących kąt obrotu osi kół platformy,
+	\item odbiornika podczerwieni pozwalającego na wyłączenie robota pilotem jeśli ten się oddali.
+\end{itemize}
+Współpraca tych komponentów pozwala robotowi na unikanie przeszkód.
+Działanie robota powinno polegać na~jeździe przed siebie do~czasu napotkania przeszkody.
+W momencie wykrycia przeszkody robot powinien się zatrzymać, a~następnie zbadać czy w~jego otoczeniu znajduje się niezagrodzona droga i~skierować się na~nią.
+Prototyp wykonano z~użyciem układu Arduino Leonardo.
+Przeprowadzono testy współpracy komponentów i~wyciągnięto wnioski dotyczące budowy finalnej konstrukcji.
+Na podstawie testów określono parametry elementów finalnej konstrukcji.
+Działanie prototypu prowadziło do następujących decyzji projektowych, które podyktowały dalszy tok projektu i~jego zakres:
+\begin{itemize}
+	\item w celu wydajnego wykorzystania przestrzeni na platformie zdecydowano się na wykonanie własnego układu elektronicznego i obwodu drukowanego,
+	\item zaprojektowano własne podwozie dopasowane do używanych peryferiów,
+	\item wykonano układy regulacji jazdy na wprost oraz skręcania platformy.
+\end{itemize}
+
 \section{Organizacja projektu}
-\section{Harmonogram}
-\section{Budżet}
+\subsection{Harmonogram}
+Projekt należało zrelaizować w przeciągu 4 miesięcy.
+Proces jego wykonania składał się z dwóch części: testów komponentów wraz z budową prototypu oraz konstrukcji finalnego układu na podstawie wniosków wyciągniętych z testów konstrukcji prototypowej.
+	Tabela \ref{tab:schedule} przedstawia ramowy rozkład pracy w czasie.
+
+\begin{table}[hbt]
+	\centering
+	\label{tab:schedule}
+		\begin{tabular}{|c|c|}
+	\hline
+Termin                  & Zakres pracy                                                                         \\ \hline
+01.10.2018 - 20.10.2018 & Zebranie komponentów układu, ustalenie zakresu prac                                  \\ \hline
+20.10.2018 - 01.11.2018 & Test komponentów i~peryferiów z użyciem Arduino Leonardo                             \\ \hline
+01.11.2018 - 14.11.2018 & Budowa prototypu, programowanie głównej logiki programu \\ \hline
+14.11.2018 - 01.12.2018 & Projekty obwodu drukowanego PCB i~podwozia                                           \\ \hline
+01.12.2018 - 20.12.2018 & Synteza i~oprogramowanie układów regulacji                                           \\ \hline
+20.12.2018 - 01.01.2019 & Złożenie układu finalnego                                                            \\ \hline
+01.01.2019 - 20.01.2019 & Strojenie układów regulacji, budowa dokumentacji                                      \\ \hline
+\end{tabular}
+	\caption{Harmonogram pracy}
+\end{table}
+
+\subsection{Budżet}
 
 \section{Budowa prototypu, analiza problemów}
 
