@@ -1,12 +1,24 @@
-\documentclass{article}
+\documentclass[11pt]{article}
 \usepackage{polski}
 \usepackage[utf8]{inputenc}
-\usepackage[a4paper, margin=20mm]{geometry}
+\usepackage[a4paper, margin=25mm]{geometry}
 \usepackage{amsmath}
 \usepackage{graphicx}
+
+\usepackage{siunitx}
+\usepackage[european,cuteinductors,fetbodydiode]{circuitikz}
+
+\usetikzlibrary{calc}
+\ctikzset{bipoles/thickness=1}
+\ctikzset{bipoles/length=0.8cm}
+\tikzstyle{every node}=[font=\small]
+\tikzstyle{every path}=[line width=0.8pt,line cap=round,line join=round]
+
 \graphicspath{ {.//} }
 \author{Maciej Ziaja, Bartosz Staszulonek}
 \date{\today}
+\pagenumbering{arabic}
+
 \begin{document}
 \title{
   Projekt Systemy Mikroprocesorowe \\
@@ -90,11 +102,132 @@ Skręcanie platformy o zadany kąt również okazało się nieprecyzyjne, obroty
 
 Testy platformy prototypowej pokazały także, że złożoność układu jest zbyt duża aby budować go na płytce stykowej/prototypowej.
 Dodatkowo serwomechanizm, który jest bardzo wrażliwy na zakłócenia zasilania, działał źle gdy był połączony przez wiele kabli, które razem tworzyły dużą rezystancję. Obserwacje te skłoniły nas do zaprojektowania własnego obwodu drukowanego, który mieściłby wszystkie potrzebne komponenty elektroniczne na małej przestrzeni.
-Konstrukcja mechaniczna platformy prototypowej okazała się mało solidna i nie była dostosowana do używanych przez nas modułów elektronicznych. W celu zwiększenia porządku i wytrzymałości układu zdecydowano się na projekt własnego podwozia robota.
+Konstrukcja mechaniczna platformy prototypowej okazała się mało solidna i~nie była dostosowana do używanych przez nas modułów elektronicznych. W celu zwiększenia porządku i~wytrzymałości układu zdecydowano się na projekt własnego podwozia robota.
 
 \section{Projekt układu elektronicznego}
 \subsection{Działanie i uzasadnienie doboru elementów elektronicznych}
+\subsubsection{Mikroprocesor ATmega32u4}
+Centralnym elementem robota jest mikroprocesor AVR o architekturze RISC. Ośmiobitowe mikroprocesory ATmega są popularnym wyborem przy konstrukcji układów wbudowanych w przemyśle i urządzeniach elektronicznych o niedużym stopniu wymaganej wydajności.
+Ich zaletą jest duża powszechność oraz fakt, że na procesorach z tej rodziny bazuje popularna platforma Arduino, w ramach której dostępny jest szeroki zakres bibliotek programistycznych do obsługi peryferiów. Przy wyborze konkretnego modelu mikroprocesora kierowaliśmy się następującymi kryteriami:
+\begin{itemize}
+	\item obsługa czterech przerwań zewnętrznych:
+		\begin{enumerate}
+			\item pochodzących z enkodera lewego koła,
+			\item pochodzących z przerwań enkodera prawego koła,
+			\item pochodzących z czujnika ultradźwiękowego,
+			\item pochodzących z odbiornika podczerwieni, 
+		\end{enumerate}
+	\item obsługa trzech wyjść PWM, za pomocą liczników w celu:
+		\begin{enumerate}
+			\item sterowania prędkością lewego silnika prądu stałego,
+			\item sterowania prędkością prawego silnika prądu stałego,
+			\item sterowania położeniem serwomechanizmu, na którym zamontowany jest czujnik ultradźwiękowy,
+		\end{enumerate}
+	\item możliwość użycia sumarycznie dwunastu wejść wyjść cyfrowych do komunikacji z peryferiami,
+	\item pożądana jest wbudowana obsługa komunikacji szeregowej za pomocą interfejsu USB w celu łatwego debugowania układu i zdjęcia pomiarów dynamiki układu przy identyfikacji obiektu regulacji i strojeniu regulatorów
+	\item powyższe wymagania powinny być spełnione przy użyciu bootloadera i bibliotek Arduino.
+\end{itemize}
+
+
+Powyższe wymagania spełnia mikroprocesor ATmega32u4 firmy Atmel.
+Jest to procesor na którym bazuje układ Arduino Leonardo, który wykorzystano przy konstrukcji prototypu.
+Z użyciem bibliotek Arduino ATmega32u4 pozwala na używanie do pięciu przerwań zewnętrznych oraz siedmiu kanałów generujących sygnały PWM.
+Istotne jest, że kanały PWM są obsługiwane przez cztery oddzielne liczniki. Biblioteki Arduino (szczególnie obsługi serwomechanizmu) wchodzą łatwo w konflikty i korzystają z liczników w sposób uniemożliwiający ich współdzielenie przy generowaniu sygnałów PWM.
+Dlatego przy doborze mikroprocesora i wyborze jego wyprowadzeń starano się, aby serwomechanizm był obsługiwany przez oddzielny licznik.
+Pin sterujący serwem nie powinien generować sygnałów z użyciem tego samego licznika co inne kanały PWM, aby uniknąć konfliktów bibliotek Arduino.
+Wybrany model mikroprocesora jest dostępny tylko w obudowach powierzchniowych QFP (\textit{Quad Flat Package}), przy wyborze tej jednostki należy pamiętać, że wymaga ona umiejętności precyzyjnego lutowania. Procesor może pracować przy zasilaniu $ 5\ V $, jest to dla nas dogodne ponieważ reszta naszych peryferiów ma takie same napięcie zasilania.
+
+
+\subsubsection{Silniki prądu stałego}
+Ze względu na ograniczenia budżetowe zdecydowano się na jedne z najtańszych dostępnych silników, wyprodukowane przez firmę Dagu.
+Silniki prądu stałego oferują największe momenty siły przy małych obrotach, nadają się dobrze do napędzania i przyspieszania platform robotów, oferują możliwość płynnego sterowania.
+Ich wadą jest fakt, że bez dodatkowego układu czujników nie można określić ich kąta obrotu.
+Ze względu na obecność komutatora i szczotek silniki prądu stałego zużywają się w czasie pracy.
+Parametry wybranych przez nas silników są następujące:
+\begin{itemize}
+	\item maksymalne napięcie zasilania: $ 6\ V $,
+	\item moment obrotowy: $ 0,8\ kg \cdot cm $, $ 0,78\ Nm $,
+	\item obroty silnika bez obciążenia: $ (90 \pm 10) \ \frac{obr}{min} $,
+	\item pobór prądu silnika bez obciążenia: $ 190\ mA\ (max.\ 250\ mA) $,
+	\item pobór prądu silnika przy zatrzymanym wale: $ 1\ A $.
+\end{itemize}
+% TODO: compare with real
+Do silników przymocowano koła o parametrach:
+\begin{itemize}
+	\item średnicy: $ 65\ mm $,
+	\item szerokości: $ 30\ mm $.
+\end{itemize}
+
+\subsubsection{Sterownik silników prądu stałego -  mostek H}
+Najbardziej popularnym sposobem sterowania silnikami prądu stałego jest użycie mostka H.
+Jest to układ składający się z czterech tranzystorów polowych, których dreny i~źrodła są odpowiednio połączone z sterowanym silnikiem. Para tranzystorów połączona z~tą samą szczotką silnika ma złączone bramki, ale przeciwny stan otwarcia.
+Złączone bramki są wyprowadzone z~układu i~stanowią wejścia sterowania. W~zależności od tego na które z~wejść podamy stan wysoki przez jeden z~tranzystorów z~każdej pary będzie płyną prąd, powodując obroty silnika w~odpowiednim kierunku.
+Układem elektronicznym, który zawiera w sobie dwa mostki H, co pozwala na sterowanie parą silników, jest L298N.
+Dodatkowo układ posiada dodatkowe tranzystory do sterowania prędkością silników za pomocą sygnału PWM, który stopniowo otwiera i~domyka tranzystor polowy przepuszczający sygnały wejściowe. Parametry sterownika są następujące:
+\begin{itemize}
+	\item maksymalne napięcie zasilania silników: $ 45\ V $,
+	\item napięcie części logicznej: $ 4,5\ V - 7\ V $,
+	\item maksymalny prąd zasilający silnik: $ 2\ A $.
+\end{itemize}
+Sterownik dostępny jest w obudowie przewlekanej Multiwatt15. Porównując parametry mostka H z silnikami możemy stwierdzić, że jest on wystarczający do ich wysterowania.
+
+\subsubsection{Stabilizator napięcia L7805CV}
+Wszystkie układy logiczne zasilane są napięciem $ 5\ V $, ale silniki zasilane są napięciem $ 7,3\ V $. 
+Wynika stąd, że najlepiej zastosować baterię siedmiowoltową, a zasilanie do części logicznej dostarczać poprzez regulator napięcia. Najbardziej popularnym regulatorem jest układ 7805. 
+W wersji CV jego parametry są następujące:
+\begin{itemize}
+	\item maksymalne napięcie wejściowe: $ 35\ V $,
+	\item napięcie wyjściowe: $ 5\ V $ (z dokładnością $ 2\% $,
+	\item maksymalny prąd wyjściowy: $ 1.5\ A $.
+\end{itemize}
+Stabilizator jest dostępny w różnych obudowach, przewlekanych i powierzchniowych, ze względu na łatwość montażu, dostępność i możliwość zamontowania radiatora wybraliśmy model w obudowie przewlekanej TO-220.
+Po porównaniu parametrów stabilizatora z parametrami komponentów, które zasili można stwierdzić, że jest on wystarczający.
+
+\subsubsection{Czujnik ultradźwiękowy}
+Najbardziej popularnym i łatwo dostępnym czujnikiem odległości jest czujnik ultradźwiękowy HC-SR04.
+Czujniki ultradźwiękowe mierzą odległość na podstawie czasu, który jest potrzebny fali ultradźwiękowej na dotarcie do przeszkody i powrót do czujnika po jej odbiciu.
+Pomiar czujnikiem rozpoczyna się od podania na wejście TRIG stanu wysokiego przez $ 10 \mu s $. Powoduje to wygenerowanie przez czujnik ciągu ośmiu sygnałów ultradźwiękowych o częstotliwości $ 40\ kHz $. Po odbiciu sygnału od przeszkody i jego powrocie do czujnika odległość można obliczyć według wzoru \ref{eq:ultrasonic}, gdzie:
+
+\begin{itemize}
+	\item $ dist $ to odległość mierzona,
+	\item $ Tim_h $ to czas trwania stanu wysokiego, 
+	\item $ v_s $ to prędkość rozchodzenia się fali dźwiękowej w powietrzu, typowo $ 340 \frac{m}{s} $.
+\end{itemize}
+\begin{equation}
+\label{eq:ultrasonic}
+	dist = \frac{Tim_h \cdot v_s}{2}
+\end{equation}
+Model czujnika HC-SR04 charakteryzuje się następującymi parametrami:
+\begin{itemize}
+	\item napięcie zasilania: $ 5\ V $,
+	\item średni pobór prądu: $ 15\ mA $,
+	\item zakres pomiarowy: od $ 2\ cm $ do $ 200\ cm $,
+	\item częstotliwość pracy: $ 40\ kHz $,
+	\item wymiary: $ 45 \times 20 \times 15 mm $.
+\end{itemize}
+Zasilanie czujnika i zakres jego pracy są odpowiednie dla projektu.
+Przeszkody które chcemy wykrywać będą znajdywały się w odległości parunastu centymetrów od robota.
+Należy mieć na uwadze, że czujniki ultradźwiękowe najlepiej wykrywają duże przeszkody. 
+Dodatkowo istotne jest, że pomiar czujnika ultradźwiękowego trwa w czasie, przebycie odpowiedniej drogi przez falę ultradźwiękową nie jest natychmiastowe.
+Kwestia ta zostanie wzięta pod uwagę w czasie tworzenia oprogramowania.
+
+\subsubsection{Odbiornik podczerwieni TSOP4836}
+Robota wyposażono w odbiornik podczerwieni ułatwiający jego zatrzymanie.
+W celu łatwej współpracy z domowymi pilotami na podczerwień należało wybrać odbiornik wspierający popularne formaty: NEC Code, Toshiba Micom Format, Sharp Code, RC5 Code, RC6 Code, R–2000 Code...
+
+Wybraliśmy odbiornik TSOP4836 pracujący z falami o częstotliwości $ 36\ kHz $. Zgodnie z dokumentacją % TODO
+ odbiornika należy go zabezpieczyć kondensatorem filtrującym i rezystorem. Parametry odbiornika są następujące:
+\begin{itemize}
+	\item napięcie zasilania: od $ 4,5\ V $ do $ 5,5\ V $,
+	\item średni pobór prądu: $ 1,5\ mA$.
+\end{itemize}
+
+\subsubsection{Elementy pasywne}
+Użyte komponenty elektroniczne wymagają użycia kondensatorów filtrujących, zastosowano kondensatory o pojemnościach podanych w dokumentacjach filtrowanych elementów.
+Kondensatory ceramiczne są umieszczone w obudowach przewlekanych, starano się dobrać kondensatory elektrolityczne w obudowach powierzchniowych, aby zredukować miejsce, którą zajmują.
+Spis wszystkich elementów układu, w tym elementów pasywnych znajduje się w sekcji \ref{sec:schem}.
 \subsection{Schemat układu elektronicznego}
+\label{sec:schem}
 \subsection{Projekt układu drukowanego}
 
 
@@ -112,6 +245,4 @@ Konstrukcja mechaniczna platformy prototypowej okazała się mało solidna i nie
 
 \section{Perspektywy rozwoju, podsumowanie}
 
-
-\pagenumbering{arabic}
 \end{document}
