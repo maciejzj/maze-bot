@@ -4,6 +4,7 @@
 \usepackage[a4paper, margin=25mm]{geometry}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{slantsc}
 
 \usepackage{siunitx}
 \usepackage[european,cuteinductors,fetbodydiode]{circuitikz}
@@ -211,6 +212,11 @@ Należy mieć na uwadze, że czujniki ultradźwiękowe najlepiej wykrywają duż
 Dodatkowo istotne jest, że pomiar czujnika ultradźwiękowego trwa w czasie, przebycie odpowiedniej drogi przez falę ultradźwiękową nie jest natychmiastowe.
 Kwestia ta zostanie wzięta pod uwagę w czasie tworzenia oprogramowania.
 
+\subsubsection{Serwomechanizm}
+Aby umożliwić robotowi kierowanie czujnika odległości w różnych kierunkach, ten zamieszczono na wieży serwomechanizmu.
+Ponieważ wymagamy aby czujnik mógł być skierowany w lewo, prawo oraz na wprost wystarczające jest serwo 180 stopni.
+Waga czujnika ultradźwiękowego jest znikoma, dlatego serwomechanizm można wybrać kierując się jak najniższą ceną.
+
 \subsubsection{Odbiornik podczerwieni TSOP4836}
 Robota wyposażono w odbiornik podczerwieni ułatwiający jego zatrzymanie.
 W celu łatwej współpracy z domowymi pilotami na podczerwień należało wybrać odbiornik wspierający popularne formaty: NEC Code, Toshiba Micom Format, Sharp Code, RC5 Code, RC6 Code, R–2000 Code...
@@ -228,13 +234,82 @@ Kondensatory ceramiczne są umieszczone w obudowach przewlekanych, starano się 
 Spis wszystkich elementów układu, w tym elementów pasywnych znajduje się w sekcji \ref{sec:schem}.
 \subsection{Schemat układu elektronicznego}
 \label{sec:schem}
-\subsection{Projekt układu drukowanego}
+Na rysunku %TODO
+przedstawiono utworzony schemat układu elektronicznego.
+Zastosowano przycisk, który zwiera pin reset z~ziemią, jeżeli przycisk jest przytrzymany dostatecznie długo zresetowany zostanie układ.
+Aby podczas resetu nie doszło do zwarcia zasilania dodano rezystor R1. Układ resetu znajduje się w~polu B2 schematu.
+Źródłem taktowania mikroprocesora jest zewnętrzny rezonator kwarcowy $ 16\ MHz $. Do jego poprawnego działania konieczne są odpowiednie kondensatory. Do osiągnięcia zamierzonego taktowania użyto kondensatorów o~pojemności $ 22\ pF $. Mikroprocesor zasilono napięciem $ 5\ V $, zasilanie filtrowane jest kondensatorami $ 100\ nF $, zasilanie portu USB filtrowane jest kondensatorami $ 1 \mu F $.
+W polu A2 schematu umieszczono diody sygnalizacyjne.
+Dioda PWR sygnalizuje obecność napięcia na wyjściu stabilizatora.
+Diody TX, RX związane są z transmisją szeregową.
+Diody podłączono tak że są aktywne kiedy wyjścia procesora są w trybie niskim.
+Dzięki temu diody świecą kiedy transmisja szeregowa nie ma miejsca i sygnalizują tym samym jego poprawne działanie.
+Jest to wygodne ponieważ dioda PWR mówi tylko o obecności zasilania, ale nie informuje użytkownika o poprawnym uruchomieniu układu.
+Każda z diod podłączona jest przez odpowiedni rezystor.
 
+
+W polu C1 znajduje się port USB w wersji MICRO. Linie portu szeregowego zabezpieczono dławikiem ferrytowym, oraz rezystorami.
+Do programowania mikroprocesora zastosowano złącze ICSP sześciopinowe, znajdujące się w~polu D1 schematu.
+
+W polu A5 schematu znajduje się mostek H L298.
+Do jego wyjść silnikowych dodano diody prostownicze, łączące go z baterią zasilającą skierowane przeciwnie do polaryzacji baterii.
+Na cewkach silników w czasie jego pracy gromadzi się energia w postaci pola magnetycznego.
+Po zatrzymaniu silników i hamowaniu platformy energia to wróci do układu w postaci płynącego prądu.
+Dzięki obecności diod układ mostka jest zabezpieczony przez tymi prądami, popłyną one przez diody do baterii, co więcej ze względu na polaryzację energia odzyskiwana z silników będzie ładować baterię, tworząc prosty układ aktywnego hamowania.
+W sekcji \textsc{io ports} znajdują się złącza peryferiów układu.
+Komponenty z fabrycznymi wyprowadzeniami przez goldpiny, połączono tak samo od strony układu.
+Silniki i zasilanie są złączone przez konektory \textsc{arc}.
+
+
+\subsection{Projekt układu drukowanego}
+\subsubsection{Parametry techniczne układu drukowanego}
+Ze względu na ograniczoną przestrzeń na powierzchni platformy robota zdecydowano się na wykonanie własnego obwodu drukowanego w technologii dwustronnej, z metalizowanymi otworami i solder maską.
+W celu zachowania zgodności z procesem technologicznym producenta płytek % TODO
+przyjęto następujące ustawienia \textsc{drc} (\textit{Design rules check}):
+\begin{itemize}
+	\item grubość laminatu wraz ze ścieżkami: $ 1.5\ mm $,
+	\item grubość ścieżek: $ 0.035\ mm $,
+	\item odległości między padami, przelotkami (\textit{via}) oraz ścieżkami: $ 6\ mil $,
+	\item odległości ścieżek od krawędzi płytki: $ 40\ mil $,
+	\item minimalna odległość otworów: $ 6\ mil $,
+	\item minimalna szerokość ścieżki: $ 6\ mil $,
+	\item minimalna średnica otworu: $ 0,35\ mm $,
+	\item szerokość termoizolacji padów od wylewek (ułatwia lutowanie): $ 10\ mil $.
+\end{itemize}
+Przy tworzeniu płytki zastosowano technikę wylewki masy, tworzenia dużych płaszczyzn masy, zamiast prowadzenia poszczególnych ścieżek.
+Ułatwia to rozmieszczenie połączeń i zmniejsza rezystancję ścieżek masy.
+Zastosowano elementy zawierające ołów jako bardziej wytrzymałe i łatwiejsze w lutowaniu.
+W amatorskim lutowaniu nie używa się temperatur przy których nie wydzielają się trujące opary ołowiu.
+
+
+\subsubsection{Rozmieszczenie elementów na powierzchni układu drukowanego}
+W centralnej części obwodu drukowanego umieszczono mikroprocesor.
+Górną krawędź układu zajmują konektory peryferiów, dolna krawędź została przeznaczona na elementy służące interakcji z użytkownikiem.
+Płytka została wykonana w technologii mieszanej, w celu zaoszczędzenia miejsca starano się używać elementów montowanych powierzchniowo, tam gdzie było to możliwe i wygodne.
+Podczas prowadzenia ścieżek układu należy mieć na uwadze ich szerokość.
+Znając parametry techniczne płytki oraz prądy płynące przez poszczególne ścieżki można obliczyć ich minimalną szerokość za pomocą kalkulatorów dostępnych online. %TODO
+Obudowę rezonatora kwarcowego oddzielono od powierzchni obwodu wyciętą gumą.
+Na obudowach elementów aktywnych umieszczono radiatory.
 
 \section{Projekt podwozia robota}
+W celu zwiększenia trwałości i solidności podwozia zdecydowano się zaprojektować własne oraz wydrukować je w technologii 3D.
+Podwozie zaprojektowano tak aby osiągnąć jego modułowość.
+Platforma robota składa się z osobnych części:
+\begin{itemize}
+	\item głównego podwozia z uchwytami na silniki,
+	\item dwóch obudów na czujniki szczelinowe,
+	\item uchwytu na serwomechanizm,
+	\item elementu mocującego czujnik ultradźwiękowy na szczycie serwomechanizmu,
+	\item obudowy baterii.
+\end{itemize}
+Obudowy komponentów są łączone z podwoziem śrubami. Jeżeli zaistniałaby potrzeba wymiany danego komponentu, np. serwomechanizmu, to wystarczy na nowo wydrukować jedynie nową obudowę na wymieniany komponent.
+W obudowie uwzględniono utworzenie otworów oraz uchwytów na kable.
+Bateria zasilająca układ jest połączona z obwodem przez przełącznik dwupozycyjny.
 
 \section{Synteza układów regulacji}
-\subsection{Regulator synchronizacji prędkości silników}
+Budowa i testy układu prototypowego wykazały, że bez zastosowania dodatkowych środków układ porusza się w sposób nieprecyzyjny.
+Zdecydowano się na syntezę układów regulacji w celu poprawienia precyzji działania robota.
+\subsection{Regulator synchronizacji prędkości silników}g
 \subsection{Kaskadowy regulator skrętu platformy}
 \subsection{Identyfikacja obiektu regulacji}
 \subsection{Strojenie regulatorów}
