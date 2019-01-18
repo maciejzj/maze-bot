@@ -12,3 +12,9 @@
 *.DS*
 
 *tmp*
+
+*.aux
+*.log
+*.gz
+*.toc
+*minted*
