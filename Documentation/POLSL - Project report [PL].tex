@@ -1,7 +1,7 @@
 \documentclass[11pt]{article}
 \usepackage{polski}
 \usepackage[utf8]{inputenc}
-\usepackage[a4paper, margin=25mm]{geometry}
+\usepackage[a4paper, margin=27mm]{geometry}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{slantsc}
@@ -309,10 +309,192 @@ Bateria zasilająca układ jest połączona z obwodem przez przełącznik dwupoz
 \section{Synteza układów regulacji}
 Budowa i testy układu prototypowego wykazały, że bez zastosowania dodatkowych środków układ porusza się w sposób nieprecyzyjny.
 Zdecydowano się na syntezę układów regulacji w celu poprawienia precyzji działania robota.
-\subsection{Regulator synchronizacji prędkości silników}g
+\subsection{Regulator synchronizacji prędkości silników}
+Bez zastosowania układu regulacji robot nie porusza się prosto przy symetrycznym wysterowaniu lewego i prawego silnika.
+Jest to spowodowane różnicami w wykonaniu poszczególnych silników, niesymetrycznym obciążeniem platformy oraz niedoskonałościami jej konstrukcji.
+Problem ten można próbować rozwiązać następującymi sposobami:
+\begin{itemize}
+	\item wyważaniem platformy robota odpowiednimi odważnikami, jest to najgorsze rozwiązanie, nie daje pewnych wyników jest bardzo zależne od stopnia naładowania baterii, ponieważ silniki rozładowują się niesymetrycznie,
+	\item sterowaniem PWM w otwartym torze, tak aby uwzględnić niesymetryczność silników, sterowanie należy ustalić drogą eksperymentalną, ta metoda również jest podatna na rozładowanie baterii oraz zmianę obciążenia platformy,
+	\item konstrukcją regulatorów, które na podstawie odczytów z enkoderów szczelinowych synchronizują prędkość silników.
+\end{itemize}
+
+Ze względu na największą pewność efektów, niskie koszty oraz wartość edukacyjną zdecydowano się na rozwiązanie wykorzystujące układy regulacji.
+
+
+Układ będzie miał na celu regulację prędkości silnika \textit{slave} na podstawie odczytu prędkości silnika \textit{master}. Dodatkowo silnik \textit{master} będzie regulowany ze stałą wartością zadaną prędkości w celu zapewnienia większej pewności jego pracy.
+Regulator prędkości silnikami \textit{slave} powinien być \textsc{pid} lub \textsc{pi}.
+Obecność członu całkującego jest wymagana aby osiągnąć odpowiednio wysoki astatyzm układu.
+Dzięki temu członowi układ wyrówna nie tylko chwilową prędkość platformy, ale również sumaryczną przebytą przez robota drogę, co jest kluczowe aby utrzymać kierunek jazdy.
+Dodatkowo obliczenia związane z członem całkującym są w naszym przypadku proste, ponieważ odczyt z enkoderów charakter drogi przebytej przez robota, czyli całki z prędkości.
+Regulator prędkości silnika \textit{master} może być typu proporcjonalnego.
+Zwiększanie astatyzmu tego silnika nie ma znaczenia dla jego poruszania się po lini prostej.
+W regulatorach nie zastosowano członu różniczkującego, który nie jest konieczny, a utrudniałby konstrukcję układów i sprawiał wyzwania obliczeniowe.
+
+Schemat % TODO
+obrazuje konstrukcję planowanego układu regulacji prędkości silników.
+Jest to wyjściowy schemat regulatora, natomiast nie jest dopasowany do charakteru toru pomiarowego i implementacji programistycznej.
+Układ należy przekształcić w celu jego łatwiejszej implementacji.
+Czujniki szczelinowe zwracają do układu pomiar liczby szczelin na tarczy enkodera co jest ekwiwalentem całki drogi, dlatego będziemy dążyć do usunięcia operacji całkowania z układu i bloku \textit{zamiana $ \alpha $ na $ \omega  $}.
+Ilość zliczonych szczelin oznaczono na schemacie jako $ \alpha $, prędkość silników (ilość szczelin w czasie) oznaczono jako $ \omega $, silnik \textit{master} oznaczono indeksem \textit{m}, a silnik \textit{slave} indeksem \textit{s}.
+W pierwszym kroku przekształceń układu skorzystamy z rozłączności operacji całkowania i przeniesiemy to działanie przed regulator oraz obliczymy całki sygnału i wartości zadanej osobno a, uchyb wyznaczymy z różnicy tych całek.
+Układ po tym przekształceniu obrazuje schemat %TODO
+W następnym kroku można zauważyć że blok \textit{zamiana $ \alpha $ na $ \omega  $} jest operacją różniczkowania, czyli mnożenia razy operator $ s $. Wynika z tego że możemy skrócić bloki całkowania $ \frac{1}{s} $ i różniczkowania $ s $.
+Finalny projekt regulatora przedstawia schemat: % TODO
+Schemat ten zawiera dodatkową modyfikację. Tarcze enkoderów wprowadzają do układu dyskretyzację oraz błąd kwantyzacji.
+Silnik \textit{slave}, który nadąża za silnikiem \textit{master} zacznie się obracać po nim, a obrót od startu układu do pierwszej szczeliny silnika \textit{master} sprawia, że w układzie pojawia się błąd.
+Błąd ten jest zależny od odległości punktu pomiarowego enkodera do pierwszej zliczonej szczeliny.
+Pozycja punktu pomiaru w momencie startu robota jest losowa podobnie błąd z tego wynikający.
+Aby zmniejszyć ten problem do układu zdecydowano się na element sterowania w torze otwartym narzucający punkt pracy regulatorów.
+Dzięki temu w momencie startu oba silniki są wysterowane do jazdy na wprost.
+Wartości punktu pracy dla obu silników należy wyznaczyć eksperymentalnie, są one zależne od niesymetryczności charakterystyk silników.
+
+
 \subsection{Kaskadowy regulator skrętu platformy}
+Kolejnym problemem jest zapewnienie powtarzalności i precyzji obrotów platformy robota.
+W tym celu należy zbudować regulator położenia robota, którego wartością zadaną jest ilość zliczonych przez enkodery szczelin.
+Ilość szczelin potrzebna do obrotu platformy o zadany kąt jest zależna od konstrukcji mechanicznej robota.
+
+\begin{equation}
+	\label{eq:slot_num}
+	\alpha = round \left( \frac{\beta}{ \ang{360}} \cdot 2 \cdot \alpha_{disk} \cdot \frac{wheelbase}{d_w} \right)
+\end{equation}
+Opisuje ją wzór \ref{eq:slot_num}, gdzie:
+\begin{itemize}
+	\item liczba slotów potrzebnych do obrotu o zadany kąt to $ \alpha $,
+	\item zadany kąt obrotu całej platformy robota to $ \beta $,
+	\item liczba szczelin na tarczy enkodera to $ \alpha_{disk} $,
+	\item rozstaw osi podwozia to $ wheelbase $,
+	\item średnica kół to $ d_w $.
+\end{itemize}
+Wzór wynika z proporcji obrotu koła do obrotu całej platformy robota wokół osi przebiegającej przez jej środek.
+We wzorze można zauważyć podwajanie liczby szczelin, wynika to z wyzwalania przerwania zliczania szczelin zarówno na zboczy rosnącym jak i malejącym w celu zwiększenia ich rozdzielczości.
+
+
+Jeżeli w układzie zastosujemy regulator proporcjonalny z pojedynczą pętlą sprzężenia zwrotnego napotkamy na problem szczególnie widoczny przy obrotach o mały kąt przy dużych oporach ruchu.
+Wtedy jeżeli regulator wyznaczy prędkość na podstawie uchybu ilości zliczonych slotów może się okazać, że wyznaczone wysterowanie jest zbyt małe aby poruszyć podwoziem silnika.
+Dodane do regulatora członu całkującego spowoduje że po czasie, kiedy wartość uchybu całki będzie odpowiednio duża układ ruszy z miejsca.
+Musimy jednak pamiętać, że układ regulacji położenia ma obiekt o charakterze całkującym (bo ilość zliczonych slotów jest ekwiwalentem drogi).
+Regulacja z członem całkującym obiektów całkujących prowadzi do utworzenia niestabilnych układów regulacji % TODO
+Rozwiązaniem tego problemu jest zastosowanie regulatora o strukturze kaskadowej, widocznego na rysunku % TODO
+Regulator taki składa się z dwóch pętli sprzężenia, zewnętrznej i wewnętrznej oraz towarzyszącym im regulatorów odpowiednio położenia i prędkości.
+Regulator położenia na podstawie uchybu liczby slotów ustala prędkość zadaną regulatora wewnętrznego potrzebną na wykonanie obrotu.
+Regulator prędkości otrzymuje swoją wartość zadaną od regulatora położenia.
+Regulator wewnętrzny, prędkości może zawierać człon całkujący, ponieważ nie reguluje samodzielnie układu całkującego.
+Ponieważ pokonanie oporu ruchów przy starcie jest trudniejsze od kontynuowania rozpoczętego obrotu % TODO
+to zdecydowano się na odwijanie całkowania (zerowanie) przy każdej zliczonej szczelinie.
+Mogłoby to spowodować niepłynny ruch robota, natomiast sprawdzono eksperymentalnie, że obrane nastawy są wystarczające, aby człon proporcjonalny powodował płynny ruch obracającej się platformy, przy częstym zerowaniu członu całkującego.
+Powoduje to też łagodne zatrzymanie robota, co sprzyja eliminowaniu poślizgów i minimalizuje wybieg silnika i przeregulowania.
+
+\subsubsection{Wyznaczenie przedziału błędów w układzie.} \label{sec:err}
+Układ nie jest wolny od błędów związanych z jego konstrukcją mechaniczną i implementacją rozwiązań.
+Tarcza enkodera ze skończoną liczbą szczelin powoduje dyskretyzację działania układu i powoduje powstanie opóźnienia w synchronizacji silników \textit{master} i \textit{slave}.
+Ponieważ błąd ten ma charakter błędu kwantyzacji można go łatwo oszacować.
+Zgodnie z % TODO
+błąd taki ma rozkład równomierny, jego skrajne wartości można wyliczyć według wzoru \ref{eq:err_max} gdzie:
+\begin{itemize}
+	\item liczba szczelin na tarczy enkodera to $ \alpha_{disk} $,
+	\item liczbę szczelin podwojono, ponieważ przerwanie wyzwalane jest na obu zboczach w celach zwiększenia rozdzielczości enkodera.
+\end{itemize}
+
+\begin{equation}
+	\label{eq:err_max}
+	\Delta \alpha_{max} = \pm \frac{\ang{360}}{\alpha_{disk} \cdot 2} \cdot \frac{1}{2} = \pm \ang{4,5}
+\end{equation}
+Ponieważ rozkład szumu kwantyzacji jest równomierny prawdopodobieństwo błędu o każdej wartości z tego przedziału wynosi $ \frac{1}{q} $, gdzie: $ q = {\left( \frac{\ang{360}}{\alpha_{disk} \cdot 2} \right)} $.
+Należy również pamiętać, że pętla sprzężenia zwrotnego i pomiar enkoderów nie obejmują prawdziwego położenia platformy, a jedynie obroty koła.
+Wszelkie poślizgi powodują ruch który nie zostanie zarejestrowany przez enkodery.
+Należy pamiętać, że silniki mają wybieg, to znaczy nie zatrzymują się natychmiastowo po wyłączeniu sterowania.
+Duże wybiegi, przy dużych prędkościach będą powodować oscylacje w układzie skręcania.
+Jest to niepożądane nie tylko ze względu na niską jakość regulacji, ale komplikuje oprogramowanie układu ponieważ enkodery nie wiedzą w którą stronę kręcą się silniki, a jedynie zliczają kolejne impulsy.
+Dlatego przy strojeniu regulatora kluczowe jest aby dobrać nastawy gwarantujące brak oscylacji w układzie.
+Dodatkowo podczas programowania ograniczono wartość prędkości zadanej wypracowywanej w regulatorze kaskadowym przez regulator położenia.
+Zapobiega to zbyt gwałtownym startom platformy, z którymi mogłyby się wiązać poślizgi.
+
 \subsection{Identyfikacja obiektu regulacji}
+W celu poprawnego strojenia regulatorów należy zbudować model obiektu regulacji.
+W naszym przypadku obiektami są dwa silniki prądu stałego.
+Prostym sposobem identyfikacji obiektu jest podanie na jego wejście skoku jednostkowego i analiza uzyskanej odpowiedzi czasowej.
+Eksperyment identyfikacyjny wykonano podając skok w postaci wysterowania silników wartością \textsc{pwm} równą $ 100 $.
+Należy pamiętać, że z punktu widzenia układów regulacji, które utworzymy na odstawie identyfikacji ta wartość wysterowania będzie równa jedności.
+Przy zadawaniu wartości silnikom sygnały będzie należało odpowiednio skalować.
+Odpowiedź czasową na wymuszenie jednostkowe otrzymano przez komunikację poprzez port szeregowy USB.
+Utworzono program testowy, który drukował przez port liczbę slotów i czas zliczeń.
+Dane przekazywano komputerowi w formacie zgodnym z \textsc{csv} (\textit{comma separated value}), dzięki temu ich import do programu \textsc{matlab} mógł się odbyć w łatwy sposób.
+Odpowiedź układu zarejestrowano dla silników bez obciążenia i dla silników pod obciążeniem podwozia.
+Wyniki eksperymentu przedstawiają wykresy: %TODO
+
+
+Ponieważ jako odpowiedź układu zliczano sloty, które są ekwiwalentem drogi należało spodziewać się odpowiedzi o charakterze całkującym.
+Wyniki identyfikacji potwierdziły te przypuszczenia, wykresy przypominają odpowiedź układu o transmitancji całki z inercją.
+Widać że przy obciążeniu silników platformą mają one większą bezwładność, czego również należało się spodziewać.
+Zaprojektowane układy mają na celu regulację prędkości stąd odpowiedź należałoby zróżniczkować aby uzyskać odpowiedź prędkości w czasie.
+Nie jest to jednak konieczne, zróżniczkowanie odpowiedzi da wykres inercji pierwszego rzędu, z którego należy odczytać stałą czasową i wzmocnienie układu.
+Te parametry da się określić również z wykresu odpowiedzi drogi w czasie.
+W celu ich określenia należy wykreślić prostą do wykresu odpowiedzi.
+Punkt przecięcia prostej z osią \textsc{x} będzie określał stałą czasową układu, natomiast nachylenie prostej jego wzmocnienie.
+Ponieważ układ przybliżamy transmitancją całki z inercją jego transmitancja będzie miała postać przedstawioną na wzorze \ref{eq:ob_int}.
+
+\begin{equation} \label{eq:ob_int}
+	K_{o1} \left( s \right) = \frac{k}{s \left( 1 + sT \right)}
+\end{equation}
+gdzie parametry stałej czasowej $ T $ i wzmocnienia $ k $, można obliczyć z dopasowanej do odpowiedzi prostej według wzorów \ref{eq:line_param}.
+
+\begin{equation} \label{eq:line_param}
+\begin{aligned}
+	y(t) &= a \cdot t + b \\
+	k &= a \\
+	T &= - \frac{a}{b} \\
+\end{aligned}
+\end{equation}
+
+Identyfikację układu i wykresy zostały wykonane w środowisku \textsc{matlab}, kod programu identyfikacyjnego przedstawia listing % TODO
+
 \subsection{Strojenie regulatorów}
+Ponieważ regulatory \textsc{PI} będą regulowały prędkość silników należy przekształcić odpowiedź tak by uzyskać wykres prędkości w czasie.
+Uzyskana identyfikacja obiektu całkującego opisuje zmiany drogi w czasie, aby uzyskać transmitancję związaną ze zmianami prędkości należy zróżniczkować transmitancję obiektu całkującego przemnażając ją przez operator $ s $, co obrazują przekształcenia we wzorze \ref{eq:ob_inert}. Jak widać zmiany prędkości w czasie są opisane modelem inercyjnym.
+
+\begin{equation} \label{eq:ob_inert}
+	K_{o2} \left( s \right) = s \cdot K_{o1} \left( s \right) = s \cdot \frac{k}{s \left( 1 + sT \right)} = \frac{k}{s \left( 1 + sT \right)}
+\end{equation}
+
+Zdecydowano się na regulator \textsc{PI}, który ma wystarczający astatyzm, oraz jest łatwy w implementacji.
+W przypadku naszego układu który opisujemy transmitancją niskiego rzędu odpowiednim sposobem strojenia będzie użycie lini pierwiastkowych.
+W celu wykreślenia linii najlepiej zapisać transmitancję regulatora i obiekty w postaci zero-biegunowej, którą przedstawia wzór \ref{eq:reg_pi_casc}.
+
+\begin{equation} \label{eq:reg_pi_casc}
+	PI \left( s \right) \cdot K_{o2} \left( s \right) = \left( \frac{s + c}{s} \right) \cdot \frac{k}{s \left( 1 + sT \right)}
+\end{equation}
+
+Należy zdecydować o wartości dodanego zera $ c $. Jego stosunek do stałej czasowej $ T $ zdecyduje o~kształcie linii pierwiastkowych.
+Można rozpatrzeć trzy przypadki:
+\begin{itemize}
+	\item zero większe do stałej czasowej $ c > T $,
+	\item zero równe stałej czasowej $ c = T $
+	\item zero mniejsze od stałej czasowej $ c < T $.
+\end{itemize}
+Przypadek równości tych parametrów jest najbardziej korzystny, doprowadzi do skrócenia fragmentów transmitancji, w takim wypadku regulator działałby jak korektor, a układ działałby najszybciej jak to możliwe.
+Mimo tego jest to przypadek który należy odrzucić.
+Aby osiągnąć równość parametrów należałoby przeprowadzić identyfikację o nieosiągalnej dokładności, jednak wyznaczona wartość stałej czasowej może i zapewne różni się od rzeczywistych parametrów układu.
+Mało prawdopodobne jest zrealizowanie korektora, a dobór zera równego zidentyfikowanej stałej czasowej da w rzeczywistości niespodziewane rezultaty, ze względu na niedoskonałości procesu identyfikacji.
+Należy rozpatrzyć pozostałe dwa przypadki, liniowe pierwiastkowe dla nich wykreślono na rysunku % TODO
+Prędkość działania finalnego układu jest zdeterminowana przez położenie bieguna, który znajduje się najbliżej osi urojonej \textsc{y}.
+Im bardziej od osi oddalony jest ten biegun tym szybszy układ.
+Przy analizie linii pierwiastkowych należy również pamiętać, że położenia biegunów o niezerowej części urojonej oznaczają oscylacje układu.
+Jak wspomniano w sekcji \ref{sec:err} zależy nam na konstrukcji układu aperiodycznego\footnote{tzn. bez oscylacji.}, czyli powinniśmy umieścić nasze bieguny na osi \textsc{x}.
+
+Można zauważyć że przypadek $ c > T $ pozwala na zbudowanie szybszego regulatora.
+W takiej konfiguracji, przy dużych wzmocnieniach najwolniejszy biegun znajduje się z lewej strony założonego zera, czyli dalej od osi urojonej \textsc{y}.
+W konfiguracji $ c < T $ najwolniejszy biegun znajduje się po prawej stronie zera, czyli taki układ jest wolniejszy.
+Przypadek $ c > T $ zdaje się bardziej korzystny, jednak niesie ze sobą ryzyko oscylacji.
+Teoretycznie najlepsze położenie bieguna w tej konfiguracji to miejsce w którym pierwiastki wracają z koła wartości urojonych z powrotem na oś rzeczywistą \textsc{x}.
+Jest to jednak lokacja ryzykowna ze względu na niedoskonałości identyfikacji.
+Przez jej błędy możemy omyłkowo, w układzie rzeczywistym, ulokować bieguny z częścią urojoną czyli wprowadzić oscylacje.
+Dla pewności wyeliminowania oscylacji należy zwiększyć wzmocnienie układu i umieścić pierwiastki dalej od koła wartości urojonych.
+Wadą takiego rozwiązania jest spowolnienie układu przez zbliżenie bieguna do osi \textsc{y} oraz wymaganie dużego wzmocnienia, które może być niemożliwe dla układu realizującego algorytm sterowania i elementów wykonawczych.
+Konfiguracja $ c < T $ może być praktycznie lepsza, niż mogło zdawać się pierwotnie nie niesie ryzyka oscylacji.
+To że taka konfiguracja jest wolniejsza także niesie pewne zalety, mało gwałtowne ruchy robota minimalizują ryzyko poślizgów kół.
+W celu nastrojenia układów regulacji należy wykonać eksperymenty i porównać oczekiwania wynikające z linii pierwiastkowych z rzeczywistością.
 
 \section{Implementacja programistyczna}
 
