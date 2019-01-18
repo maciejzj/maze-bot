@@ -6,6 +6,37 @@
 \usepackage{graphicx}
 \usepackage{slantsc}
 
+\usepackage{xcolor}
+\definecolor{commentgreen}{RGB}{2,112,10}
+\definecolor{eminence}{RGB}{108,48,130}
+\definecolor{weborange}{RGB}{80,60,60}
+\definecolor{frenchplum}{RGB}{129,20,83}
+
+\usepackage{listings}
+\lstset {
+    language=C++,
+    frame=tb,
+    tabsize=4,
+    showstringspaces=false,
+    numbers=left,
+    %upquote=true,
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{eminence},
+    stringstyle=\color{red},
+    basicstyle=\small\ttfamily, % basic font setting
+    emph={int,char,double,figure,unsigned,void,bool},
+    emphstyle={\color{blue}},
+    escapechar=\&,
+    % keyword highlighting
+    classoffset=1, % starting new class
+    otherkeywords={>,<,.,;,-,!,=,~},
+    morekeywords={>,<,.,;,-,!,=,~},
+    keywordstyle=\color{weborange},
+    classoffset=0,
+	breaklines=true,
+	postbreak=\mbox{{$\hookrightarrow$}\space},
+}
+
 \usepackage{siunitx}
 \usepackage[european,cuteinductors,fetbodydiode]{circuitikz}
 
@@ -287,9 +318,10 @@ W centralnej części obwodu drukowanego umieszczono mikroprocesor.
 Górną krawędź układu zajmują konektory peryferiów, dolna krawędź została przeznaczona na elementy służące interakcji z użytkownikiem.
 Płytka została wykonana w technologii mieszanej, w celu zaoszczędzenia miejsca starano się używać elementów montowanych powierzchniowo, tam gdzie było to możliwe i wygodne.
 Podczas prowadzenia ścieżek układu należy mieć na uwadze ich szerokość.
-Znając parametry techniczne płytki oraz prądy płynące przez poszczególne ścieżki można obliczyć ich minimalną szerokość za pomocą kalkulatorów dostępnych online. %TODO
+Znając parametry techniczne płytki oraz prądy płynące przez poszczególne ścieżki można obliczyć ich minimalną szerokość za pomocą kalkulatorów dostępnych online. %TODO: ref net
 Obudowę rezonatora kwarcowego oddzielono od powierzchni obwodu wyciętą gumą.
 Na obudowach elementów aktywnych umieszczono radiatory.
+Rozdysponowanie wyprowadzeń sygnałowych mikroprocesora jest kompromisem między ograniczeniami bibliotek Arduino, możliwościami procesora oraz ilością miejsca dostępnego na płytce.
 
 \section{Projekt podwozia robota}
 W celu zwiększenia trwałości i solidności podwozia zdecydowano się zaprojektować własne oraz wydrukować je w technologii 3D.
@@ -350,7 +382,7 @@ Dzięki temu w momencie startu oba silniki są wysterowane do jazdy na wprost.
 Wartości punktu pracy dla obu silników należy wyznaczyć eksperymentalnie, są one zależne od niesymetryczności charakterystyk silników.
 
 
-\subsection{Kaskadowy regulator skrętu platformy}
+\subsection{Kaskadowy regulator skrętu platformy} \label{sec:reg_casc}
 Kolejnym problemem jest zapewnienie powtarzalności i precyzji obrotów platformy robota.
 W tym celu należy zbudować regulator położenia robota, którego wartością zadaną jest ilość zliczonych przez enkodery szczelin.
 Ilość szczelin potrzebna do obrotu platformy o zadany kąt jest zależna od konstrukcji mechanicznej robota.
@@ -497,9 +529,150 @@ To że taka konfiguracja jest wolniejsza także niesie pewne zalety, mało gwał
 W celu nastrojenia układów regulacji należy wykonać eksperymenty i porównać oczekiwania wynikające z linii pierwiastkowych z rzeczywistością.
 
 \section{Implementacja programistyczna}
+\subsection{Podział i organizacja kodu}
+Kod odpowiadający za różne funkcjonalności robota umieszczono w oddzielnych plikach, w których znajdują się funkcje budujące warstwy abstrakcji peryferiów konstrukcji. Zdecydowano się na następujący podział plików i funckjonalności:
+\begin{itemize}
+	\item \texttt{defines} zawiera stałe programu oraz makroinstrukcje,
+	\item \texttt{servoSensor} zawiera funkcje budujące warstwę abstrakcji czujnika ultradźwiękowego na wieży serwomechanizmu, pozwala na kierowanie czujnika w różne strony, wykrywanie przeszkód oraz poszukiwanie wolnej drogi w otoczeniu,
+	\item \texttt{platformMotors} zawiera funkcję budujące warstwę abstrakcji platformy robota, pozwala na jazdę na wprost oraz skręty, bazuje w działaniu na układach regulacji,
+	\item \verb|HC_SR04| zawiera zmodyfikowaną bibliotekę obsługi czujnika ultradźwiękowego w trybie nieblokującym, biblioteka jest wykorzystywana przez funkcje z pliku \texttt{servoSensor},
+	\item \texttt{main} zawiera główną logikę programu, wywołuje funkcje poszukiwań drogi bez przeszkód i podążania w tym kierunku, kontroluje także wyłączanie i włączanie układu po odebraniu rozkazów wysłanych podczerwienią.
+\end{itemize}
+
+\subsection{Algorytm omijania przeszkód}
+Kluczowym elementem omijania przeszkód jest znajdywanie drogi na której nie znajdują się przeszkody.
+Proces znajdywania nowego kierunku jazdy rozpoczyna się w momencie, w którym na obecnym kierunku jazdy zostaje wykryta przeszkoda.
+Wtedy robot się zatrzymuje i losuje po której stronie najpierw będzie szukał wolnej drogi. Potem zwraca w~tym kierunku czujnik ultradźwiękowy i~wykrywa obecność przeszkód.
+Jeżeli takie nie zostaną wykryte platforma skręca w~wylosowanym kierunku i~rozpoczyna jazdę na wprost.
+W przeciwnym przypadku robot kieruje czujnik w drugą stronę i~bada czy tam znajduje się przeszkoda, jeżeli nie to rozpocznie jazdę w~tym kierunku.
+Kiedy obie strony robota są zablokowane ten zwróci się w~kierunku z~którego przyjechał. Opisane zachowanie obrazuje schemat na rysunku % TODO
+
+\subsection{Algorytmy regulacji}
+\subsubsection{Algorytm regulacji synchronizacji prędkości silników}
+Algorytm synchronizacji został zaprogramowany według schematu na rysunku % TODO
+Kod realizujący założenia schematu przedstawiono na listingu \ref{lst:synch_reg}.
+Parametry regulatora należy przekształcić względem tych uzyskanych z analizy linii pierwiastkowych, aby ułatwić obliczenia i czytelność kodu.
+Formuła regulatora zastosowana w kodzie ma postać jak we wzorze \ref{eq:progr_PI}, gdzie:
+\begin{itemize}
+	\item $ \Delta \alpha $ to uchyb ilości zliczonych slotów,
+	\item $ \Delta \omega $ to uchyb chwilowej prędkości,
+\end{itemize}
+Parametry regulatora w takiej postaci można wyliczyć według wzoru \ref{eq:reg_param}, gdzie:
+\begin{itemize}
+	\item $ k_r $ to wzmocnienie regulatora odczytane z linii pierwiastkowych,
+	\item $ c $ to wartość zera transmitacnji ze wzoru \ref{eq:reg_pi_casc}.
+\end{itemize}
+
+\begin{equation} \label{eq:reg_param}
+\begin{aligned}
+	P &=  k_r\\
+	I &=  k_r \cdot c\\
+\end{aligned}
+\end{equation}
+
+
+\begin{equation} \label{eq:progr_PI}
+	PI \left( \Delta \alpha, \Delta \omega \right) = P \cdot \Delta \alpha + I \cdot \Delta \omega
+\end{equation}
+
+
+
+\lstinputlisting[language=c, firstline=161, lastline=183, label={lst:synch_reg}, caption={Algorytm regulacji synchronizacji prędkości silników}]{../src/platformMotors.cpp}
+
+
+
+\subsubsection{Algorytm regulacji skrętu o kąt zadany}
+Algorytm regulacji skrętu o kąt zadany został zaprogramowany według schematu na rysunku % TODO
+Kod pętli wewnątrz której realizowana jest regulacja przedstawiony jest na listingu \ref{lst:rot_reg}.
+Wypracowanie sterowania rozpoczyna się od wyznaczenia uchybu ilości slotów wymaganych do wykonania obrotów.
+Wartość zadana \texttt{target} regulatora położenia jest wyliczana z makrofunkcji realizującej wzór \ref{eq:slot_num}.
+Wartość zadana prędkości została ograniczona aby zapobiec poślizgom.
+Wartość zadana regulatora prędkości jest wypracowywana jest przez regulator położenia.
+Różniczkowanie ilości slotów w celu otrzymania prędkości chwilowej zrealizowano przez dzielenie odwracanie czasu zliczonego między ostatnimi przerwaniami wygenerowanymi przez czujniki szczelinowe.
+Kod przerwań czujników przedstawia listing \ref{lst:enc_int}
+Istotne jest aby pamiętać o rzutowaniu wartości \texttt{int} na \texttt{figure} przy dzieleniu, aby zachować precyzję obliczeń.
+Całkowanie uchybu odbywa się przez mnożenie go przez czas jaki upłynął od ostatniego przerwania czujnika szczelinowego.
+W rozdziale \ref{sec:reg_casc} opisującym założenia budowy regulatora kaskadowego opisano założenia konstrukcji zerującej wartość całki przy każdym przerwaniu czujnika szczelinowego.
+Odpowiednikiem tego założenia w kodzie jest brak zapamiętywania i sumowania poprzednich wartości całki, przy każdej nowej szczelinie czas od tego przerwania jest liczony od nowa.
+Jest to bardzo uproszczona realizacja członu całkującego, jednak zupełnie wystarczająca w naszym przypadku\footnote{
+	Działanie członu całkującego można sprawdzić w sposób eksperymentalny.
+	W tym celu wyłączono człon proporcjonalny, zerując jego parametr \texttt{P}.
+	Robot powinien na początku nie ruszyć, a wraz z brakiem jego ruchu powinien być nacałkowywany coraz większy uchyb i zadawane coraz większe wysterowanie silników.
+	Po chwili powinien być słyszany odgłos silników próbujących pokonać opory ruchu.
+	Ostatecznie wartość całki powinna być na tyle duża, że silniki ruszą i nastąpi obrót kół o kąt powodujący zliczenie jednej szczeliny.
+	Ponieważ całkę zerujemy przy każdej zliczonej szczelinie robot się zatrzyma i zacznie całkować uchyb od nowa.
+	Proces ten będzie powtarzał się aż robot wykona stopniowo pełen skręt.
+	Przewidywania te potwierdził eksperyment.
+}.
+
+
+\lstinputlisting[language=c, firstline=85, lastline=126, label={lst:rot_reg}, caption={Algorytm regulacji skrętu o kąt zadany}]{../src/platformMotors.cpp}
+
+\subsection{Kod funkcji obsługującej przerwanie czujnika szczelinowego}
+Kod funkcji obsługującej przerwanie czujnika szczelinowego\footnote{Funkcje obsługi przerwań lewego i prawego czujnika należało napisać oddzielnie, ale ich kod jest praktycznie taki sam.
+Opisano tu kod obsługi jednego czujnika, ale drugi różni się tylko operacjami na innych zmiennych globalnych, logika jego działania jest identyczna.} przedstawiono na listingu \ref{lst:enc_int}.
+Funkcje obsługi przerwań czujników szczelinowych mają za zadanie inkrementację licznika szczelin oraz obliczenie czasu
+W funkcji należało uwzględnić inne zachowanie przerwań przy początku ruchu robota.
+Przy testach czujników okazało się, że przy zmianie stanu czujnika następuje zjawisko podobne do odbijania styków, co sprawiało że fałszywie zliczana była ogromna ilość szczelin.
+Aby temu zapobiec ignorowane są sygnały które pojawiły się zbyt szybko względem ostatniej zmiany.
+Tworząc kod przerwań należy pamiętać, że ich obsługa w mikrokontrolerach ATmega wyłącza działanie liczników przez co funkcje \texttt{millis()} w~przerwaniach zwracają czas włączenia przerwania, a~czas który upłynął na obsłudze przerwania jest pomijany przy następnych wywołaniach funkcji \texttt{millis()}.
+To zjawisko mogłoby powodować błędy jeżeli zależałoby nam na precyzyjnym zliczaniu czasu od wydarzenia, kiedy podczas zliczania obsługujemy dużo przerwań o długim kodzie obsługi.
+Taka potrzeba nie zachodzi jednak w naszym przypadku, więc użycie funkcji \texttt{millis()} jest bezpieczne.
+
+\lstinputlisting[language=c, firstline=185, lastline=206, label={lst:enc_int}, caption={Kod funkcji obsługującej przerwanie czujnika szczelinowego}]{../src/platformMotors.cpp}
 
 \section{Wykorzystane technologie}
+\subsection{Narzędzia programistyczne}
+Ze względu na ograniczenia programu Arduino IDE zdecydowano się na użycie środowiska PlatformIO, które jest wtyczką do programu Visual Studio Code. Taka konfiguracja oferuje:
+\begin{itemize}
+	\item bogate kolorowanie składni języków programowania,
+	\item zaawansowany system autouzupełniania kodu z użyciem technologii \textit{IntelliSense},
+	\item automatyczne wykrywanie portów szeregowych z podłączonymi płytkami,
+	\item konstrukcja bazująca na plikach \textit{make} i programie \textsc{avrdude}.
+\end{itemize}
+Kod projektu wersjonowano z użyciem programu Git oraz korzystając z usług serwisu GitHub, który oferuje internetowy interfejs do zarządzania repozytorium, system \textit{issue tracking} oraz zarządzanie projektem za pomocą tablic kanban.
+
+\subsection{Komunikacja z mikroprocesorem}
+Do komunikacji z mikroprocesorem przydatny okazał się program \textsc{avrdude}. Szczególnie jego polecenia testu poprawnej komunikacji i odczytu \textit{fuse bitów}. Poniżej przedstawiono przykład użycia polecenia testu mikrokontrolera oraz jego wynik:
+
+\begin{verbatim}
+$ sudo avrdude -p m32u4 -c usbasp -P usb
+avrdude: AVR device initialized and ready to accept instructions
+Reading | ############################################### | 100% 0.01s
+avrdude: Device signature = 0x1e9587
+avrdude: safemode: Fuses OK
+avrdude done.  Thank you.
+\end{verbatim}
+Polecenie odczytu \textit{fusebitów} ma z kolei następujący format i daje wynik:
+\begin{verbatim}
+$ sudo avrdude -p m32u4 -c usbasp -P usb -U hfuse:r:hfuse.hex:h
+avrdude: AVR device initialized and ready to accept instructions
+Reading | ############################################### | 100% 0.01s
+avrdude: Device signature = 0x1e9587
+avrdude: reading hfuse memory:
+Reading | ############################################### | 100% 0.00s
+avrdude: writing output file "hfuse.hex"
+avrdude: safemode: Fuses OK
+avrdude done.  Thank you.
+\end{verbatim}
+Jak widać w powyższych instrukcjach, do programowania mikrokontrolera użyto programatora USBasp.
+Przy zakupie takiego programatora warto upewnić się że kupujemy wersję z najnowszym firmwarem, dzięki czemu programator będzie miał od razu dostępną funkcję automatycznego dopasowania do taktowania zegara mikrokontrolera.
+Program Arduino IDE pozwala na wypalenie w pamięci mikrokontrolera bootloadera Arduino. Opcja ta jest dostępna w pasku menu w zakładce narzędzia.
 
 \section{Perspektywy rozwoju, podsumowanie}
+Wykonany projekt spełnił założenia, dzięki zastosowaniu układów regulacji napędu silników robot jest stanie poruszać się na tyle precyzyjnie by wymijać przeszkody.
+Wszystkie elementy układu oraz części obwodu drukowanego działają w sposób poprawny.
+Załączniki do dokumentacji zawierają materiały multimedialne prezentujące osiągniętą dokładność pracy robota.
+Projekt miał charakter edukacyjny, jego wyników nie da się porównać z produktami komercyjnymi, jednak zdobyte podczas jego realizacji doświadczenie i fragmenty pracy mogą być przydatne przy konstrukcji robotów magazynowych, robotów labiryntowych oraz przy konstrukcji dedykowanych serwomechanizmów.
+
+Precyzję układu można zwiększyć stosując tarcze enkoderów o większej ilości szczelin, lub stosując enkodery umieszczane przed przekładnią silników.
+Ciekawą ścieżką rozwoju może być zamiana układu pomiarowego z enkodera badającego obroty kół na system Yaw, Pitch Roll. Jest to zestaw współpracujących ze sobą: żyroskopu, magnetometru oraz akcelerometru w celu ustalenia kierunku układu w przestrzeni poprzez kąty eulera.
+Taki układ pomiarowy cechowałby się daleko większą dokładnością i obejmowałby pętlą sprzężenia zwrotnego nie tylko obroty silnika ale rzeczywisty kierunek robota, eliminując błędy związane z poślizgiem kół.
+Na obecnym etapie projektu taki system pomiarowy znacząco przekroczyłby budżet, jednak w przyszłości może on stanowić ciekawe zagadnienie.
+Jego wprowadzenie pozwoliłoby na zachowanie sporej ilości aktualnego kodu, zmiany wymagałby jedynie tor pomiarowy i zadajnik.
+
+Na bieżącym etapie układ nie zapamiętuje ścieżki którą przebył, aby to zmienić można skonstruować drzewo binarne wykonanych zakrętów i odległości między nimi. Dzięki temu układ mógłby analizować przebytą drogę i szukać wyjścia z bardziej złożonych labiryntów.
+
+
 
 \end{document}
