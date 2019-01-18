@@ -4,12 +4,16 @@
 \usepackage[a4paper, margin=27mm]{geometry}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{rotating}
 \usepackage{slantsc}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
 
 \usepackage{caption}
 \usepackage[newfloat]{minted}
 \captionsetup[listing]{position=top}
 \setminted{autogobble}
+\usepackage{csvsimple}
 
 \usepackage{xcolor}
 \definecolor{commentgreen}{RGB}{2,112,10}
@@ -18,6 +22,10 @@
 \definecolor{frenchplum}{RGB}{129,20,83}
 
 \usepackage{siunitx}
+\DeclareSIUnit \amperehour { Ah }
+\DeclareSIUnit \mil { mil }
+
+
 \usepackage[european,cuteinductors,fetbodydiode]{circuitikz}
 
 \usetikzlibrary{calc}
@@ -26,11 +34,12 @@
 \tikzstyle{every node}=[font=\small]
 \tikzstyle{every path}=[line width=0.8pt,line cap=round,line join=round]
 
-\graphicspath{ {.//} }
+\graphicspath{ {Graphics/} }
 \author{Maciej Ziaja \and Bartosz Staszulonek}
 \date{\today}
 
 \begin{document}
+
 \pagenumbering{gobble}
 \title{
   Projekt Systemy Mikroprocesorowe \\
@@ -47,48 +56,46 @@
 \section{Wstęp}
 
 \subsection{Abstrakt}
-Projekt polegał na budowie mobilnego robota, który unika przeszkód.
-Konstrukcja porusza się na dwóch kołach, wykrywa przeszkody za pomocą czujnika ultradźwiękowego zamocowanego na wieży serwomechanizmu.
+Projekt polega na konstrukcji mobilnego robota, który unika przeszkód.
+Układ porusza się na dwóch kołach oraz wykrywa przeszkody za pomocą czujnika ultradźwiękowego zamocowanego na wieży serwomechanizmu.
 Platforma robota napędzana jest za pomocą pary silników prądu stałego, których kąt obrotu jest odczytywany przez robota za pomocą czujników szczelinowych.
 W celu zwiększenia precyzji działania układu zbudowano układy regulacji prędkości silników.
-Wykonano dwa typy układ regulacji, synchronizujący prędkość obrotu obu silników w~celu zachowania kierunku jazdy na wprost oraz kaskadowy układ regulacji skrętu platformy robota.
+Wykonano dwa typy układów regulacji: synchronizujący prędkość obrotu obu silników w~celu zachowania kierunku jazdy na wprost oraz kaskadowy układ regulacji skrętu platformy robota.
 Układ regulacji skrętu robota przypomina zasadą działania prosty serwomechanizm.
-Przedstawiono metodę identyfikacji i~strojenia regulatorów.
-Na potrzeby projektu wykonano także schemat układu elektronicznego i~zrealizowano go w~postaci obwodu drukowanego PCB.
+Przedstawiono metodę identyfikacji obiektu regulacji i~strojenia regulatorów z~użyciem linii pierwiastkowych.
+Na potrzeby projektu wykonano także schemat układu elektronicznego i~zrealizowano go w~postaci obwodu drukowanego \textsc{pcb}.
 Zaprojektowano także podwozie robota i~wydrukowano je w~technologii~3D.
 
 \subsection{Cel i zakres projektu}
-Projekt obejmował budowę platformy bazującej na mikroprocesorze z~serii ATmega32, obsługującym peryferia:
+Projekt obejmował budowę platformy bazującej na~mikroprocesorze z~serii ATmega32, obsługującym peryferia:
 \begin{itemize}
 	\item czujnika ultradźwiękowego wykrywającego przeszkody,
-	\item wieży serwomechanizmu, na której zamontowany jest czujnik i która kieruje go w różne strony,
-	\item silników prądu stałego stanowiących napęd platformy
-	\item czujników szczelinowych odczytujących kąt obrotu osi kół platformy,
-	\item odbiornika podczerwieni pozwalającego na wyłączenie robota pilotem jeśli ten się oddali.
+	\item wieży serwomechanizmu, na której zamontowany jest czujnik i~która kieruje go w~różne strony,
+	\item silników prądu stałego stanowiących napęd platformy,
+	\item czujników szczelinowych odczytujących kąt obrotu kół platformy,
+	\item odbiornika podczerwieni pozwalającego na~zdalne wyłączenie robota, jeśli ten się oddali.
 \end{itemize}
-Współpraca tych komponentów pozwala robotowi na unikanie przeszkód.
-Działanie robota powinno polegać na~jeździe przed siebie do~czasu napotkania przeszkody.
-W momencie wykrycia przeszkody robot powinien się zatrzymać, a~następnie zbadać czy w~jego otoczeniu znajduje się niezagrodzona droga i~skierować się na~nią.
-Prototyp wykonano z~użyciem układu Arduino Leonardo.
-Przeprowadzono testy współpracy komponentów i~wyciągnięto wnioski dotyczące budowy finalnej konstrukcji.
-Na podstawie testów określono parametry elementów finalnej konstrukcji.
+Współpraca wymienionych komponentów pozwala robotowi na unikanie przeszkód.
+Działanie robota powinno polegać na~jeździe przed siebie, do~czasu napotkania przeszkody.
+W~momencie wykrycia przeszkody robot powinien się zatrzymać, a~następnie zbadać czy w~jego otoczeniu znajduje się niezagrodzona droga i~skierować się w jej stronę.
+Prototyp układu wykonano z~użyciem układu Arduino Leonardo.
+Na wykonanym prototypie wykonano testy współpracy komponentów i~wyciągnięto wnioski dotyczące budowy finalnej konstrukcji oraz wymaganych parametrów komponentów.
 Działanie prototypu prowadziło do następujących decyzji projektowych, które podyktowały dalszy tok projektu i~jego zakres:
 \begin{itemize}
-	\item w celu wydajnego wykorzystania przestrzeni na platformie zdecydowano się na wykonanie własnego układu elektronicznego i obwodu drukowanego,
-	\item zaprojektowano własne podwozie dopasowane do używanych peryferiów,
+	\item w~celu wydajnego wykorzystania przestrzeni na platformie zdecydowano się na wykonanie własnego układu elektronicznego i~obwodu drukowanego,
+	\item zaprojektowano własne podwozie dopasowane do~używanych peryferiów,
 	\item wykonano układy regulacji jazdy na wprost oraz skręcania platformy.
 \end{itemize}
 
 \section{Organizacja projektu}
 \subsection{Harmonogram}
-Projekt należało zrelaizować w przeciągu 4 miesięcy.
-Proces jego wykonania składał się z dwóch części: testów komponentów wraz z budową prototypu oraz konstrukcji finalnego układu na podstawie wniosków wyciągniętych z testów konstrukcji prototypowej.
-	Tabela \ref{tab:schedule} przedstawia ramowy rozkład pracy w czasie.
+Projekt należało zrealizować w przeciągu 4 miesięcy.
+Proces jego wykonania składał się z~dwóch części: testów komponentów wraz z~budową prototypu oraz konstrukcji finalnego układu, na~podstawie wniosków wyciągniętych z~testów konstrukcji prototypowej.
+	Tabela \ref{tab:harmonogram} przedstawia ramowy rozkład pracy w~czasie.
 
 \begin{table}[hbt]
 	\centering
-	\label{tab:schedule}
-		\begin{tabular}{|c|c|}
+	\begin{tabular}{|c|c|}
 	\hline
 Termin                  & Zakres pracy                                                                         \\ \hline
 01.10.2018 - 20.10.2018 & Zebranie komponentów układu, ustalenie zakresu prac                                  \\ \hline
@@ -96,212 +103,257 @@ Termin                  & Zakres pracy                                          
 01.11.2018 - 14.11.2018 & Budowa prototypu, programowanie głównej logiki programu \\ \hline
 14.11.2018 - 01.12.2018 & Projekty obwodu drukowanego PCB i~podwozia                                           \\ \hline
 01.12.2018 - 20.12.2018 & Synteza i~oprogramowanie układów regulacji                                           \\ \hline
-20.12.2018 - 01.01.2019 & Złożenie układu finalnego                                                            \\ \hline
+20.12.2018 - 01.01.2019 & Złożenie finalnego układu                                                            \\ \hline
 01.01.2019 - 20.01.2019 & Strojenie układów regulacji, budowa dokumentacji                                      \\ \hline
-\end{tabular}
+	\end{tabular}
 	\caption{Harmonogram pracy}
+	\label{tab:harmonogram}
 \end{table}
 
 \subsection{Budżet}
-
 \section{Budowa prototypu, analiza problemów}
-Realizację projektu zaczęto od zgromadzenia peryferiów koniecznych do realizacji robota.
-W pierwszej fazie prototypowania komponenty testowano osobno używając Arduino Leonardo. Zapoznano się z ich praktycznymi możliwościami i działaniem dostępnych bibliotek. 
+Realizację projektu zaczęto od~zgromadzenia peryferiów koniecznych do~realizacji konstrukcji robota.
+W pierwszej fazie prototypowania komponenty testowano osobno używając Arduino Leonardo. Zapoznano się z~ich praktycznymi możliwościami i~działaniem dostępnych bibliotek. 
 
-Następnie połączono wszystkie komponenty jednocześnie i przeprowadzono ich jednoczesne testy oraz zmierzono zasilanie używając multimetru i zasilacza regulowanego.
-Testy pokazały, że układ przy zasilaniu $ 7.3 \ V $~pobiera prąd do $ 0.3 \ A $,~co dostarcza nam informacji potrzebnych do doboru baterii dla robota.
-
+Następnie połączono wszystkie komponenty i~przeprowadzono ich jednoczesne testy oraz zmierzono zasilanie używając multimetru wraz z~zasilaczem regulowanego.
 Elementy prototypowe umieszczono na platformie testowej i oceniono działanie konstrukcji.
 Okazało się, że działanie robota jest możliwe, ale sterowanie silnikami w~torze otwartym nie było wystarczająco precyzyjne aby unikać przeszkód. Przy symetrycznym wysterowaniu silników robot nie poruszał się w~kierunku prostym, różnice w działaniu poszczególnych silników są zbyt duże by pracowały one symetrycznie co jest wymagane by platforma jechała na wprost.
 Skręcanie platformy o zadany kąt również okazało się nieprecyzyjne, obroty o~na przykład 90 stopni w~prawo były mało powtarzalne i~obarczone dużym błędem. Zdecydowano się na syntezę układów regulacji, aby wyeliminować te problemy.
 
 Testy platformy prototypowej pokazały także, że złożoność układu jest zbyt duża aby budować go na płytce stykowej/prototypowej.
 Dodatkowo serwomechanizm, który jest bardzo wrażliwy na zakłócenia zasilania, działał źle gdy był połączony przez wiele kabli, które razem tworzyły dużą rezystancję. Obserwacje te skłoniły nas do zaprojektowania własnego obwodu drukowanego, który mieściłby wszystkie potrzebne komponenty elektroniczne na małej przestrzeni.
-Konstrukcja mechaniczna platformy prototypowej okazała się mało solidna i~nie była dostosowana do używanych przez nas modułów elektronicznych. W celu zwiększenia porządku i~wytrzymałości układu zdecydowano się na projekt własnego podwozia robota.
+Konstrukcja mechaniczna platformy prototypowej okazała się mało solidna i~nie była dostosowana do używanych przez nas modułów elektronicznych. W celu zwiększenia porządku i~wytrzymałości układu zdecydowano się na~projekt własnego podwozia robota.
 
 \section{Projekt układu elektronicznego}
 \subsection{Działanie i uzasadnienie doboru elementów elektronicznych}
 \subsubsection{Mikroprocesor ATmega32u4}
-Centralnym elementem robota jest mikroprocesor AVR o architekturze RISC. Ośmiobitowe mikroprocesory ATmega są popularnym wyborem przy konstrukcji układów wbudowanych w przemyśle i urządzeniach elektronicznych o niedużym stopniu wymaganej wydajności.
-Ich zaletą jest duża powszechność oraz fakt, że na procesorach z tej rodziny bazuje popularna platforma Arduino, w ramach której dostępny jest szeroki zakres bibliotek programistycznych do obsługi peryferiów. Przy wyborze konkretnego modelu mikroprocesora kierowaliśmy się następującymi kryteriami:
+Centralnym elementem robota jest mikroprocesor \textsc{avr} o~architekturze \textsc{risc}. Ośmiobitowe mikroprocesory ATmega są~popularnym wyborem przy konstrukcji układów wbudowanych w~przemyśle i~urządzeniach elektronicznych o~niedużym stopniu wymaganej wydajności.
+Ich~zaletą jest powszechność oraz fakt,~że~na~procesorach z~tej rodziny bazuje popularna platforma Arduino, w~ramach której dostępny jest szeroki zakres bibliotek programistycznych do~obsługi peryferiów. 
+
+\noindent\begin{minipage}{\linewidth}
+Przy wyborze konkretnego modelu mikroprocesora kierowaliśmy się następującymi wymaganiami:
 \begin{itemize}
 	\item obsługa czterech przerwań zewnętrznych:
 		\begin{enumerate}
-			\item pochodzących z enkodera lewego koła,
-			\item pochodzących z przerwań enkodera prawego koła,
-			\item pochodzących z czujnika ultradźwiękowego,
-			\item pochodzących z odbiornika podczerwieni, 
+			\item pochodzących z~enkodera lewego koła,
+			\item pochodzących z~przerwań enkodera prawego koła,
+			\item pochodzących z~czujnika ultradźwiękowego,
+			\item pochodzących z~odbiornika podczerwieni, 
 		\end{enumerate}
-	\item obsługa trzech wyjść PWM, za pomocą liczników w celu:
+	\item obsługa trzech wyjść PWM, za~pomocą liczników w~celu:
 		\begin{enumerate}
 			\item sterowania prędkością lewego silnika prądu stałego,
 			\item sterowania prędkością prawego silnika prądu stałego,
-			\item sterowania położeniem serwomechanizmu, na którym zamontowany jest czujnik ultradźwiękowy,
+			\item sterowania położeniem serwomechanizmu, na~którym zamontowany jest czujnik ultradźwiękowy,
 		\end{enumerate}
-	\item możliwość użycia sumarycznie dwunastu wejść wyjść cyfrowych do komunikacji z peryferiami,
-	\item pożądana jest wbudowana obsługa komunikacji szeregowej za pomocą interfejsu USB w celu łatwego debugowania układu i zdjęcia pomiarów dynamiki układu przy identyfikacji obiektu regulacji i strojeniu regulatorów
-	\item powyższe wymagania powinny być spełnione przy użyciu bootloadera i bibliotek Arduino.
+	\item możliwość użycia sumarycznie dwunastu wejść wyjść cyfrowych do~komunikacji z~peryferiami,
+	\item pożądana jest wbudowana obsługa komunikacji szeregowej za~pomocą interfejsu USB w~celu łatwego debugowania układu i~zdjęcia pomiarów dynamiki układu przy identyfikacji obiektu regulacji i~strojeniu regulatorów
+	\item powyższe wymagania powinny być spełnione przy użyciu bootloadera i~bibliotek Arduino.
 \end{itemize}
+\hspace{5mm}
+\end{minipage}
 
+Powyższe wymagania spełnia mikroprocesor ATmega32u4 firmy Atmel, co~można wywnioskować z jego dokumentacji \cite{atmega32u4_datasheet}.
+Na~tym procesorze bazuje układ Arduino Leonardo, który wykorzystano przy konstrukcji prototypu.
+Mikroprocesor ATmega32u4 z~użyciem bibliotek Arduino pozwala na~używanie do pięciu przerwań zewnętrznych oraz siedmiu kanałów generujących sygnały \textsc{pwm}.
 
-Powyższe wymagania spełnia mikroprocesor ATmega32u4 firmy Atmel.
-Jest to procesor na którym bazuje układ Arduino Leonardo, który wykorzystano przy konstrukcji prototypu.
-Z użyciem bibliotek Arduino ATmega32u4 pozwala na używanie do pięciu przerwań zewnętrznych oraz siedmiu kanałów generujących sygnały PWM.
-Istotne jest, że kanały PWM są obsługiwane przez cztery oddzielne liczniki. Biblioteki Arduino (szczególnie obsługi serwomechanizmu) wchodzą łatwo w konflikty i korzystają z liczników w sposób uniemożliwiający ich współdzielenie przy generowaniu sygnałów PWM.
-Dlatego przy doborze mikroprocesora i wyborze jego wyprowadzeń starano się, aby serwomechanizm był obsługiwany przez oddzielny licznik.
-Pin sterujący serwem nie powinien generować sygnałów z użyciem tego samego licznika co inne kanały PWM, aby uniknąć konfliktów bibliotek Arduino.
-Wybrany model mikroprocesora jest dostępny tylko w obudowach powierzchniowych QFP (\textit{Quad Flat Package}), przy wyborze tej jednostki należy pamiętać, że wymaga ona umiejętności precyzyjnego lutowania. Procesor może pracować przy zasilaniu $ 5\ V $, jest to dla nas dogodne ponieważ reszta naszych peryferiów ma takie same napięcie zasilania.
+Istotne jest, że kanały \textsc{pwm} są~obsługiwane przez cztery oddzielne liczniki. Biblioteki Arduino (szczególnie obsługi serwomechanizmu) wchodzą łatwo w~konflikty i~korzystają z liczników w~sposób uniemożliwiający ich współdzielenie przy generowaniu sygnałów \textsc{pwm}.
+Dlatego przy doborze mikroprocesora i~rozdysponowaniu jego zasobów starano się, aby serwomechanizm był obsługiwany przez oddzielny licznik, który nie jest dzielony z~innymi funkcjami układu.
+Oznacza to,~że~pin sterujący serwem~nie powinien generować sygnałów z~użyciem tego samego licznika,~co inne kanały PWM, aby uniknąć konfliktów bibliotek Arduino.
 
+Wybrany model mikroprocesora jest dostępny tylko w~obudowach powierzchniowych \textsc{qfp} (\textit{Quad Flat Package}), przy wyborze tej jednostki należy pamiętać, że wymaga ona umiejętności precyzyjnego lutowania. Procesor może pracować przy zasilaniu 5~\si{\volt}, jest to~dogodna wartość ponieważ reszta peryferiów w~układzie ma~takie same napięcie zasilania.
 
 \subsubsection{Silniki prądu stałego}
-Ze względu na ograniczenia budżetowe zdecydowano się na jedne z najtańszych dostępnych silników, wyprodukowane przez firmę Dagu.
-Silniki prądu stałego oferują największe momenty siły przy małych obrotach, nadają się dobrze do napędzania i przyspieszania platform robotów, oferują możliwość płynnego sterowania.
+Ze względu na ograniczenia budżetowe zdecydowano się na~jedne z najtańszych dostępnych silników, wyprodukowane przez firmę Dagu.
+Silniki prądu stałego oferują największe momenty siły przy małych obrotach, nadają się dobrze do~napędzania i~przyspieszania platform robotów, oferują możliwość płynnego sterowania.
 Ich wadą jest fakt, że bez dodatkowego układu czujników nie można określić ich kąta obrotu.
-Ze względu na obecność komutatora i szczotek silniki prądu stałego zużywają się w czasie pracy.
-Parametry wybranych przez nas silników są następujące:
+Należy mieć na uwadze, że~ze~względu na~obecność komutatora i~szczotek silniki prądu stałego zużywają się w~czasie pracy.
+Parametry wybranych przez nas silników są~następujące:
 \begin{itemize}
-	\item maksymalne napięcie zasilania: $ 6\ V $,
-	\item moment obrotowy: $ 0,8\ kg \cdot cm $, $ 0,78\ Nm $,
+	\item maksymalne napięcie zasilania: 6~\si{\volt},
+	\item moment obrotowy: \SI[inter-unit-product =\ensuremath{\cdot}]{0,8}{\kilogram\centi\meter}, \SI[inter-unit-product =\ensuremath{\cdot}]{0,78}{\newton\meter},
 	\item obroty silnika bez obciążenia: $ (90 \pm 10) \ \frac{obr}{min} $,
-	\item pobór prądu silnika bez obciążenia: $ 190\ mA\ (max.\ 250\ mA) $,
-	\item pobór prądu silnika przy zatrzymanym wale: $ 1\ A $.
+	\item pobór prądu silnika bez obciążenia: 190~\si{\milli\ampere} (max. 250~\si{\milli\ampere}),
+	\item pobór prądu silnika przy zatrzymanym wale: 1~\si{\ampere}.
 \end{itemize}
 % TODO: compare with real
 Do silników przymocowano koła o parametrach:
 \begin{itemize}
-	\item średnicy: $ 65\ mm $,
-	\item szerokości: $ 30\ mm $.
+	\item średnicy: 65~\si{\milli\meter},
+	\item szerokości: 30~\si{\milli\meter}.
 \end{itemize}
 
-\subsubsection{Sterownik silników prądu stałego -  mostek H}
-Najbardziej popularnym sposobem sterowania silnikami prądu stałego jest użycie mostka H.
-Jest to układ składający się z czterech tranzystorów polowych, których dreny i~źrodła są odpowiednio połączone z sterowanym silnikiem. Para tranzystorów połączona z~tą samą szczotką silnika ma złączone bramki, ale przeciwny stan otwarcia.
+\subsubsection{Sterownik silników prądu stałego -  mostek \textsc{h}}
+Najbardziej popularnym sposobem sterowania silnikami prądu stałego jest użycie mostka~\textsc{h}.
+~Jest to układ składający się z~czterech tranzystorów polowych, których dreny i~źrodła są~odpowiednio połączone ze~sterowanym silnikiem. Para tranzystorów połączona z~tą samą szczotką silnika ma~złączone bramki, ale przeciwny stan otwarcia.
 Złączone bramki są wyprowadzone z~układu i~stanowią wejścia sterowania. W~zależności od tego na które z~wejść podamy stan wysoki przez jeden z~tranzystorów z~każdej pary będzie płyną prąd, powodując obroty silnika w~odpowiednim kierunku.
-Układem elektronicznym, który zawiera w sobie dwa mostki H, co pozwala na sterowanie parą silników, jest L298N.
-Dodatkowo układ posiada dodatkowe tranzystory do sterowania prędkością silników za pomocą sygnału PWM, który stopniowo otwiera i~domyka tranzystor polowy przepuszczający sygnały wejściowe. Parametry sterownika są następujące:
+Układem elektronicznym, który zawiera w sobie dwa mostki~\textsc{h},~co~pozwala na~sterowanie parą silników, jest L298N.
+Dodatkowo układ posiada dodatkowe tranzystory do sterowania prędkością silników za pomocą sygnału \textsc{pwm}, który stopniowo otwiera i~domyka tranzystor polowy przepuszczający sygnały wejściowe. Parametry sterownika są~następujące:
 \begin{itemize}
-	\item maksymalne napięcie zasilania silników: $ 45\ V $,
-	\item napięcie części logicznej: $ 4,5\ V - 7\ V $,
-	\item maksymalny prąd zasilający silnik: $ 2\ A $.
+	\item maksymalne napięcie zasilania silników: 45~\si{\volt},
+	\item napięcie części logicznej: od 4,5~\si{\volt} do 7~\si{\volt},
+	\item maksymalny prąd zasilający silnik: 2~\si{\ampere}.
 \end{itemize}
-Sterownik dostępny jest w obudowie przewlekanej Multiwatt15. Porównując parametry mostka H z silnikami możemy stwierdzić, że jest on wystarczający do ich wysterowania.
-
-\subsubsection{Stabilizator napięcia L7805CV}
-Wszystkie układy logiczne zasilane są napięciem $ 5\ V $, ale silniki zasilane są napięciem $ 7,3\ V $. 
-Wynika stąd, że najlepiej zastosować baterię siedmiowoltową, a zasilanie do części logicznej dostarczać poprzez regulator napięcia. Najbardziej popularnym regulatorem jest układ 7805. 
-W wersji CV jego parametry są następujące:
-\begin{itemize}
-	\item maksymalne napięcie wejściowe: $ 35\ V $,
-	\item napięcie wyjściowe: $ 5\ V $ (z dokładnością $ 2\% $,
-	\item maksymalny prąd wyjściowy: $ 1.5\ A $.
-\end{itemize}
-Stabilizator jest dostępny w różnych obudowach, przewlekanych i powierzchniowych, ze względu na łatwość montażu, dostępność i możliwość zamontowania radiatora wybraliśmy model w obudowie przewlekanej TO-220.
-Po porównaniu parametrów stabilizatora z parametrami komponentów, które zasili można stwierdzić, że jest on wystarczający.
+Sterownik dostępny jest w~obudowie przewlekanej \textit{Multiwatt15}, jego producentem jest firma STMicroelectronics. Porównując parametry mostka, zawarte w dokumentacji \cite{h_bridge_datasheet} z~parametrami silników możemy stwierdzić, że~jest on~wystarczający do~ich wysterowania.
 
 \subsubsection{Czujnik ultradźwiękowy}
-Najbardziej popularnym i łatwo dostępnym czujnikiem odległości jest czujnik ultradźwiękowy HC-SR04.
-Czujniki ultradźwiękowe mierzą odległość na podstawie czasu, który jest potrzebny fali ultradźwiękowej na dotarcie do przeszkody i powrót do czujnika po jej odbiciu.
-Pomiar czujnikiem rozpoczyna się od podania na wejście TRIG stanu wysokiego przez $ 10 \mu s $. Powoduje to wygenerowanie przez czujnik ciągu ośmiu sygnałów ultradźwiękowych o częstotliwości $ 40\ kHz $. Po odbiciu sygnału od przeszkody i jego powrocie do czujnika odległość można obliczyć według wzoru \ref{eq:ultrasonic}, gdzie:
-
+Najbardziej popularnym i~łatwo dostępnym miernikiem odległości jest czujnik ultradźwiękowy HC-SR04.
+Czujniki ultradźwiękowe mierzą odległość na~podstawie czasu, który jest potrzebny fali ultradźwiękowej na~dotarcie do~przeszkody i~powrót do~czujnika po~jej odbiciu.
+Pomiar czujnikiem rozpoczyna się od~podania na~wejście \textsc{trig} stanu wysokiego przez~10~\si{\micro\second}. Powoduje to~wygenerowanie przez czujnik ciągu ośmiu sygnałów ultradźwiękowych o~częstotliwości 40~\si{\kilo\hertz}. Po odbiciu sygnału od przeszkody i~jego powrocie do~czujnika odległość można obliczyć według wzoru \ref{eq:ultrasonic}, gdzie:
 \begin{itemize}
-	\item $ dist $ to odległość mierzona,
-	\item $ Tim_h $ to czas trwania stanu wysokiego, 
-	\item $ v_s $ to prędkość rozchodzenia się fali dźwiękowej w powietrzu, typowo $ 340 \frac{m}{s} $.
+	\item $ d $ to odległość mierzona,
+	\item $ t_h $ to czas trwania stanu wysokiego, 
+	\item $ v_s $ to prędkość rozchodzenia się fali dźwiękowej w powietrzu, typowo 340~\si{\meter\per\second}.
 \end{itemize}
 \begin{equation}
 \label{eq:ultrasonic}
-	dist = \frac{Tim_h \cdot v_s}{2}
+	d = \frac{t_h \cdot v_s}{2}
 \end{equation}
-Model czujnika HC-SR04 charakteryzuje się następującymi parametrami:
+Model czujnika HC-SR04, zgodnie z dokumentacją \cite{ultr_datasheet} charakteryzuje się następującymi parametrami:
 \begin{itemize}
-	\item napięcie zasilania: $ 5\ V $,
-	\item średni pobór prądu: $ 15\ mA $,
-	\item zakres pomiarowy: od $ 2\ cm $ do $ 200\ cm $,
-	\item częstotliwość pracy: $ 40\ kHz $,
-	\item wymiary: $ 45 \times 20 \times 15 mm $.
+	\item napięcie zasilania: 5~\si{\volt},
+	\item średni pobór prądu: 15~\si{\milli\ampere},
+	\item zakres pomiarowy: od 2~\si{\centi\meter} do 200~\si{\centi\meter},
+	\item częstotliwość pracy: 40~\si{\kilo\hertz},
+	\item wymiary: $ 45 \times 20 \times 15 $~\si{\milli\meter}.
 \end{itemize}
-Zasilanie czujnika i zakres jego pracy są odpowiednie dla projektu.
-Przeszkody które chcemy wykrywać będą znajdywały się w odległości parunastu centymetrów od robota.
-Należy mieć na uwadze, że czujniki ultradźwiękowe najlepiej wykrywają duże przeszkody. 
-Dodatkowo istotne jest, że pomiar czujnika ultradźwiękowego trwa w czasie, przebycie odpowiedniej drogi przez falę ultradźwiękową nie jest natychmiastowe.
-Kwestia ta zostanie wzięta pod uwagę w czasie tworzenia oprogramowania.
+Zasilanie czujnika  i~jego zakres pracy są odpowiednie dla projektu.
+Przeszkody, które chcemy wykrywać będą znajdywały się w~odległości parunastu centymetrów od~robota, czyli w~zakresie pracy czujnika.
+Należy mieć na uwadze, że~czujniki ultradźwiękowe wykrywają najlepiej duże przeszkody. 
+Dodatkowo istotne jest, że~pomiar czujnika ultradźwiękowego trwa w~czasie, przebycie odpowiedniej drogi przez falę ultradźwiękową nie~jest natychmiastowe.
+Kwestia ta~zostanie wzięta pod uwagę w~czasie tworzenia oprogramowania.
 
 \subsubsection{Serwomechanizm}
-Aby umożliwić robotowi kierowanie czujnika odległości w różnych kierunkach, ten zamieszczono na wieży serwomechanizmu.
-Ponieważ wymagamy aby czujnik mógł być skierowany w lewo, prawo oraz na wprost wystarczające jest serwo 180 stopni.
+Aby umożliwić robotowi kierowanie czujnika odległości w~różnych kierunkach, ten zamieszczono na~wieży serwomechanizmu.
+Ponieważ wymagamy aby czujnik mógł być skierowany w~lewo, prawo oraz na~wprost wystarczające jest serwo 180 stopni.
 Waga czujnika ultradźwiękowego jest znikoma, dlatego serwomechanizm można wybrać kierując się jak najniższą ceną.
 
 \subsubsection{Odbiornik podczerwieni TSOP4836}
-Robota wyposażono w odbiornik podczerwieni ułatwiający jego zatrzymanie.
-W celu łatwej współpracy z domowymi pilotami na podczerwień należało wybrać odbiornik wspierający popularne formaty: NEC Code, Toshiba Micom Format, Sharp Code, RC5 Code, RC6 Code, R–2000 Code...
+Robota wyposażono w~odbiornik podczerwieni ułatwiający jego zatrzymanie.
+W celu łatwej współpracy z domowymi pilotami na podczerwień należało wybrać odbiornik wspierający popularne formaty: NEC Code, Toshiba Micom Format, Sharp Code, RC5 Code, RC6 Code, R–2000 Code\dots.
 
-Wybraliśmy odbiornik TSOP4836 pracujący z falami o częstotliwości $ 36\ kHz $. Zgodnie z dokumentacją % TODO
+Wybraliśmy odbiornik TSOP4836 pracujący z~falami o~częstotliwości 36~\si{\kilo\hertz}. Zgodnie z dokumentacją \cite{ir_datasheet} firmy Vishay
  odbiornika należy go zabezpieczyć kondensatorem filtrującym i rezystorem. Parametry odbiornika są następujące:
 \begin{itemize}
-	\item napięcie zasilania: od $ 4,5\ V $ do $ 5,5\ V $,
-	\item średni pobór prądu: $ 1,5\ mA$.
+	\item napięcie zasilania: od 4,5~\si{\volt} do 5,5~\si{\volt},
+	\item średni pobór prądu: 1,5~\si{\milli\ampere}.
+\end{itemize}
+Przy projektowaniu obwodu drukowanego i~lutowaniu odbiernika należy zwrócić uwagę na jego wyprowadzenia.
+Wiele czujników podczerwieni o~identycznych obudowach i~podobnych parametrach ma bardzo różne kolejności wyprowadzeń.
+
+\subsubsection{Stabilizator napięcia L7805CV}
+W konstruowanym projekcie szystkie układy logiczne zasilane są napięciem 5~\si{\volt}, natomiast silniki zasilane są napięciem  7,4~\si{\volt}.
+Wynika stąd, że~najlepiej zastosować baterię siedmiowoltową, a~zasilanie do części logicznej dostarczać poprzez regulator napięcia. Najbardziej popularnym regulatorem jest układ 7805, produkowany przez firmę STMicroelectronics \cite{stab_datasheet}. 
+W wersji \textsc{cv} jego parametry są następujące:
+\begin{itemize}
+	\item maksymalne napięcie wejściowe: 35~\si{\volt}$ 35\ V $,
+	\item napięcie wyjściowe: 5~\si{\volt} (z dokładnością 2 \%),
+	\item maksymalny prąd wyjściowy: 1,5~\si{\ampere}.
+\end{itemize}
+Stabilizator jest dostępny w różnych obudowach, przewlekanych i~powierzchniowych. Ze względu na łatwość montażu, dostępność i~możliwość zamontowania radiatora wybraliśmy model w obudowie przewlekanej~TO-220.
+Po~porównaniu parametrów stabilizatora z~parametrami komponentów, które zasili można stwierdzić, że~jest on~wystarczający by spełnić zapotrzebowania projektu.
+
+\subsubsection{Akumulator}
+Testy pokazały, że~przy zasilaniu 7,4~\si{\volt} układ pobiera prąd~do~0,3~\si{\ampere},~co dostarcza nam informacji potrzebnych do~doboru baterii dla robota.
+Zdecydowano się na~zastosowanie akumulatora litowo-polimerowego firmy Dualsky.
+Jego najważniejsze parametry są następujące:
+\begin{itemize}
+	\item akumulator składa się z dwóch ogniw Li-pol,
+	\item napięcie nominalne: 7,4~\si{\volt},
+	\item pojemność: 800~\si{\milli\amperehour},
+	\item prąd rozładowania ciągły: 20~\si{\ampere},
+	\item wbudowane przewody ze wtykiem \textsc{jst}.
 \end{itemize}
 
 \subsubsection{Elementy pasywne}
-Użyte komponenty elektroniczne wymagają użycia kondensatorów filtrujących, zastosowano kondensatory o pojemnościach podanych w dokumentacjach filtrowanych elementów.
-Kondensatory ceramiczne są umieszczone w obudowach przewlekanych, starano się dobrać kondensatory elektrolityczne w obudowach powierzchniowych, aby zredukować miejsce, którą zajmują.
-Spis wszystkich elementów układu, w tym elementów pasywnych znajduje się w sekcji \ref{sec:schem}.
+Użyte komponenty elektroniczne wymagają użycia kondensatorów filtrujących, zastosowano kondensatory o~pojemnościach podanych w~dokumentacjach filtrowanych elementów.
+Kondensatory ceramiczne są~umieszczone w~obudowach przewlekanych, starano się dobrać kondensatory elektrolityczne w~obudowach powierzchniowych, aby zredukować miejsce, którą zajmują.
+Spis wszystkich elementów układu, w~tym elementów pasywnych znajduje się~w osobnym pliku \texttt{csv} dostępnym w plikach projektu. 
 \subsection{Schemat układu elektronicznego}
 \label{sec:schem}
-Na rysunku %TODO
-przedstawiono utworzony schemat układu elektronicznego.
-Zastosowano przycisk, który zwiera pin reset z~ziemią, jeżeli przycisk jest przytrzymany dostatecznie długo zresetowany zostanie układ.
-Aby podczas resetu nie doszło do zwarcia zasilania dodano rezystor R1. Układ resetu znajduje się w~polu B2 schematu.
-Źródłem taktowania mikroprocesora jest zewnętrzny rezonator kwarcowy $ 16\ MHz $. Do jego poprawnego działania konieczne są odpowiednie kondensatory. Do osiągnięcia zamierzonego taktowania użyto kondensatorów o~pojemności $ 22\ pF $. Mikroprocesor zasilono napięciem $ 5\ V $, zasilanie filtrowane jest kondensatorami $ 100\ nF $, zasilanie portu USB filtrowane jest kondensatorami $ 1 \mu F $.
-W polu A2 schematu umieszczono diody sygnalizacyjne.
-Dioda PWR sygnalizuje obecność napięcia na wyjściu stabilizatora.
-Diody TX, RX związane są z transmisją szeregową.
-Diody podłączono tak że są aktywne kiedy wyjścia procesora są w trybie niskim.
-Dzięki temu diody świecą kiedy transmisja szeregowa nie ma miejsca i sygnalizują tym samym jego poprawne działanie.
-Jest to wygodne ponieważ dioda PWR mówi tylko o obecności zasilania, ale nie informuje użytkownika o poprawnym uruchomieniu układu.
-Każda z diod podłączona jest przez odpowiedni rezystor.
 
+\begin{sidewaysfigure}[!htbp]
+		\centering
+		\includegraphics[scale=0.9]{"MazeBot Main Board".pdf}
+		\caption{Schemat układu elektronicznego}
+		\label{fig:sch_eletr}
+\end{sidewaysfigure}
 
-W polu C1 znajduje się port USB w wersji MICRO. Linie portu szeregowego zabezpieczono dławikiem ferrytowym, oraz rezystorami.
-Do programowania mikroprocesora zastosowano złącze ICSP sześciopinowe, znajdujące się w~polu D1 schematu.
+Na rysunku \ref{fig:sch_eletr} przedstawiono utworzony schemat układu elektronicznego.
+Projekt układu wykonano w programie Autodesk Eagle, korzystając z~licznych bibliotek komponentów. 
 
-W polu A5 schematu znajduje się mostek H L298.
-Do jego wyjść silnikowych dodano diody prostownicze, łączące go z baterią zasilającą skierowane przeciwnie do polaryzacji baterii.
-Na cewkach silników w czasie jego pracy gromadzi się energia w postaci pola magnetycznego.
-Po zatrzymaniu silników i hamowaniu platformy energia to wróci do układu w postaci płynącego prądu.
-Dzięki obecności diod układ mostka jest zabezpieczony przez tymi prądami, popłyną one przez diody do baterii, co więcej ze względu na polaryzację energia odzyskiwana z silników będzie ładować baterię, tworząc prosty układ aktywnego hamowania.
+Centralnym elementem układu jest mikroprocesor ATmega32u4 oznaczony symbolem \textit{U3}, znajduje się on w polu \textit{C3} schematu.
+Źródłem taktowania mikroprocesora jest zewnętrzny rezonator kwarcowy 16~\si{\mega\hertz}.
+Do jego poprawnego działania konieczne są~odpowiednie kondensatory.
+Do osiągnięcia zamierzonego taktowania użyto kondensatorów o~pojemności 22~\si{\pico\farad}.
+Mikroprocesor zasilono napięciem 5~\si{\volt}, które jest filtrowane kondensatorami 0,1~\si{\micro\farad}, zasilanie portu USB jest filtrowane kondensatorami 1~\si{\micro\farad}.
+Aby ułatwić restartowanie układu, na schemacie umieszczono przycisk, który umożliwia zwieranie pinu reset z~ziemią.
+Jeżeli przycisk jest przytrzymany dostatecznie długo układ mikroprocesorowy zostanie zresetowany.
+Aby podczas resetu nie doszło do~zwarcia obwodu zasilania, dodano rezystor \textit{R1}.
+Układ resetu znajduje się w~polu \textit{B2} schematu.
+
+W polu \textit{A2} schematu umieszczono diody sygnalizacyjne.
+Dioda \textit{PWR\_LED} sygnalizuje obecność napięcia na~wyjściu stabilizatora.
+Diody \textit{TX\_LED} oraz \textit{RX\_LED} są związane~z~transmisją szeregową, podłączono je tak że~są~aktywne kiedy wyjścia procesora są~w~stanie niskim.
+Dzięki temu diody świecą kiedy transmisja szeregowa nie ma miejsca i~sygnalizują tym samym poprawne działanie procesora.
+Jest to wygodne ponieważ dioda \textit{PWR\_LED} sygnalizuje jedynie obecność zasilania układu, ale nie informuje użytkownika o~właściwym uruchomieniu mikroprocesora.
+Każda z~diod podłączona jest przez odpowiedni rezystor ograniczający płynący prąd.
+W polu \textit{C1} znajduje się port USB w wersji \textsc{micro}. Linie portu szeregowego zabezpieczono dławikiem ferrytowym, oraz rezystorami.
+Do programowania mikroprocesora zastosowano złącze ICSP sześciopinowe, znajdujące się w~polu \textit{D1} schematu.
+
+W~polu \textit{A5} schematu znajduje się mostek H~L298.
+Aby zabezpieczyć układ, do jego wyjść silnikowych dodano diody prostownicze skierowane przeciwnie do polaryzacji baterii.
+W czasie pracy silników na ich uzwojeniu gromadzi się energia w~postaci pola magnetycznego.
+Po zatrzymaniu silników i~hamowaniu platformy energia to wróci do układu w~postaci płynącego prądu.
+Dzięki obecności diod układ mostka jest zabezpieczony przez tymi prądami, popłyną one przez diody do baterii.
+ Co więcej, ze względu na polaryzację diod, energia odzyskiwana z~silników będzie ładować baterię, tworząc prosty układ aktywnego hamowania.
 W sekcji \textsc{io ports} znajdują się złącza peryferiów układu.
-Komponenty z fabrycznymi wyprowadzeniami przez goldpiny, połączono tak samo od strony układu.
-Silniki i zasilanie są złączone przez konektory \textsc{arc}.
 
+
+Komponenty z fabrycznymi wyprowadzeniami przez goldpiny, połączono takimi samymi złączami od strony układu.
+Silniki i zasilanie są złączone przez konektory \textsc{arc} dokręcane śrubokrętem.
 
 \subsection{Projekt układu drukowanego}
 \subsubsection{Parametry techniczne układu drukowanego}
-Ze względu na ograniczoną przestrzeń na powierzchni platformy robota zdecydowano się na wykonanie własnego obwodu drukowanego w technologii dwustronnej, z metalizowanymi otworami i solder maską.
-W celu zachowania zgodności z procesem technologicznym producenta płytek % TODO
+Ze względu na ograniczoną przestrzeń na~powierzchni platformy robota zdecydowano się na~wykonanie własnego obwodu drukowanego w~technologii dwustronnej, z~metalizowanymi otworami i~soldermaską.
+W celu zachowania zgodności z procesem technologicznym producenta płytek\footnote{Elpin: \url{https://www.elpinpcb.com.pl/prototypy/}}
 przyjęto następujące ustawienia \textsc{drc} (\textit{Design rules check}):
 \begin{itemize}
-	\item grubość laminatu wraz ze ścieżkami: $ 1.5\ mm $,
-	\item grubość ścieżek: $ 0.035\ mm $,
-	\item odległości między padami, przelotkami (\textit{via}) oraz ścieżkami: $ 6\ mil $,
-	\item odległości ścieżek od krawędzi płytki: $ 40\ mil $,
-	\item minimalna odległość otworów: $ 6\ mil $,
-	\item minimalna szerokość ścieżki: $ 6\ mil $,
-	\item minimalna średnica otworu: $ 0,35\ mm $,
-	\item szerokość termoizolacji padów od wylewek (ułatwia lutowanie): $ 10\ mil $.
+	\item grubość laminatu wraz ze ścieżkami: 1,5~\si{\milli\meter},
+	\item grubość ścieżek: 0.035~\si{\milli\meter},
+	\item odległości między ścieżkami, przelotkami (\textit{via}) oraz padami: 6~\si{\mil},
+	\item odległości ścieżek od krawędzi płytki: 40\si{\mil},
+	\item minimalna odległość otworów: 6~\si{\mil},
+	\item minimalna szerokość ścieżki: 6~\si{\mil},,
+	\item minimalna średnica otworu: 0,35\si{\milli\meter},
+	\item szerokość termoizolacji padów od wylewek (ułatwia lutowanie): 10\si{\mil}.
 \end{itemize}
-Przy tworzeniu płytki zastosowano technikę wylewki masy, tworzenia dużych płaszczyzn masy, zamiast prowadzenia poszczególnych ścieżek.
-Ułatwia to rozmieszczenie połączeń i zmniejsza rezystancję ścieżek masy.
-Zastosowano elementy zawierające ołów jako bardziej wytrzymałe i łatwiejsze w lutowaniu.
-W amatorskim lutowaniu nie używa się temperatur przy których nie wydzielają się trujące opary ołowiu.
+Dwuwymiarowe wizualizacje obwodu drukowanego wykonanego w programie Autodesk Eagle przedstawiają rysunki \ref{fig:pcb_top} oraz \ref{fig:pcb_bottom}.
+Przy tworzeniu płytki zastosowano technikę wylewki masy, czyli tworzenia dużych płaszczyzn przewodnika, zamiast prowadzenia poszczególnych ścieżek.
+Ułatwia to~rozmieszczenie połączeń i~zmniejsza rezystancję ścieżek masy.
+Zastosowano materiały zawierające ołów jako bardziej wytrzymałe i~łatwiejsze w~lutowaniu.
+W amatorskim lutowaniu nie używa się temperatur przy których wydzielają się trujące opary ołowiu.
 
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=\linewidth]{"MazeBot Main Board Top".png}
+	\caption{Górna warstwa obwodu drukowanego}
+	\label{fig:pcb_top}
+\end{figure}
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=\linewidth]{"MazeBot Main Board Bottom".png}
+	\caption{Dolna warstwa obwodu drukowanego}
+	\label{fig:pcb_bottom}
+\end{figure}
 
 \subsubsection{Rozmieszczenie elementów na powierzchni układu drukowanego}
 W centralnej części obwodu drukowanego umieszczono mikroprocesor.
-Górną krawędź układu zajmują konektory peryferiów, dolna krawędź została przeznaczona na elementy służące interakcji z użytkownikiem.
+Górną krawędź układu zajmują konektory peryferiów, dolna krawędź została przeznaczona na elementy służące interakcji z~użytkownikiem.
 Płytka została wykonana w technologii mieszanej, w celu zaoszczędzenia miejsca starano się używać elementów montowanych powierzchniowo, tam gdzie było to możliwe i wygodne.
 Podczas prowadzenia ścieżek układu należy mieć na uwadze ich szerokość.
-Znając parametry techniczne płytki oraz prądy płynące przez poszczególne ścieżki można obliczyć ich minimalną szerokość za pomocą kalkulatorów dostępnych online. %TODO: ref net
+Znając parametry techniczne płytki oraz prądy płynące przez poszczególne ścieżki można obliczyć ich minimalną szerokość za pomocą kalkulatorów dostępnych online\footnote{Kalkulator scieżek \textit{4PCB} \url{https://www.4pcb.com/trace-width-calculator.html}}.
 Obudowę rezonatora kwarcowego oddzielono od powierzchni obwodu wyciętą gumą.
 Na obudowach elementów aktywnych umieszczono radiatory.
 Rozdysponowanie wyprowadzeń sygnałowych mikroprocesora jest kompromisem między ograniczeniami bibliotek Arduino, możliwościami procesora oraz ilością miejsca dostępnego na płytce.
@@ -666,6 +718,28 @@ Jego wprowadzenie pozwoliłoby na zachowanie sporej ilości aktualnego kodu, zmi
 
 Na bieżącym etapie układ nie zapamiętuje ścieżki którą przebył, aby to zmienić można skonstruować drzewo binarne wykonanych zakrętów i odległości między nimi. Dzięki temu układ mógłby analizować przebytą drogę i szukać wyjścia z bardziej złożonych labiryntów.
 
+\begin{thebibliography}{9}
+\bibitem{atmega32u4_datasheet}
+Atmel: \textit{ATmega16U4/ATmega32U4 8-bit Microcontroller with 16/32K bytes of ISP Flash and USB Controller}, \url{http://ww1.microchip.com/downloads/en/devicedoc/atmel-7766-8-bit-avr-atmega16u4-32u4\_datasheet.pdf}
 
+\bibitem{h_bridge_datasheet}
+STMicroelectronics: \textit{L298
+DUAL FULL-BRIDGE DRIVER}, \url{https://www.sparkfun.com/datasheets/Robotics/L298_H_Bridge.pdf}
 
+\bibitem{ultr_datasheet}
+Elec: \textit{Ultrasonic Ranging Module HC - SR04}, \url{https://www.mouser.com/ds/2/813/HCSR04-1022824.pdf}
+
+\bibitem{ir_datasheet}
+Vishay: \textit{TSOP48 Photo Modules for PCM Remote Control Systems}, \url{http://mkpochtoi.narod.ru/TSOP4836_ds.pdf}
+
+\bibitem{stab_datasheet}
+STMicroelectronics: \textit{TL7800 series positive voltage regulators}, \url{https://datasheet.octopart.com/L7805CV-STMicroelectronics-datasheet-7264666.pdf}
+
+\bibitem{ziolo}
+Praca zbiorowa pod redakcją Krzysztofa Zioło
+\textit{LABORATORIUM ELEKTRONIKI I Elementy półprzewodnikowe i układy podstawowe}.
+Wydanie III zmienione .
+Wydawnictwo Politechniki Śląskiej, Gliwice 1999.
+
+\end{thebibliography}
 \end{document}
