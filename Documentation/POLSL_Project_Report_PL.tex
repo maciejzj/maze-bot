@@ -6,36 +6,16 @@
 \usepackage{graphicx}
 \usepackage{slantsc}
 
+\usepackage{caption}
+\usepackage[newfloat]{minted}
+\captionsetup[listing]{position=top}
+\setminted{autogobble}
+
 \usepackage{xcolor}
 \definecolor{commentgreen}{RGB}{2,112,10}
 \definecolor{eminence}{RGB}{108,48,130}
 \definecolor{weborange}{RGB}{80,60,60}
 \definecolor{frenchplum}{RGB}{129,20,83}
-
-\usepackage{listings}
-\lstset {
-    language=C++,
-    frame=tb,
-    tabsize=4,
-    showstringspaces=false,
-    numbers=left,
-    %upquote=true,
-    commentstyle=\color{commentgreen},
-    keywordstyle=\color{eminence},
-    stringstyle=\color{red},
-    basicstyle=\small\ttfamily, % basic font setting
-    emph={int,char,double,figure,unsigned,void,bool},
-    emphstyle={\color{blue}},
-    escapechar=\&,
-    % keyword highlighting
-    classoffset=1, % starting new class
-    otherkeywords={>,<,.,;,-,!,=,~},
-    morekeywords={>,<,.,;,-,!,=,~},
-    keywordstyle=\color{weborange},
-    classoffset=0,
-	breaklines=true,
-	postbreak=\mbox{{$\hookrightarrow$}\space},
-}
 
 \usepackage{siunitx}
 \usepackage[european,cuteinductors,fetbodydiode]{circuitikz}
@@ -579,10 +559,11 @@ Parametry regulatora w takiej postaci można wyliczyć według wzoru \ref{eq:reg
 \end{equation}
 
 
-
-\lstinputlisting[language=c, firstline=161, lastline=183, label={lst:synch_reg}, caption={Algorytm regulacji synchronizacji prędkości silników}]{../src/platformMotors.cpp}
-
-
+\begin{listing}[htb]
+\caption{Algorytm regulacji synchronizacji prędkości silników}
+\inputminted[firstline=161, lastline=183, frame=lines, linenos, breaklines]{cpp}{../src/platformMotors.cpp}
+\label{lst:synch_reg}
+\end{listing}
 
 \subsubsection{Algorytm regulacji skrętu o kąt zadany}
 Algorytm regulacji skrętu o kąt zadany został zaprogramowany według schematu na rysunku % TODO
@@ -609,7 +590,11 @@ Jest to bardzo uproszczona realizacja członu całkującego, jednak zupełnie wy
 }.
 
 
-\lstinputlisting[language=c, firstline=85, lastline=126, label={lst:rot_reg}, caption={Algorytm regulacji skrętu o kąt zadany}]{../src/platformMotors.cpp}
+\begin{listing}[htbp]
+\caption{Algorytm regulacji skrętu o kąt zadany}
+\inputminted[firstline=85, lastline=126, frame=lines, linenos, breaklines, fontsize=\small]{cpp}{../src/platformMotors.cpp}
+\label{lst:rot_reg}
+\end{listing}
 
 \subsection{Kod funkcji obsługującej przerwanie czujnika szczelinowego}
 Kod funkcji obsługującej przerwanie czujnika szczelinowego\footnote{Funkcje obsługi przerwań lewego i prawego czujnika należało napisać oddzielnie, ale ich kod jest praktycznie taki sam.
@@ -622,7 +607,12 @@ Tworząc kod przerwań należy pamiętać, że ich obsługa w mikrokontrolerach 
 To zjawisko mogłoby powodować błędy jeżeli zależałoby nam na precyzyjnym zliczaniu czasu od wydarzenia, kiedy podczas zliczania obsługujemy dużo przerwań o długim kodzie obsługi.
 Taka potrzeba nie zachodzi jednak w naszym przypadku, więc użycie funkcji \texttt{millis()} jest bezpieczne.
 
-\lstinputlisting[language=c, firstline=185, lastline=206, label={lst:enc_int}, caption={Kod funkcji obsługującej przerwanie czujnika szczelinowego}]{../src/platformMotors.cpp}
+
+\begin{listing}[htb]
+\caption{Kod funkcji obsługującej przerwanie czujnika szczelinowego}
+\inputminted[firstline=185, lastline=206, frame=lines, linenos, breaklines]{cpp}{../src/platformMotors.cpp}
+\label{lst:enc_int}
+\end{listing}
 
 \section{Wykorzystane technologie}
 \subsection{Narzędzia programistyczne}
