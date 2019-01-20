@@ -57,20 +57,19 @@
 \newpage
 \pagenumbering{arabic}
 \tableofcontents
-\newpage
 
 \section{Wstęp}
 
 \subsection{Abstrakt}
-Projekt polega na konstrukcji mobilnego robota, który unika przeszkód.
-Układ porusza się na dwóch kołach oraz wykrywa przeszkody za pomocą czujnika ultradźwiękowego zamocowanego na wieży serwomechanizmu.
-Platforma robota napędzana jest za pomocą pary silników prądu stałego, których kąt obrotu jest odczytywany przez robota za pomocą czujników szczelinowych.
+Projekt polega na konstrukcji mobilnego robota, który unika przeszkód w~otoczeniu.
+Układ porusza się na dwóch kołach oraz wykrywa przeszkody za~pomocą czujnika ultradźwiękowego zamocowanego na wieży serwomechanizmu.
+Platforma robota napędzana jest za pomocą pary silników prądu stałego, których kąt obrotu jest odczytywany za~pomocą czujników szczelinowych.
 W celu zwiększenia precyzji działania układu zbudowano układy regulacji prędkości silników.
-Wykonano dwa typy układów regulacji: synchronizujący prędkość obrotu obu silników w~celu zachowania kierunku jazdy na wprost oraz kaskadowy układ regulacji skrętu platformy robota.
+Wykonano dwa typy układów regulacji: synchronizujący prędkość obrotu obu silników w~celu zachowania kierunku jazdy na~wprost oraz kaskadowy układ regulacji skrętu platformy robota.
 Układ regulacji skrętu robota przypomina zasadą działania prosty serwomechanizm.
 Przedstawiono metodę identyfikacji obiektu regulacji i~strojenia regulatorów z~użyciem linii pierwiastkowych.
 Na potrzeby projektu wykonano także schemat układu elektronicznego i~zrealizowano go w~postaci obwodu drukowanego \textsc{pcb}.
-Zaprojektowano także podwozie robota i~wydrukowano je w~technologii~3D.
+Zaprojektowano także podwozie robota i~wydrukowano je~w~technologii~3D.
 
 \subsection{Cel i zakres projektu}
 Projekt obejmował budowę platformy bazującej na~mikroprocesorze z~serii ATmega32, obsługującym peryferia:
@@ -147,7 +146,7 @@ Całkowity koszt komponentów projektu wyniósł 149,86 złotych.
 Realizację projektu zaczęto od~zgromadzenia peryferiów koniecznych do~realizacji konstrukcji robota.
 W~pierwszej fazie prototypowania komponenty testowano osobno używając Arduino Leonardo. Zapoznano się z~ich praktycznymi możliwościami i~działaniem dostępnych bibliotek. 
 
-Następnie połączono wszystkie komponenty i~przeprowadzono ich jednoczesne testy oraz zmierzono zasilanie używając multimetru wraz z~zasilaczem regulowanego.
+Następnie połączono wszystkie komponenty i~przeprowadzono ich jednoczesne testy oraz zmierzono zasilanie używając multimetru wraz z~zasilaczem regulowanym.
 Elementy prototypowe umieszczono na~platformie testowej i oceniono działanie konstrukcji.
 Okazało się, że działanie robota jest możliwe, ale sterowanie silnikami w~torze otwartym nie było wystarczająco precyzyjne aby unikać przeszkód. Przy symetrycznym wysterowaniu silników robot nie poruszał się w~kierunku prostym, różnice w działaniu poszczególnych silników są~zbyt duże by~pracowały one symetrycznie co jest wymagane by platforma jechała na~wprost.
 Skręcanie platformy o~zadany kąt również okazało się nieprecyzyjne, obroty o~na~przykład 90~stopni w~prawo były mało powtarzalne i~obarczone dużym błędem.
@@ -169,7 +168,7 @@ Przy wyborze konkretnego modelu mikroprocesora kierowaliśmy się następującym
 	\item obsługa czterech przerwań zewnętrznych:
 		\begin{enumerate}
 			\item pochodzących z~enkodera lewego koła,
-			\item pochodzących z~przerwań enkodera prawego koła,
+			\item pochodzących z~enkodera prawego koła,
 			\item pochodzących z~czujnika ultradźwiękowego,
 			\item pochodzących z~odbiornika podczerwieni, 
 		\end{enumerate}
@@ -180,7 +179,7 @@ Przy wyborze konkretnego modelu mikroprocesora kierowaliśmy się następującym
 			\item sterowania położeniem serwomechanizmu, na~którym zamontowany jest czujnik ultradźwiękowy,
 		\end{enumerate}
 	\item możliwość użycia sumarycznie dwunastu wejść wyjść cyfrowych do~komunikacji z~peryferiami,
-	\item pożądana jest wbudowana obsługa komunikacji szeregowej za~pomocą interfejsu USB w~celu łatwego debugowania układu i~zdjęcia pomiarów dynamiki układu przy identyfikacji obiektu regulacji i~strojeniu regulatorów
+	\item pożądana jest wbudowana obsługa komunikacji szeregowej za~pomocą interfejsu USB w~celu łatwego debugowania układu i~zdjęcia pomiarów dynamiki układu przy identyfikacji obiektu regulacji i~strojeniu regulatorów,
 	\item powyższe wymagania powinny być spełnione przy użyciu bootloadera i~bibliotek Arduino.
 \end{itemize}
 \hspace{5mm}
@@ -218,7 +217,7 @@ Do silników przymocowano koła o parametrach:
 \subsubsection{Sterownik silników prądu stałego -  mostek \textsc{h}}
 Najbardziej popularnym sposobem sterowania silnikami prądu stałego jest użycie mostka~\textsc{h}.
 ~Jest to~układ składający się z~czterech tranzystorów polowych, których dreny i~źrodła są~odpowiednio połączone ze~sterowanym silnikiem. Para tranzystorów połączona z~tą samą szczotką silnika ma~złączone bramki, ale przeciwny stan otwarcia.
-Złączone bramki są wyprowadzone z~układu i~stanowią wejścia sterowania. W~zależności od tego na które z~wejść podamy stan wysoki przez jeden z~tranzystorów z~każdej pary będzie płyną prąd, powodując obroty silnika w~odpowiednim kierunku.
+Złączone bramki są wyprowadzone z~układu i~stanowią wejścia sterowania. W~zależności od tego na które z~wejść podamy stan wysoki przez jeden z~tranzystorów z~każdej pary będzie płynął prąd, powodując obroty silnika w~odpowiednim kierunku.
 Układem elektronicznym, który zawiera w sobie dwa mostki~\textsc{h},~co~pozwala na~sterowanie parą silników, jest L298N.
 Dodatkowo układ posiada dodatkowe tranzystory do sterowania prędkością silników za pomocą sygnału \textsc{pwm}, który stopniowo otwiera i~domyka tranzystor polowy przepuszczający sygnały wejściowe. Parametry sterownika są~następujące:
 \begin{itemize}
@@ -256,7 +255,7 @@ Dodatkowo istotne jest, że~pomiar czujnika ultradźwiękowego trwa w~czasie, pr
 Kwestia ta~zostanie wzięta pod uwagę w~czasie tworzenia oprogramowania.
 
 \subsubsection{Serwomechanizm}
-Aby umożliwić robotowi kierowanie czujnika odległości w~różnych kierunkach, ten zamieszczono na~wieży serwomechanizmu.
+Aby umożliwić robotowi kierowanie czujnika odległości w~różnych kierunkach, został on~zamieszczono na~wieży serwomechanizmu.
 Ponieważ wymagamy aby czujnik mógł być skierowany w~lewo, prawo oraz na~wprost wystarczające jest serwo 180 stopni.
 Waga czujnika ultradźwiękowego jest znikoma, dlatego serwomechanizm można wybrać kierując się jak najniższą ceną.
 
@@ -274,7 +273,7 @@ Przy projektowaniu obwodu drukowanego i~lutowaniu odbiernika należy zwrócić u
 Wiele czujników podczerwieni o~identycznych obudowach i~podobnych parametrach ma~bardzo różne kolejności wyprowadzeń.
 
 \subsubsection{Stabilizator napięcia L7805CV}
-W konstruowanym projekcie szystkie układy logiczne zasilane są~napięciem 5~\si{\volt}, natomiast silniki zasilane są napięciem  7,4~\si{\volt}.
+W konstruowanym projekcie wszystkie układy logiczne zasilane są~napięciem 5~\si{\volt}, natomiast silniki zasilane są napięciem  7,4~\si{\volt}.
 Wynika stąd, że~najlepiej zastosować baterię siedmiowoltową, a~zasilanie części logicznej dostarczać poprzez regulator napięcia. Najbardziej popularnym regulatorem jest układ 7805,~produkowany przez firmę STMicroelectronics \cite{stab_datasheet}. 
 W wersji \textsc{cv} jego parametry są następujące:
 \begin{itemize}
@@ -430,16 +429,16 @@ Bez zastosowania układu regulacji robot nie porusza się prosto przy symetryczn
 Problem ten jest spowodowany różnicami w~wykonaniu poszczególnych silników, niesymetrycznym obciążeniem platformy oraz niedoskonałościami jej konstrukcji.
 To zagadnienie można próbować rozwiązać następującymi sposobami:
 \begin{itemize}
-	\item wyważaniem platformy robota odpowiednimi odważnikami, jest to~najgorsze rozwiązanie, nie dające pewnych wyników, jest bardzo zależne od stopnia naładowania baterii, ponieważ silniki rozładowują się niesymetrycznie,
-	\item sterowaniem \textsc{pwm} w otwartym torze, tak aby uwzględnić niesymetryczność silników, sterowanie należy ustalić drogą eksperymentalną, ta~metoda również jest podatna na~rozładowanie baterii oraz zmianę obciążenia platformy,
+	\item wyważaniem platformy robota odpowiednimi odważnikami, jest to~najgorsze rozwiązanie, nie dające pewnych wyników, jest też zależne od stopnia naładowania baterii, który wpływa na~silniki niesymetrycznie,
+	\item sterowaniem \textsc{pwm} w otwartym torze, tak aby uwzględnić niesymetryczność silników, sterowanie należy ustalić drogą eksperymentalną, ta~metoda również jest podatna na~rozładowanie baterii oraz zmianę obciążenia platformy i~inne zakłócenia,
 	\item konstrukcją regulatorów, które na~podstawie odczytów z~enkoderów szczelinowych synchronizują prędkość silników.
 \end{itemize}
 Ze~względu na~największą pewność efektów, niskie koszty oraz wartość edukacyjną zdecydowano się na~rozwiązanie wykorzystujące układy regulacji.
 
 
 Syntezowany układ będzie miał na~celu regulację prędkości silnika \textit{slave} na podstawie odczytu prędkości silnika \textit{master}. Dodatkowo silnik \textit{master} będzie regulowany ze~stałą wartością zadaną prędkości w~celu zapewnienia większej pewności jego pracy.
-Regulator prędkości silnikami \textit{slave} powinien być typu \textsc{pid} lub \textsc{pi}.
-Obecność członu całkującego jest wymagana aby osiągnąć odpowiednio wysoki astatyzm układu.
+Regulator prędkości silnikam \textit{slave} powinien być typu \textsc{pid} lub \textsc{pi}.
+Obecność członu całkującego jest wymagana aby osiągnąć odpowiedni astatyzm układu.
 Dzięki całkowaniu układ wyrówna nie tylko chwilową prędkość platformy, ale również sumaryczną przebytą przez robota drogę, co~jest kluczowe aby utrzymać poprawny kierunek jazdy.
 Dodatkowo obliczenia związane z~członem całkującym są w~naszym przypadku proste, ponieważ odczyt z~enkoderów charakter drogi przebytej przez robota, czyli całki z~prędkości.
 Regulator prędkości silnika \textit{master} może być typu proporcjonalnego.
@@ -460,7 +459,7 @@ Jest to~wyjściowy schemat regulatora, który nie jest dopasowany do~charakteru 
 
 Układ należy przekształcić w~celu jego łatwiejszej implementacji.
 Czujniki szczelinowe zwracają do~układu pomiar liczby szczelin na~tarczy enkodera, co~jest ekwiwalentem całki z~prędkości, dlatego będziemy dążyć do~usunięcia operacji całkowania z~układu i~bloku \textit{zamiana $ \alpha $~na~$ \omega  $}.
-W~pierwszym kroku przekształceń układu skorzystamy z~rozłączności operacji całkowania i~przeniesiemy to~działanie przed regulator oraz obliczymy całki sygnału i~wartości zadanej osobno, a~uchyb wyznaczymy z~różnicy tych całek.
+W~pierwszym kroku przekształceń układu skorzystamy z~rozłączności operacji całkowania i~przeniesiemy to~działanie przed regulator oraz obliczymy całkę sygnału i~wartości zadanej osobno, a~uchyb wyznaczymy z~różnicy tych całek.
 Układ po~tym przekształceniu obrazuje schemat~\ref{fig:tikz:control_block_2}, który jeszcze jedną modyfikację.
 \begin{figure}[htbp]
 	\centering
@@ -549,7 +548,7 @@ Zapobiega to~zbyt gwałtownym startom platformy, z~którymi mogłyby się wiąza
 
 \subsection{Identyfikacja obiektu regulacji}
 W~celu poprawnego strojenia regulatorów należy zbudować model obiektu regulacji.
-W naszym przypadku obiektami są~dwa silniki prądu stałego.
+W naszym przypadku obiektami są~silniki prądu stałego.
 Prostym sposobem identyfikacji obiektu jest podanie na~jego wejście skoku jednostkowego i~analiza uzyskanej odpowiedzi czasowej.
 Eksperyment identyfikacyjny wykonano podając skok w~postaci wysterowania silników wartością \textsc{pwm} równą~100.
 Należy pamiętać, że~z~punktu widzenia układów regulacji, które utworzymy na~odstawie identyfikacji, ta~wartość wysterowania będzie równa jedności.
@@ -578,7 +577,7 @@ Wyniki eksperymentu zobrazowano na wykresach. Rysunki \ref{fig:identif_left} ora
 		\includegraphics[width=0.5\textwidth]{Identif_right.png}
 		\label{fig:identif_rigth} 
 	}
-	\caption{Wykresy odpowiedzi silników na skok jednostkowy} 
+	\caption{Wykresy odpowiedzi silników na skok jednostkowy bez obciążenia} 
 \end{figure}
 
 \begin{figure}[!htbp] 
@@ -604,7 +603,7 @@ Nie jest to~jednak konieczne, zróżniczkowanie odpowiedzi da wykres inercji pie
 Te~same parametry da~się określić również z~wykresu odpowiedzi drogi w~czasie.
 W~celu ich określenia należy wykreślić prostą do wykresu odpowiedzi.
 Punkt przecięcia prostej z~osią \textsc{x} będzie określał stałą czasową układu, natomiast nachylenie prostej jego wzmocnienie.
-Ponieważ układ przybliżamy transmitancją całki z~inercją, jego transmitancja będzie miała postać przedstawioną na wzorze \ref{eq:ob_int}
+Ponieważ układ przybliżamy transmitancją całki z~inercją, jego transmitancja będzie miała postać przedstawioną na wzorze \ref{eq:ob_int}.
 Parametry stałej czasowej $ T $ i wzmocnienia $ k $, można obliczyć z~dopasowanej do~odpowiedzi prostej, według wzorów \ref{eq:line_param}.
 
 \begin{equation} \label{eq:line_param}
@@ -630,7 +629,7 @@ Uzyskana identyfikacja obiektu całkującego opisuje zmiany drogi w~czasie, aby 
 
 Zdecydowano się na~regulator \textsc{PI}, który ma~wystarczający astatyzm, oraz jest łatwy w~implementacji.
 W przypadku naszego układu, który opisujemy transmitancją niskiego rzędu odpowiednim sposobem strojenia będzie użycie lini pierwiastkowych.
-W celu wykreślenia linii najlepiej zapisać transmitancję regulatora i~obiektyu w postaci zero-biegunowej, którą przedstawia wzór \ref{eq:reg_pi_casc}.
+W celu wykreślenia linii najlepiej zapisać transmitancję regulatora i~obiektu w postaci zero-biegunowej, którą przedstawia wzór \ref{eq:reg_pi_casc}.
 
 \begin{equation} \label{eq:reg_pi_casc}
 	PI \left( s \right) \cdot K_{o2} \left( s \right) = \left( \frac{s + c}{s} \right) \cdot \frac{k}{s \left( 1 + sT \right)}
@@ -639,9 +638,9 @@ W celu wykreślenia linii najlepiej zapisać transmitancję regulatora i~obiekty
 Należy zdecydować o~wartości dodanego zera $ c $. Jego stosunek do~stałej czasowej $ T $ zdecyduje o~kształcie linii pierwiastkowych.
 Można rozpatrzeć trzy przypadki:
 \begin{itemize}
-	\item zero większe do~stałej czasowej $ c > T $,
-	\item zero równe stałej czasowej $ c = T $
-	\item zero mniejsze od~stałej czasowej $ c < T $.
+	\item zero większe do~stałej czasowej: $ c > T $,
+	\item zero równe stałej czasowej: $ c = T $
+	\item zero mniejsze od~stałej czasowej: $ c < T $.
 \end{itemize}
 Przypadek równości tych parametrów jest najbardziej korzystny, doprowadzi do~skrócenia fragmentów transmitancji, w~takim wypadku regulator działałby jak korektor, a~układ byłby najszybszym z~możliwych.
 Mimo tego jest to~przypadek, który należy odrzucić.
@@ -701,7 +700,7 @@ Kluczowym elementem omijania przeszkód jest znajdywanie drogi, na~której nie z
 Proces znajdywania nowego kierunku jazdy rozpoczyna się w~momencie, w~którym na obecnym kierunku jazdy zostaje wykryta przeszkoda.
 Wtedy robot się zatrzymuje i~losuje po której stronie najpierw będzie szukał wolnej drogi. Potem zwraca w~tym kierunku czujnik ultradźwiękowy i~wykrywa obecność przeszkód.
 Jeżeli te~nie zostaną wykryte platforma skręca w~wylosowanym kierunku i~rozpoczyna jazdę na wprost.
-W przeciwnym przypadku robot kieruje czujnik w drugą stronę i~bada czy tam znajduje się przeszkoda, jeżeli nie to~rozpocznie jazdę w~tym kierunku.
+W przeciwnym przypadku robot kieruje czujnik w~przeciwną stronę i~bada czy tam znajduje się przeszkoda, jeżeli nie to~rozpocznie jazdę w~tym kierunku.
 Kiedy obie strony robota są~zablokowane ten zwróci się w~kierunku z~którego przyjechał. Opisane zachowanie obrazuje schemat na~rysunku~\ref{fig:tikz:pathfind_flowchart}.
 \begin{figure}[htbp]
 	\centering
@@ -750,7 +749,7 @@ Wypracowanie sterowania rozpoczyna się od~wyznaczenia uchybu ilości slotów wy
 Wartość zadana \texttt{target} regulatora położenia jest wyliczana z~makrofunkcji realizującej wzór~\ref{eq:slot_num}.
 Wartość zadana prędkości została ograniczona, aby zapobiec poślizgom.
 Wartość zadana regulatora prędkości jest wypracowywana przez regulator położenia.
-Różniczkowanie ilości slotów w~celu otrzymania prędkości chwilowej zrealizowano przez dzielenie odwracanie czasu zliczonego między ostatnimi przerwaniami wygenerowanymi przez czujniki szczelinowe.
+Różniczkowanie ilości slotów w~celu otrzymania prędkości chwilowej zrealizowano przez odwracanie czasu zliczonego między ostatnimi przerwaniami wygenerowanymi przez czujniki szczelinowe.
 Kod przerwań czujników przedstawia listing \ref{lst:enc_int}
 Istotne jest aby pamiętać o~rzutowaniu wartości \texttt{int} na~\texttt{float} przy dzieleniu, aby zachować precyzję obliczeń.
 Całkowanie uchybu odbywa się przez mnożenie go~przez czas jaki upłynął od~ostatniego przerwania czujnika szczelinowego.
