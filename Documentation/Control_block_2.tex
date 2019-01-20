@@ -1,0 +1,60 @@
+\documentclass{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows}
+\usetikzlibrary{arrows.meta, positioning}
+\begin{document}
+
+% Define styles
+\tikzstyle{block} = [draw, rectangle, 
+    minimum height=3em, minimum width=3em]
+\tikzstyle{sum} = [draw, circle, inner sep=5pt, node distance=2cm]
+\tikzstyle{point} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+\begin{tikzpicture}[auto, node distance=2cm, >=latex']
+	\node [point, name=input] {};
+	\node [block, below of=input, label={\small Zadajnik}] (master_encoder) {Master encoder};
+	\node [block, below of=master_encoder] (differ_master) {
+		\begin{tabular}{c}
+			Zamiana \\ $ \alpha \rightarrow \omega $
+		\end{tabular}};
+	\node [block, right of=differ_master, xshift=2cm, yshift=-2cm] (sa) {$ s^{-1} $};
+	\node [block, below of=sa] (ss) {$ s^{-1} $};
+	\node [sum, above of=sa, xshift=-1.5cm] (sum_kp) {};
+	\node [block, right of=sum_kp, xshift=1.5cm, label={\small Człon P regulatora}] (kp) {$ k_p $};
+	\node [sum, above of=sa, xshift=-1.5cm] (sum_kp) {};
+	\node [sum, right of=ss] (sum_I) {};
+	\node [block, right of=sum_I, label={\small Człon I regulatora}] (kI) {$\frac{k_p}{T_I}$};
+	\node [sum, right of=kI, yshift=2cm] (sum_con) {};
+	\node [block, right of=sum_con, xshift=0.25cm] (system) {Obiekt SWPS};
+	\draw [->] (sum_con) -- node[name=u] {$u$} (system);
+	\node [block, below of=u, yshift=-2.2cm] (slave_encoder) {Slave encoder};
+	\node [point, right of=system] (output) {};
+	\draw [->] (system) -- node [name=y] {$\alpha_s$}(output);	
+	\draw [->] (y) |- (slave_encoder);
+	\node [block, below of=ss] (differ_slave) {
+		\begin{tabular}{c}
+			Zamiana \\ $ \alpha \rightarrow \omega $
+		\end{tabular}};
+
+		
+	\draw [->] (master_encoder) -- node {$\alpha_a$} (differ_master);
+	\draw [->] (differ_master) -- node {$\omega_a$} (sum_kp);
+	\draw [->] (sa.east) -| node {$\alpha_a$} (sum_I);
+	\draw [->] (differ_master.south) |- node[near end] {$\omega_a$} (sa);
+	\draw [->] (sum_kp) -- node {$e_\omega$} (kp);
+	\draw [->] (ss) -- node[xshift=0.5cm, yshift=-0.5cm] {$-$} 
+		node {$\alpha_s$} (sum_I);
+	\draw [->] (kI) -| node {} (sum_con);
+	\draw [->] (kp) -| node {} (sum_con);
+	\draw [->] (sum_I) -- node {$e_\alpha$} (kI);
+	\draw [->] (slave_encoder) -- node {$\alpha_s$} (differ_slave);
+	\draw [->] (differ_slave) -- node {$\omega_s$} (ss);
+	\draw [->] (differ_slave) -| node[pos=0.99] {$-$} 
+		node [near end] {$\omega_s$} (sum_kp);
+	
+\end{tikzpicture}
+
+\end{document}
