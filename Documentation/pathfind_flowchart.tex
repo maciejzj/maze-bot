@@ -1,0 +1,57 @@
+\documentclass{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows}
+\usetikzlibrary{arrows.meta, positioning}
+\begin{document}
+
+% Define styles
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1.25cm, text centered, draw=black]
+\tikzstyle{decision} = [diamond, aspect=3, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+
+\begin{tikzpicture}[auto, node distance=2cm, >=latex']
+	\node (start) [startstop] {Start};
+	\node (rand) [process, below of=start] {
+	\small{\texttt{int direction = random(RIGHT, LEFT + 1);}}
+	};
+	\node (turn) [process, below of=rand] {
+	\small{\texttt{turnServoSensor(direction);}}
+	};
+	\node (pathfind) [decision, below of=turn, yshift=-1cm] {
+	\small{\texttt{sensor.probeRange()<SAFE\_DIST;}}
+	};
+	\node (return) [process, right of=pathfind, yshift=-2.5cm, xshift=2.5cm] {
+	\begin{tabular}{c}
+		\small{\texttt{direction = !direction;}} \\ 
+		\small{\texttt{turnServoSensor(direction);}}
+	\end{tabular}
+	};
+	\node (repathfind) [decision, below of=return, yshift=-1cm] {
+	\small{\texttt{sensor.probeRange()<SAFE\_DIST;}}
+	};
+	\node (back) [process, right of=repathfind, yshift=-2.5cm, xshift=2.5cm] {
+	\small{\texttt{direction = BACK;}}
+	};
+	\node (finish) [process, left of=back, xshift=-11.5cm] {
+	\begin{tabular}{c}
+		\small{\texttt{turnServoSensor(FRONT);}} \\ 
+		\small{\texttt{return direction;}}
+	\end{tabular}
+	};
+	\node (stop) [startstop, below of=finish] {Stop};
+	
+	\draw [->] (start) -- node {} (rand);
+	\draw [->] (rand) -- node {} (turn);
+	\draw [->] (turn) -- node {} (pathfind);
+	\draw [->] (pathfind.west) -| node[yshift=0.25cm, xshift=0.25cm] {No} (finish);
+	\draw [->] (pathfind) -| node[yshift=0.25cm, xshift=-1cm] {Yes} (return);
+	\draw [->] (return) -- node {} (repathfind);
+	\draw [->] (repathfind) -| node[yshift=0.25cm, xshift=-1cm] {Yes} (back);
+	\draw [->] (repathfind) -| node[yshift=0.25cm, xshift=4cm] {No} (finish);
+	\draw [->] (back) -- node {} (finish);
+	\draw [->] (finish) -- node {} (stop);
+	
+\end{tikzpicture}
+
+\end{document}
