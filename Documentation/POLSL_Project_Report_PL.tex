@@ -624,7 +624,7 @@ Ponieważ regulatory \textsc{PI} będą regulowały prędkość silników należ
 Uzyskana identyfikacja obiektu całkującego opisuje zmiany drogi w~czasie, aby uzyskać transmitancję związaną ze~zmianami prędkości należy zróżniczkować transmitancję obiektu całkującego przemnażając ją~przez operator $ s $, co~obrazują przekształcenia we~wzorze \ref{eq:ob_inert}. Jak widać zmiany prędkości w~czasie są~opisane modelem inercyjnym.
 
 \begin{equation} \label{eq:ob_inert}
-	K_{o2} \left( s \right) = s \cdot K_{o1} \left( s \right) = s \cdot \frac{k}{s \left( 1 + sT \right)} = \frac{k}{s \left( 1 + sT \right)}
+	K_{o2} \left( s \right) = s \cdot K_{o1} \left( s \right) = s \cdot \frac{k}{s \left( 1 + sT \right)} = \frac{k}{1 + sT}
 \end{equation}
 
 Zdecydowano się na~regulator \textsc{PI}, który ma~wystarczający astatyzm, oraz jest łatwy w~implementacji.
@@ -632,7 +632,7 @@ W przypadku naszego układu, który opisujemy transmitancją niskiego rzędu odp
 W celu wykreślenia linii najlepiej zapisać transmitancję regulatora i~obiektu w postaci zero-biegunowej, którą przedstawia wzór \ref{eq:reg_pi_casc}.
 
 \begin{equation} \label{eq:reg_pi_casc}
-	PI \left( s \right) \cdot K_{o2} \left( s \right) = \left( \frac{s + c}{s} \right) \cdot \frac{k}{s \left( 1 + sT \right)}
+	PI \left( s \right) \cdot K_{o2} \left( s \right) = \left( \frac{s + c}{s} \right) \cdot \frac{k}{1 + sT}
 \end{equation}
 
 Należy zdecydować o~wartości dodanego zera $ c $. Jego stosunek do~stałej czasowej $ T $ zdecyduje o~kształcie linii pierwiastkowych.
