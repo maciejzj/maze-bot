@@ -156,9 +156,9 @@ void motorRotateRight(int velocity) {
 
 void resetEncoders() {
 	motLeftCounter = 0;
-    motRightCounter = 0;
-    motLeftDeltaTime = 20;
-    motRightDeltaTime = 20;
+	motRightCounter = 0;
+	motLeftDeltaTime = 20;
+	motRightDeltaTime = 20;
 }
 
 void headingVeloFix() {
