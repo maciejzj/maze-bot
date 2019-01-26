@@ -9,8 +9,8 @@ extern Servo servoSensor;
 extern HC_SR04 sensor;
 
 void turnServoSensor(int direction) {
-    switch(direction) {
-        case RIGHT:
+	switch(direction) {
+		case RIGHT:
 			servoSensor.write(180);
 			break;
 		
@@ -21,7 +21,7 @@ void turnServoSensor(int direction) {
 		case LEFT:
 			servoSensor.write(0);
 			break;
-    }
+			}
 	delay(MOTOR_STOP_DELAY);
 }
 
