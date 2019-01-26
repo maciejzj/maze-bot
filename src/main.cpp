@@ -28,8 +28,8 @@ int ultrasonicTrig = 4;             ///< Ultrasonic sensor trigger pin.
 int ultrasonicEcho = 3;             ///< Ultrasonic sensor echo pin.
 int ultrasonicInt = 0;              ///< Ultrasonic sensor interrupt pin.
 HC_SR04 sensor(ultrasonicTrig,      ///< Ultrasonic sensor library instance.
-				ultrasonicEcho,
-				ultrasonicInt); 
+               ultrasonicEcho,
+               ultrasonicInt); 
 
 int IRrecvPin = 7;                  ///< IR receiver interrupt and data pin.
 IRrecv irrecv(IRrecvPin);           ///< IR library global instance.
