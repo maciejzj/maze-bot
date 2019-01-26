@@ -21,7 +21,7 @@ void turnServoSensor(int direction) {
 		case LEFT:
 			servoSensor.write(0);
 			break;
-			}
+	}
 	delay(MOTOR_STOP_DELAY);
 }
 
