@@ -9,8 +9,8 @@ extern Servo servoSensor;
 extern HC_SR04 sensor;
 
 void turnServoSensor(int direction) {
-    switch(direction) {
-        case RIGHT:
+	switch(direction) {
+		case RIGHT:
 			servoSensor.write(180);
 			break;
 		
@@ -21,23 +21,23 @@ void turnServoSensor(int direction) {
 		case LEFT:
 			servoSensor.write(0);
 			break;
-    }
+	}
 	delay(MOTOR_STOP_DELAY);
 }
 
 int findUnobstructedDirection() {
-			int direction = random(RIGHT, LEFT + 1);
-			turnServoSensor(direction);
+	int direction = random(RIGHT, LEFT + 1);
+	turnServoSensor(direction);
 
-			if(sensor.probeRange() < SAFE_DIST) {
-				direction = !direction;
-				turnServoSensor(direction);
+	if(sensor.probeRange() < SAFE_DIST) {
+		direction = !direction;
+		turnServoSensor(direction);
 
-				if(sensor.probeRange() < SAFE_DIST) {
-					direction = BACK;
-				}
-			}
+		if(sensor.probeRange() < SAFE_DIST) {
+			direction = BACK;
+		}
+	}
 
-			turnServoSensor(FRONT);
-			return direction;
+	turnServoSensor(FRONT);
+	return direction;
 }

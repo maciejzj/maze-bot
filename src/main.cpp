@@ -17,37 +17,36 @@
 #include "platformMotors.h"
 #include "HC_SR04.h"
 
-int motLeftForward = 10;			///< Left motor forward pin.
-int motLeftBack = 12;				///< Left motor back pin.
-int motLeftVelo = 11;				///< Left motor velocity PWM pin.
+int motLeftForward = 10;            ///< Left motor forward pin.
+int motLeftBack = 12;               ///< Left motor back pin.
+int motLeftVelo = 11;               ///< Left motor velocity PWM pin.
 
-int motRightForward = 8;			///< Right motor forward pin.
-int motRightBack = 9;				///< Right motor back pin.
-int motRightVelo = 5;				///< Right motor velocity PWM pin.
+int motRightForward = 8;            ///< Right motor forward pin.
+int motRightBack = 9;               ///< Right motor back pin.
+int motRightVelo = 5;               ///< Right motor velocity PWM pin.
 
-int motLeftSlotSensor = 2;			///< Left motor slot sensor (encoder) interrupt pin.
-int motRightSlotSensor = 1;			///< Right motor slot sensor (encoder) interrupt pin.
-volatile int motLeftCounter = 0;	///< Counter of left motor's slots detected in current movement.
-volatile int motRightCounter = 0;	///< Counter of right motor's slots detected in current movement.
-unsigned long motLeftDeltaTime;		///< Time betweeen last left enoder's ISRs, indicates velocity.
-unsigned long motRightDeltaTime;	///< Time betweeen last right enoder's ISRs, indicates velocity.
+int motLeftSlotSensor = 2;          ///< Left motor slot sensor (encoder) interrupt pin.
+int motRightSlotSensor = 1;         ///< Right motor slot sensor (encoder) interrupt pin.
+volatile int motLeftCounter = 0;    ///< Counter of left motor's slots detected in current movement.
+volatile int motRightCounter = 0;   ///< Counter of right motor's slots detected in current movement.
+unsigned long motLeftDeltaTime;     ///< Time betweeen last left enoder's ISRs, indicates velocity.
+unsigned long motRightDeltaTime;    ///< Time betweeen last right enoder's ISRs, indicates velocity.
 
-int servoPin = 13;					///< Servo control PWM pin.
-Servo servoSensor;					///< Servo library global instance.
+int servoPin = 13;                  ///< Servo control PWM pin.
+Servo servoSensor;                  ///< Servo library global instance.
 
-int ultrasonicTrig = 4;				///< Ultrasonic sensor trigger pin.
-int ultrasonicEcho = 3;				///< Ultrasonic sensor echo pin.
-int ultrasonicInt = 0;				///< Ultrasonic sensor interrupt pin.
-HC_SR04 sensor(ultrasonicTrig, ultrasonicEcho, ultrasonicInt); ///< Ultrasonic sensor library instance.
+int ultrasonicTrig = 4;             ///< Ultrasonic sensor trigger pin.
+int ultrasonicEcho = 3;             ///< Ultrasonic sensor echo pin.
+int ultrasonicInt = 0;              ///< Ultrasonic sensor interrupt pin.
+HC_SR04 sensor(ultrasonicTrig,      ///< Ultrasonic sensor library instance.
+               ultrasonicEcho,
+               ultrasonicInt); 
 
-int IRrecvPin = 7;					///< IR receiver interrupt and data pin.
-IRrecv irrecv(IRrecvPin);			///< IR library global instance.
-decode_results results;				///< IR received codes holding structure.
+int IRrecvPin = 7;                  ///< IR receiver interrupt and data pin.
+IRrecv irrecv(IRrecvPin);           ///< IR library global instance.
+decode_results results;             ///< IR received codes holding structure.
 
-unsigned long forwardStartTim = 0;
-unsigned long forwardStopTim = 0;
-
-volatile int state = START;			///< State machine state variable.
+volatile int state = START;         ///< State machine state variable.
    
 /** @brief Changes the state of program when IR signal is received.
  *
@@ -58,7 +57,7 @@ volatile int state = START;			///< State machine state variable.
 void changeRunningState();
 
 void setup() {
-	Serial.begin(9600); 				// For debug purposes.
+	Serial.begin(9600); // For debug purposes.
 	Serial.print("Initialised serial");
 
 	/* Initialise pin modes for motors */
@@ -106,7 +105,6 @@ void loop() {
 					state = START;
 
 					motorStop();
-					forwardStopTim = millis();
 
 					int direction = findUnobstructedDirection();
 					platformTurn(direction);

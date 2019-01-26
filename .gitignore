@@ -5,3 +5,17 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/*
+
+*.b#*
+*.s#*
+
+*.DS*
+
+*tmp*
+
+*.aux
+*.out
+*.log
+*.gz
+*.toc
+*minted*

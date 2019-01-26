@@ -1,0 +1,42 @@
+\documentclass{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows}
+\usetikzlibrary{arrows.meta, positioning}
+\begin{document}
+
+% Define styles
+\tikzstyle{block} = [draw, rectangle, 
+    minimum height=3em, minimum width=6em]
+\tikzstyle{sum} = [draw, circle, inner sep=5pt, node distance=2.5cm]
+\tikzstyle{point} = [coordinate]
+
+\begin{tikzpicture}[auto, node distance=2.5cm, >=latex']
+	\node [point, name=input] {};
+	\node [block, left of=input, label=\small{\begin{tabular}{c}
+		Zadajnik \\
+		Zamiana kąta skrętu \\
+		na liczbę slotów
+	\end{tabular}}] (func) {$ f \left( x \right) $};
+	\node [sum, left of=func] (sum_ext) {};
+	\node [block, left of=sum_ext, label=\small{Regulator położenia}] (con_ext) {$ P \left( s \right) $};
+	\node [sum, left of=con_ext] (sum_int) {};
+	\node [block, left of=sum_int, label=\small{Regulator prędkości}] (con_int) {$ PI \left( s \right) $};
+	\node [block, below of=con_int] (system) {Obiekt SWPS};
+	\node [block, below of=con_ext] (int) {$ s^{-1} $};
+	
+	\draw [->] (input) -- node {$ \beta $} (func);
+	\draw [->] (func) -- node {$ \alpha_w $} (sum_ext);
+	\draw [->] (sum_ext) -- node {$ e_{\alpha} $} (con_ext);
+	\draw [->] (con_ext) -- node {$ \omega_w $} (sum_int);
+	\draw [->] (sum_int) -- node {$ e_\omega $} (con_int);
+	\draw [->] (con_int) -- node {$ u $} (system);
+	\draw [->] (system) -- node {} (int);
+	\draw [->] (system) -| node[pos=0.99] {$-$} 
+		node [near end] {$\omega$} (sum_int);	
+	\draw [->] (int) -| node[pos=0.99] {$-$} 
+		node [near end] {$\alpha$} (sum_ext);
+
+\end{tikzpicture}
+
+\end{document}
