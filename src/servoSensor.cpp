@@ -26,18 +26,18 @@ void turnServoSensor(int direction) {
 }
 
 int findUnobstructedDirection() {
-			int direction = random(RIGHT, LEFT + 1);
-			turnServoSensor(direction);
+	int direction = random(RIGHT, LEFT + 1);
+	turnServoSensor(direction);
 
-			if(sensor.probeRange() < SAFE_DIST) {
-				direction = !direction;
-				turnServoSensor(direction);
+	if(sensor.probeRange() < SAFE_DIST) {
+		direction = !direction;
+		turnServoSensor(direction);
 
-				if(sensor.probeRange() < SAFE_DIST) {
-					direction = BACK;
-				}
-			}
+		if(sensor.probeRange() < SAFE_DIST) {
+			direction = BACK;
+		}
+	}
 
-			turnServoSensor(FRONT);
-			return direction;
+	turnServoSensor(FRONT);
+	return direction;
 }
