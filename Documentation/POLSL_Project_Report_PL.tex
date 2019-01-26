@@ -2,43 +2,30 @@
 \usepackage{polski}
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper, margin=20mm]{geometry}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{subfigure}
-\usepackage{footnote}
-\usepackage{rotating}
-\usepackage{slantsc}
-\usepackage[hidelinks]{hyperref}
-\usepackage{standalone}
-\usepackage[T1]{fontenc}
-
-\usepackage{caption}
-\usepackage[newfloat]{minted}
-\captionsetup[listing]{position=top}
-\setminted{autogobble}
-\usepackage{csvsimple}
-
-\usepackage{xcolor}
-\definecolor{commentgreen}{RGB}{2,112,10}
-\definecolor{eminence}{RGB}{108,48,130}
-\definecolor{weborange}{RGB}{80,60,60}
-\definecolor{frenchplum}{RGB}{129,20,83}
-
-\usepackage{siunitx}
+\usepackage{amsmath}                        % Math symbols
+\usepackage{amssymb}                        % More math symbols
+\usepackage{graphicx}                       % Figures, images
+\usepackage{subfigure}                      % Multiple figures in one
+\usepackage{footnote}                       % Footnote on bottom of page
+\usepackage{rotating}                       % Rotate figures by given angle
+\usepackage{slantsc}                        % Small caps
+\usepackage[hidelinks]{hyperref}            % Hyperlinks without red box
+\usepackage{standalone}                     % import standalone docs
+                                            % Mainly for tikz
+\usepackage[T1]{fontenc}                    % Best text enocoding
+\usepackage[newfloat]{minted}               % For code listings
+\setminted{autogobble}                      % Remove unnecessary indents
+\usepackage{siunitx}                        % SI Units
 \DeclareSIUnit \amperehour { Ah }
 \DeclareSIUnit \mil { mil }
 
-\usepackage[european,cuteinductors,fetbodydiode]{circuitikz}
-\usepackage{tikz}
-\usetikzlibrary{shapes, arrows}
-\usetikzlibrary{arrows.meta, positioning}
-
-\usetikzlibrary{calc}
-\ctikzset{bipoles/thickness=1}
-\ctikzset{bipoles/length=0.8cm}
-\tikzstyle{every node}=[font=\small]
-\tikzstyle{every path}=[line width=0.8pt,line cap=round,line join=round]
+\usepackage{tikz}                           % Graphing and plotting
+\usetikzlibrary{shapes,                     % Tikz common shapes
+				arrows}                     % Tikz common arrows
+\tikzstyle{every node}=[font=\small]        % Make tikz globally prettier
+\tikzstyle{every path}=[line width=0.8pt,
+						line cap=round,
+						line join=round]
 
 \graphicspath{ {Graphics/} }
 \author{Maciej Ziaja \and Bartosz Staszulonek}
@@ -48,9 +35,9 @@
 
 \pagenumbering{gobble}
 \title{
-  Projekt Systemy Mikroprocesorowe \\
-  \large MazeBot \\
-    Robot unikający przeszkód z regulacją napędu silników prądu stałego}
+	Projekt Systemy Mikroprocesorowe \\
+	\large MazeBot \\
+	Robot unikający przeszkód z regulacją napędu silników prądu stałego}
 
 \maketitle
 
@@ -568,12 +555,12 @@ Odpowiedź układu zarejestrowano dla silników bez obciążenia i~dla silników
 Wyniki eksperymentu zobrazowano na wykresach. Rysunki \ref{fig:identif_left} oraz \ref{fig:identif_rigth} przedstawiają odpowiedzi silników bez obciążenia, rysunki \ref{fig:identif_left_load}, \ref{fig:identif_rigth_load} przedstawiają odpowiedzi silników pod obciążeniem podwozia robota.
 
 \begin{figure}[!htbp] 
-	\subfigure[Silnik lewy bez obciążenia]{% 
+	\subfigure[Silnik lewy bez obciążenia]{
 		\includegraphics[width=0.5\textwidth]{Identif_left.png} 
 		\label{fig:identif_left}
 		}
 	\quad 
-	\subfigure[Silnik prawy bez obciążenia]{% 
+	\subfigure[Silnik prawy bez obciążenia]{
 		\includegraphics[width=0.5\textwidth]{Identif_right.png}
 		\label{fig:identif_rigth} 
 	}
@@ -581,12 +568,12 @@ Wyniki eksperymentu zobrazowano na wykresach. Rysunki \ref{fig:identif_left} ora
 \end{figure}
 
 \begin{figure}[!htbp] 
-	\subfigure[Silnik lewy z obciążeniem podwozia]{% 
+	\subfigure[Silnik lewy z obciążeniem podwozia]{
 		\includegraphics[width=0.5\textwidth]{Identif_left_load.png} 
 		\label{fig:identif_left_load}
 		}
 	\quad 
-	\subfigure[Silnik prawy z obciążeniem podwozia]{% 
+	\subfigure[Silnik prawy z obciążeniem podwozia]{
 		\includegraphics[width=0.5\textwidth]{Identif_right_load.png}
 		\label{fig:identif_rigth_load} 
 	} 

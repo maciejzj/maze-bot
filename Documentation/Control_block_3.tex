@@ -10,8 +10,6 @@
     minimum height=3em, minimum width=3em]
 \tikzstyle{sum} = [draw, circle, inner sep=5pt, node distance=2cm]
 \tikzstyle{point} = [coordinate]
-\tikzstyle{output} = [coordinate]
-\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
 
 \begin{tikzpicture}[auto, node distance=2cm, >=latex']
 	\node [point, name=input] {};
@@ -25,7 +23,7 @@
 	\node [sum, right of=kp] (sum_con) {};
 	\node [block, right of=sum_con, xshift=0.25cm] (system) {Obiekt SWPS};
 	\draw [->] (sum_con) -- node[name=u] {$u$} (system);
-	\node [point, right of=system] (output) {};
+	\node [point, right of=system] (point) {};
 	\node [block, below of=sum_I] (slave_encoder) {Slave encoder};
 	\node [point, above of=sum_con] (open_u) {};
 	
@@ -39,7 +37,7 @@
 	\draw [->] (kp) |- node {} (sum_con);
 	\draw [->] (kI) -| node {} (sum_con);
 	\draw [->] (open_u) -- node {$ u_o $} (sum_con);
-	\draw [->] (system) -- node [name=y] {$\alpha_s$}(output);
+	\draw [->] (system) -- node [name=y] {$\alpha_s$}(point);
 	\draw [->] (y) |- (slave_encoder);
 	\draw [->] (slave_encoder) -- node[pos=0.99] {$-$} 
 		node [near end] {$\alpha_s$} (sum_I);
