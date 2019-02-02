@@ -8,3 +8,5 @@ The project consists of making custom Arduino Leonardo clone PCB and making a 3D
 The code and Autodesk Eagle files are stored in the GitHub repository, Autodesk Fusion 360 project files can be accessed using Autodesk cloud mechanisms: https://a360.co/2U4947x.
 
 We encourage you to check out our documentation and project report in Polish.
+
+![khj](https://i.imgur.com/xnGFgQZ.jpg)
