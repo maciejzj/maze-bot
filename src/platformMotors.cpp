@@ -119,7 +119,7 @@ void platformTurnAngle(int degree) {
 		} else
 			motorRotateRight(-direction * actuationRight);
 		
-		#if	TURN_ANGLE_DBG
+		#if TURN_ANGLE_DBG
 			PRINT_TURN_ANGLE_DBG
 		#endif
 		/* If both motors are stopped exit function */
@@ -184,7 +184,7 @@ void headingVeloFix() {
 	motorRotateRight(actuationRight);
 	motorRotateLeft(actuationLeft);
 
-	#if	HEADING_VELO_FIX_DBG
+	#if HEADING_VELO_FIX_DBG
 		PRINT_HEADING_VELO_FIX_DBG
 	#endif
 }
@@ -198,13 +198,13 @@ void motorLeftCounterInt() {
 	}
 
 	/** Straightforward low pass filter, debounces the slot sensor 
-	 * 	when it is on the edge of a slot. 
+	 *  when it is on the edge of a slot. 
 	 */
 	unsigned long timeNow = millis();
 	if(timeNow - lastTimeLeft < 2) return;
 
-	/**	Increment slot counter and calculate time delta to provide
-	 * 	information for velocity calculation
+	/** Increment slot counter and calculate time delta to provide
+	 *  information for velocity calculation
 	 */
 	motLeftCounter++;
 	motLeftDeltaTime = timeNow - lastTimeLeft;
@@ -221,13 +221,13 @@ void motorRightCounterInt() {
 	}
 
 	/** Straightforward low pass filter, debounces the slot sensor 
-	 * 	when it is on the edge of a slot. 
+	 *  when it is on the edge of a slot. 
 	 */
 	unsigned long timeNow = millis();
 	if(timeNow - lastTimeRight < 2) return;
 
-	/**	Increment slot counter and calculate time delta to provide
-	 * 	information for velocity calculation
+	/** Increment slot counter and calculate time delta to provide
+	 *  information for velocity calculation
 	 */
 	motRightCounter++;
 	motRightDeltaTime = timeNow - lastTimeRight;

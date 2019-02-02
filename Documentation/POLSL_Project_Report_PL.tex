@@ -190,7 +190,7 @@ Należy mieć na uwadze, że~ze~względu na~obecność komutatora i~szczotek sil
 Parametry wybranych przez nas silników są~następujące:
 \begin{itemize}
 	\item maksymalne napięcie zasilania: 6~\si{\volt},
-	\item moment obrotowy: \SI[inter-unit-product =\ensuremath{\cdot}]{0,8}{\kilogram\centi\meter}, \SI[inter-unit-product =\ensuremath{\cdot}]{0,78}{\newton\meter},
+	\item moment obrotowy: \SI[inter-unit-product =\ensuremath{\cdot}]{0,8}{\kilogram\centi\meter}, \SI[inter-unit-product =\ensuremath{\cdot}]{0,78~}{\newton\meter},
 	\item obroty silnika bez obciążenia: $ (90 \pm 10) \ \frac{obr}{min} $,
 	\item pobór prądu silnika bez obciążenia: 190~\si{\milli\ampere} (max. 250~\si{\milli\ampere}),
 	\item pobór prądu silnika przy zatrzymanym wale: 1~\si{\ampere}.
@@ -264,7 +264,7 @@ W konstruowanym projekcie wszystkie układy logiczne zasilane są~napięciem 5~\
 Wynika stąd, że~najlepiej zastosować baterię siedmiowoltową, a~zasilanie części logicznej dostarczać poprzez regulator napięcia. Najbardziej popularnym regulatorem jest układ 7805,~produkowany przez firmę STMicroelectronics \cite{stab_datasheet}. 
 W wersji \textsc{cv} jego parametry są następujące:
 \begin{itemize}
-	\item maksymalne napięcie wejściowe: 35~\si{\volt}$ 35\ V $,
+	\item maksymalne napięcie wejściowe: 35~\si{\volt},
 	\item napięcie wyjściowe: 5~\si{\volt} (z dokładnością 2 \%),
 	\item maksymalny prąd wyjściowy: 1,5~\si{\ampere}.
 \end{itemize}
@@ -338,13 +338,13 @@ W celu zachowania zgodności z procesem technologicznym producenta płytek\footn
 przyjęto następujące ustawienia \textsc{drc} (\textit{Design rules check}):
 \begin{itemize}
 	\item grubość laminatu wraz ze~ścieżkami: 1,5~\si{\milli\meter},
-	\item grubość ścieżek: 0.035~\si{\milli\meter},
+	\item grubość ścieżek: 0,035~\si{\milli\meter},
 	\item odległości między ścieżkami, przelotkami (\textit{via}) oraz padami: 6~\si{\mil},
-	\item odległości ścieżek od~krawędzi płytki: 40\si{\mil},
+	\item odległości ścieżek od~krawędzi płytki: 40~\si{\mil},
 	\item minimalna odległość otworów: 6~\si{\mil},
 	\item minimalna szerokość ścieżki: 6~\si{\mil},,
-	\item minimalna średnica otworu: 0,35\si{\milli\meter},
-	\item szerokość termoizolacji padów od~wylewek (ułatwia lutowanie): 10\si{\mil}.
+	\item minimalna średnica otworu: 0,35~\si{\milli\meter},
+	\item szerokość termoizolacji padów od~wylewek (ułatwia lutowanie): 10~\si{\mil}.
 \end{itemize}
 Dwuwymiarowe wizualizacje obwodu drukowanego wykonanego w~programie Autodesk Eagle przedstawiają rysunki \ref{fig:pcb_top} oraz \ref{fig:pcb_bottom}.
 Przy tworzeniu płytki zastosowano technikę wylewki masy, czyli tworzenia dużych płaszczyzn przewodnika, zamiast prowadzenia poszczególnych ścieżek.
