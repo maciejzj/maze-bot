@@ -7,7 +7,7 @@ The project consists of making a custom Arduino Leonardo clone PCB and designing
 
 The code and Autodesk Eagle files are stored in the GitHub repository, Autodesk Fusion 360 project files can be accessed using [Autodesk cloud mechanisms](https://a360.co/2U4947x).
 
-Fell free to check out the documentation and [project report](https://raw.githubusercontent.com/MaciejZj/MazeBot/16cebf032a5ea0aaa41a32081933f3ef379c02ca/Documentation/POLSL_Project_Report_PL.pdf) in Polish.
+Feel free to check out the documentation and [project report](https://raw.githubusercontent.com/MaciejZj/MazeBot/16cebf032a5ea0aaa41a32081933f3ef379c02ca/Documentation/POLSL_Project_Report_PL.pdf) in Polish.
 
 ![mazebot_demo_photo](https://i.imgur.com/xnGFgQZ.jpg)
 
