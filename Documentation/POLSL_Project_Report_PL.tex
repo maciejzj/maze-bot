@@ -14,6 +14,8 @@
                                             % Mainly for tikz
 \usepackage[T1]{fontenc}                    % Best text enocoding
 \usepackage[newfloat]{minted}               % For code listings
+\usepackage{listings}
+\renewcommand*{\listlistingname}{Spis listingów}
 \setminted{autogobble}                      % Remove unnecessary indents
 \usepackage{siunitx}                        % SI Units
 \DeclareSIUnit \amperehour { Ah }
@@ -28,7 +30,7 @@
 						line join=round]
 
 \graphicspath{ {Graphics/} }
-\author{Maciej Ziaja \and Bartosz Staszulonek}
+\author{Maciej Ziaja}
 \date{\today}
 
 \begin{document}
@@ -40,6 +42,18 @@
 	Robot unikający przeszkód z regulacją napędu silników prądu stałego}
 
 \maketitle
+
+\vfill
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=\linewidth]{"Title Page Photo"}
+\end{figure}
+\vfill
+
+\begin{sidewaysfigure}[!htbp]
+	\centering
+	\includegraphics[width=\linewidth]{"Overview Collage"}
+\end{sidewaysfigure}
 
 \newpage
 \pagenumbering{arabic}
@@ -833,6 +847,12 @@ Jego wprowadzenie pozwoliłoby na~zachowanie sporej ilości aktualnego kodu, zmi
 Na bieżącym etapie układ nie zapamiętuje ścieżki którą przebył, aby to~zmienić można skonstruować drzewo binarne wykonanych skrętów i~odległości między nimi.
 Dzięki temu układ mógłby analizować przebytą drogę i~szukać wyjścia z~bardziej złożonych labiryntów.
 Kod programu, pliki Autodesk Eagle oraz dokumentacja są dostępne na stronie GitHub projektu: \url{https://github.com/MaciejZj/MazeBot}.
+
+\newpage
+\listoftables
+\listoffigures
+\listoflistings
+\newpage
 
 \begin{thebibliography}{9}
 
