@@ -1,0 +1,19 @@
+\contentsline {figure}{\numberline {1}{\ignorespaces Schemat uk\IeC {\l }adu elektronicznego}}{8}{figure.1}
+\contentsline {figure}{\numberline {2}{\ignorespaces G\IeC {\'o}rna warstwa obwodu drukowanego}}{10}{figure.2}
+\contentsline {figure}{\numberline {3}{\ignorespaces Dolna warstwa obwodu drukowanego}}{11}{figure.3}
+\contentsline {figure}{\numberline {4}{\ignorespaces Projekt podwozia robota, rzut izometryczny}}{12}{figure.4}
+\contentsline {figure}{\numberline {5}{\ignorespaces Projekt podwozia robota, rzuty}}{13}{figure.5}
+\contentsline {figure}{\numberline {6}{\ignorespaces Wyj\IeC {\'s}ciowy schemat blokowy uk\IeC {\l }adu regulacji}}{14}{figure.6}
+\contentsline {figure}{\numberline {7}{\ignorespaces Schemat blokowy uk\IeC {\l }adu regulacji trakcie przekszta\IeC {\l }ce\IeC {\'n}}}{15}{figure.7}
+\contentsline {figure}{\numberline {8}{\ignorespaces Finalna konstrukcja uk\IeC {\l }adu regulacji}}{15}{figure.8}
+\contentsline {figure}{\numberline {9}{\ignorespaces Schemat blokowy kaskadowego uk\IeC {\l }adu regulacji}}{16}{figure.9}
+\contentsline {figure}{\numberline {10}{\ignorespaces Wykresy odpowiedzi silnik\IeC {\'o}w na skok jednostkowy bez obci\IeC {\k a}\IeC {\.z}enia}}{18}{figure.10}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Silnik lewy bez obci\IeC {\k a}\IeC {\.z}enia}}}{18}{figure.10}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Silnik prawy bez obci\IeC {\k a}\IeC {\.z}enia}}}{18}{figure.10}
+\contentsline {figure}{\numberline {11}{\ignorespaces Wykresy odpowiedzi silnik\IeC {\'o}w na\nobreakspace {}skok jednostkowy pod obci\IeC {\k a}\IeC {\.z}eniem podwozia}}{18}{figure.11}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Silnik lewy z obci\IeC {\k a}\IeC {\.z}eniem podwozia}}}{18}{figure.11}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Silnik prawy z obci\IeC {\k a}\IeC {\.z}eniem podwozia}}}{18}{figure.11}
+\contentsline {figure}{\numberline {12}{\ignorespaces Rozpatrywane linie pierwiastkowe uk\IeC {\l }adu z regulatorem \textsc {pi}}}{20}{figure.12}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Wariant z zerem wi\IeC {\k e}kszym od sta\IeC {\l }ej czasowej}}}{20}{figure.12}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Wariant z zerem mniejszym od sta\IeC {\l }ej czasowej}}}{20}{figure.12}
+\contentsline {figure}{\numberline {13}{\ignorespaces Schemat blokowy algorytmu znajdywania kierunku bez przeszk\IeC {\'o}d}}{23}{figure.13}
